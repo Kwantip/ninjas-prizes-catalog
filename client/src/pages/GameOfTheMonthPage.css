@@ -1,0 +1,117 @@
+@import "../colors.css";
+
+.game-of-the-month-page {
+    display: grid;
+    grid-template-areas: "a b" "c b";
+}
+.game-of-the-month-block {
+    width: 30vw;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-self: center;
+
+    color: var(--color-brand-white);
+}
+#link {
+    position: relative;
+}
+#tooltip {
+    display: none;
+    
+    left: 50%;
+
+    transform: translateX(-50%);
+
+    background-color: rgba(0, 0, 0, 0.8);
+
+    padding: 5px;
+
+    z-index: 99;
+}
+#link:hover #tooltip {
+    display: block;
+    position: absolute;
+}
+.game-of-the-month-container {
+    grid-area: a;
+    
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.leader-board-item {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 30vw;
+}
+
+.leader-board-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    grid-area: c;
+}
+.leader-board-block {
+    background-color: var(--color-brand-primary);
+    color: var(--color-brand-white);
+    
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.leader-board-block button, .game-of-the-month-block button, .past-games-block button {
+    border-color: var(--color-brand-white);
+    color: var(--color-brand-white);
+    
+    &::after {
+        background-color: var(--color-brand-primary);
+    }
+    &::before {
+        background-color: var(--color-brand-white);
+    }
+    &:hover {
+        color: var(--color-brand-primary);
+    }
+}
+.game-of-the-month-block form, .leader-board-block form {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    width: 30vw;
+}
+.game-of-the-month-block form label, .leader-board-block form label {
+    display: flex;
+    justify-content: space-between;
+}
+.game-of-the-month-block button {
+    margin-top: 20px;
+}
+.leader-board-cols {
+    display: flex;
+    justify-content: space-between;
+    gap: 150px;
+}
+
+.past-games-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    grid-area: b;
+}
+.past-games-block {
+    width: 300px;
+}
+.past-game-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    margin: 15px 0;
+
+    color: var(--color-brand-white);
+}

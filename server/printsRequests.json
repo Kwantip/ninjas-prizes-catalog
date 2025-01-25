@@ -1,0 +1,183 @@
+{
+   "idTaken": [
+      "AB123",
+      "CD456",
+      "WR178",
+      "OF993",
+      "ZB216",
+      "GR565",
+      "IR107",
+      "RS392",
+      "EA547",
+      "YV989",
+      "MT690",
+      "BI258",
+      "SD298",
+      "LI943"
+   ],
+   "activeRequests": [
+      {
+         "id": "OF993",
+         "firstName": "Evie",
+         "lastInitial": "T",
+         "printName": "Fish Toy",
+         "linkToPrint": "https://youtube.com",
+         "color": "Random",
+         "notes": "",
+         "status": "Completed",
+         "receivedDate": "12/22/2024, 12:39:25 AM"
+      },
+      {
+         "id": "IR107",
+         "firstName": "Wimon",
+         "lastInitial": "T",
+         "printName": "POOBIES",
+         "linkToPrint": null,
+         "color": "Random",
+         "notes": "",
+         "status": "OrderDenied",
+         "receivedDate": "12/22/2024, 1:03:30 AM"
+      },
+      {
+         "id": "BI258",
+         "firstName": "Kwan",
+         "lastInitial": "T",
+         "printName": "POOBIES",
+         "linkToPrint": null,
+         "color": "Random",
+         "notes": ":)",
+         "status": "Received",
+         "receivedDate": "1/24/2025, 6:04:05 PM"
+      },
+      {
+         "id": "SD298",
+         "firstName": "Venice",
+         "lastInitial": "G",
+         "printName": "Katana",
+         "linkToPrint": null,
+         "color": "Random",
+         "notes": "",
+         "status": "Completed",
+         "receivedDate": "1/24/2025, 6:04:56 PM"
+      },
+      {
+         "id": "LI943",
+         "firstName": "John",
+         "lastInitial": "M",
+         "printName": "Katana",
+         "linkToPrint": null,
+         "color": "Random",
+         "notes": "Banana Multi Color",
+         "status": "Received",
+         "receivedDate": "1/24/2025, 6:34:24 PM"
+      }
+   ],
+   "inactiveRequests": [
+      {
+         "id": "AB123",
+         "firstName": "Sample",
+         "lastInitial": "1",
+         "printName": "Sample Print Name 1",
+         "linkToPrint": "link.com",
+         "color": "Random",
+         "notes": "Sample print request",
+         "status": "Fulfilled",
+         "fulfilledDate": ""
+      },
+      {
+         "id": "CD456",
+         "firstName": "Sample",
+         "lastInitial": "2",
+         "printName": "Sample Print Name 2",
+         "linkToPrint": "link.com",
+         "color": "Random",
+         "notes": "Sample print request",
+         "status": "Cancelled",
+         "fulfilledDate": ""
+      },
+      {
+         "id": "ZB216",
+         "firstName": "Nori",
+         "lastInitial": "T",
+         "printName": "Ribbon Toy",
+         "linkToPrint": "https://youtube.com",
+         "color": "Random",
+         "notes": "",
+         "status": "Cancelled",
+         "receivedDate": "12/22/2024, 12:48:29 AM",
+         "fulfilledDate": "12/26/2024, 6:03:56 PM"
+      },
+      {
+         "id": "YV989",
+         "firstName": "Akkares",
+         "lastInitial": "T",
+         "printName": "POOBIES",
+         "linkToPrint": null,
+         "color": "Random",
+         "notes": "",
+         "status": "Cancelled",
+         "receivedDate": "12/27/2024, 9:28:56 PM",
+         "fulfilledDate": "12/30/2024, 7:58:42 PM"
+      },
+      {
+         "id": "EA547",
+         "firstName": "Jatu",
+         "lastInitial": "T",
+         "printName": "Cola Flavored Toothpastes",
+         "linkToPrint": "https://youtube.com",
+         "color": "Random",
+         "notes": "Cola flavored",
+         "status": "Cancelled",
+         "receivedDate": "12/23/2024, 3:21:59 AM",
+         "fulfilledDate": "12/30/2024, 7:58:43 PM"
+      },
+      {
+         "id": "RS392",
+         "firstName": "Wimon",
+         "lastInitial": "T",
+         "printName": "Hello Kitty Doll",
+         "linkToPrint": "https://youtube.com",
+         "color": "Random",
+         "notes": "",
+         "status": "Fulfilled",
+         "receivedDate": "12/22/2024, 1:03:56 AM",
+         "fulfilledDate": "12/30/2024, 7:58:44 PM"
+      },
+      {
+         "id": "MT690",
+         "firstName": "Kwan",
+         "lastInitial": "T",
+         "printName": "cookie",
+         "linkToPrint": "http://youtube.com",
+         "color": "Random",
+         "notes": "",
+         "status": "Fulfilled",
+         "receivedDate": "12/28/2024, 10:26:47 AM",
+         "fulfilledDate": "1/3/2025, 9:29:50 PM"
+      },
+      {
+         "id": "GR565",
+         "firstName": "Poobies",
+         "lastInitial": "T",
+         "printName": "Feather Toy",
+         "linkToPrint": "https://youtube.com",
+         "color": "Random",
+         "notes": "",
+         "status": "Fulfilled",
+         "receivedDate": "12/22/2024, 12:49:35 AM",
+         "fulfilledDate": "1/3/2025, 9:36:17 PM"
+      },
+      {
+         "id": "WR178",
+         "firstName": "Kwan",
+         "lastInitial": "T",
+         "printName": "POOBIES",
+         "linkToPrint": null,
+         "color": "Random",
+         "notes": "",
+         "status": "Cancelled",
+         "receivedDate": "12/22/2024, 12:15:12 AM",
+         "fulfilledDate": "1/3/2025, 9:37:48 PM"
+      }
+   ]
+}

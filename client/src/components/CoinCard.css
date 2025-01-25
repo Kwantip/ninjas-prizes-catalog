@@ -1,0 +1,61 @@
+@import "../colors.css";
+
+.coin-card {
+    width: 250px;
+    height: 250px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    border: 7px solid var(--color-brand-primary);
+    border-radius: 25px;
+
+    font-weight: 800;
+    font-size: 32px;
+
+    position: relative;
+    z-index: 1;
+
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+
+    &::after {
+        content: "";
+
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        z-index: -2;
+
+        width: 100%;
+        height: 100%;
+    }
+    &::before {
+        content: "";
+
+        position: absolute;
+        bottom: 50%;
+        left: 25%;
+        z-index: -1;
+
+        width: 50%;
+        height: 0%;
+        border-radius: 5000px;
+
+
+        transition: all 0.5s;
+
+        background-color: var(--color-brand-primary);
+    }
+    &:hover {
+        color: var(--color-brand-white);
+        cursor: default;
+        &::before {
+            left: 0;
+            bottom: 0;
+            height: 100%;
+            width: 100%;
+            border-radius: 5px;
+        }
+    }
+}

@@ -1,0 +1,99 @@
+@import "../colors.css";
+
+.detailed-prize-popup {
+    width: 75%;
+    height: 75%;
+
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+
+    background-color: var(--color-brand-white);
+
+    padding: 0 !important;
+    
+    text-align: left;
+}
+.detailed-prize-popup .details-section {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+
+    padding: 50px;
+}
+.detailed-prize-popup .details-section h1 {
+    color: var(--color-brand-primary);
+}
+.detailed-prize-popup .details-section h2, .detailed-prize-popup .details-section h3 {
+    padding-left: 20px;
+}
+.detailed-prize-popup .details-section p {
+    padding-left: 40px;
+}
+.detailed-prize-popup .details-section button {
+    max-width: 100px;
+    align-self: center;
+}
+
+.image {
+    width: 100%;
+    height: 100%;
+
+    background-size: cover;
+    position: relative;
+}
+.image .left-arrow, .image .right-arrow {
+    position: absolute;
+    top: 50%;
+    font-size: 50px;
+}
+.image .left-arrow {
+    left: 20px;
+}
+.image .right-arrow {
+    right: 20px;
+}
+
+.how-to-request {
+    position: relative;
+
+    z-index: 103;
+
+    color: var(--color-brand-primary);
+
+    width: 50%;
+    
+    text-align: center;
+    align-self: center;
+
+    animation: wiggle 1.5s linear 2s infinite alternate
+    
+}
+.how-to-request::after {
+    content: "Talk to a sensei";
+
+    height: 100%;
+    width: 100%;
+
+    position: absolute;
+    left: 0;
+    top: 0;
+    z-index: 100;
+
+    background-color: var(--color-brand-primary);
+    color: var(--color-brand-white);
+
+    transform: scaleX(0);
+    transform-origin: bottom right;
+    transition: transform 0.5s ease-out;
+}
+.how-to-request:hover::after {
+    transform: scaleX(1);
+    transform-origin: bottom left;
+}
+@keyframes wiggle {
+    0% {transform: rotate(0);}
+    80% {transform: rotate(0);}
+    85% {transform: rotate(5deg);}
+    95% {transform: rotate(-5deg);}
+    100% {transform: rotate(0);}
+}

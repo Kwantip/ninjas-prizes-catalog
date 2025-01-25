@@ -1,0 +1,198 @@
+@import "./colors.css";
+@import url('https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,opsz,wght@0,6..12,200..1000;1,6..12,200..1000&display=swap');
+
+#root {
+    text-align: center;
+    background-color: var(--color-brand-white);
+    font-family: "Nunito Sans", sans-serif;
+}
+
+main {
+    margin: 50px 100px;
+    min-height: calc(100vh - 150px);
+}
+main.admin-access-page {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 50px;
+}
+
+h1, h2, h3, h4, p {
+    margin: 0;
+    cursor: default;
+}
+h1 {
+    font-size: 48px;
+    font-weight: 800;
+}
+h2 {
+    font-size: 36px;
+    font-weight: 800;
+}
+h3 {
+    font-size: 32px;
+    font-weight: 700;
+}
+h4 {
+    font-size: 24px;
+    font-weight: 700;
+}
+p {
+    font-size: 20px;
+    font-weight: 400;
+}
+
+button {
+    font-family: "Nunito Sans", sans-serif;
+    font-size: 20px;
+    font-weight: 600;
+
+    padding: 5px 10px;
+    border: 3px solid var(--color-brand-primary);
+    border-radius: 10px;
+
+    position: relative;
+    overflow: hidden;
+    z-index: 1;
+
+    color: var(--color-brand-primary);
+
+    transition: all 0.5s;
+
+    &::after {
+        content: "";
+
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        z-index: -2;
+
+        width: 100%;
+        height: 100%;
+
+        background-color: var(--color-brand-white);
+    }
+    &::before {
+        content: "";
+
+        position: absolute;
+        bottom: 0;
+        left: 25%;
+        z-index: -1;
+
+        width: 50%;
+        height: 0%;
+        border-top-left-radius: 5000px;
+        border-top-right-radius: 5000px;
+
+
+        transition: all 0.5s;
+
+        background-color: var(--color-brand-primary);
+    }
+    &:hover {
+        cursor: pointer;
+        color: var(--color-brand-white);
+        &::before {
+            left: 0;
+            height: 100%;
+            width: 100%;
+            border-radius: 5px;
+        }
+    }
+}
+
+.prints-request-form {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+.prints-request-form .input-area {
+    border: 7px solid var(--color-brand-primary);
+    border-radius: 25px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    width: 500px;
+
+    padding: 65px 50px;
+}
+.prints-request-form input, .prints-request-form select, .prints-request-form textarea {
+    width: 400px;
+
+    padding: 10px;
+
+    background-color: var(--color-form-input-primary);
+    border: 2px var(--color-form-input-border) solid;
+    border-radius: 10px;
+}
+.prints-request-form label {
+    width: 400px;
+
+    text-align: left;
+    margin-top: 30px;
+
+    color: var(--color-brand-primary);
+}
+.prints-request-form label:first-child {
+    margin: 0;
+}
+form.prints-request-form .input-area input {
+    height: 20px;
+}
+form.prints-request-form .input-area input:valid {
+    border-width: 3px;
+    border-color: var(--color-brand-primary);
+}
+.prints-request-form button {
+    width: 100px;
+    margin-top: 30px;
+}
+
+.overlay-background {
+    width: 100vw;
+    height: 100vh;
+    max-width: 100%;
+
+    background-color: black;
+    opacity: 0.5;
+
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 100;
+}
+.overlay {
+    z-index: 101;
+    opacity: 1;
+
+    overflow-y: scroll;
+
+    padding: 50px;
+
+    position: absolute;
+    top:50%;
+    left:50%;
+    transform:translate(-50%, -50%);
+
+    box-shadow: 0 10px 8px 0 rgba(0, 0, 0, 0.2);
+}
+.overlay .close-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+}
+.clickable {
+    cursor: pointer;
+}
+
+.no-scroll {
+    height: 100%;
+    overflow: hidden;
+}

@@ -1,0 +1,36 @@
+.filament-manager {
+    width: 50vw;
+    height: 50vh;
+
+    background-color: white;
+    opacity: 1;
+}
+.filament-manager h3 {
+    margin: 10px;
+}
+.filament-manager .add-btn {
+    cursor: pointer;
+    
+    font-size: 36px;
+    font-weight: 900;
+}
+.filament-manager .close-btn {
+    cursor: pointer;
+}
+.filament-editors-container {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+
+    list-style: none;
+    padding-left: 0;
+}
+.filament-editor {
+    display: flex;
+    gap: 5px;
+    justify-content: center;
+    align-items: center;
+}
+.filament-editor .delete-btn {
+    cursor: pointer;
+}

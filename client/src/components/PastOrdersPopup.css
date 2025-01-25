@@ -1,0 +1,48 @@
+@import "../colors.css";
+
+.past-orders-popup {
+    height: 75%;
+    width: 65%;
+
+    background-color: var(--color-brand-white);
+
+    text-align: center;
+    position: relative;
+}
+.past-orders-popup .items-section {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+
+    text-align: left;
+
+    margin: 20px;
+}
+.past-orders-popup button {
+    height: 50px;
+}
+
+.past-order {
+    display: grid;
+    grid-template-areas: 
+    "printName printName printName"
+    "detail1 detail2 btn";
+    grid-template-columns: 2fr 3fr 1fr;
+    background-color: var(--color-brand-primary-light);
+    border-radius: 10px;
+
+    padding: 10px 20px;
+}
+.past-order h4 {
+    grid-area: printName;
+}
+.detail1 {
+    grid-area: detail1;
+}
+.detail2 {
+    grid-area: detail2;
+}
+.past-order button {
+    grid-area: btn;
+    box-sizing: border-box;
+}

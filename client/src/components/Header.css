@@ -1,0 +1,44 @@
+@import "../colors.css";
+nav {
+    background-color: var(--color-brand-primary);
+    width: 100vw;
+    max-width: 100%;
+}
+nav p.logout {
+    background-color: var(--color-brand-red);
+    padding: 5px 0;
+    cursor: pointer;
+}
+nav ul {
+    list-style: none;
+    padding-left: 0px;
+
+    margin: 0px;
+    padding-right: 50px;
+
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 20px;
+}
+nav ul li .link-styles {
+    height: 150px;
+    width: 140px;
+
+    text-align: center;
+
+    padding: 0px 10px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-size: 24px;
+    font-weight: medium;
+    color: var(--color-brand-white);
+    text-decoration: none;
+}
+nav ul li .link-styles:hover {
+    background-color: var(--color-brand-primary-dark);
+    cursor: pointer;
+}

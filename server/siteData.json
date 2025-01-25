@@ -1,0 +1,364 @@
+{
+  "earnCoinsPageData": {
+    "announcement": {
+      "visible": false,
+      "imagePath": "announcement.png"
+    },
+    "earnCoins": [
+      {
+        "id": 0,
+        "action": "Good behavior",
+        "price": 1,
+        "unit": "Silver"
+      },
+      {
+        "id": 1,
+        "action": "Complete a Build",
+        "price": 1,
+        "unit": "Silver"
+      },
+      {
+        "id": 2,
+        "action": "Complete a Solve",
+        "price": 1,
+        "unit": "Silver"
+      },
+      {
+        "id": 3,
+        "action": "Complete an Adventure",
+        "price": 1,
+        "unit": "Silver"
+      },
+      {
+        "id": 4,
+        "action": "Answer the riddle",
+        "price": 1,
+        "unit": "Silver"
+      }
+    ],
+    "loseCoins": [
+      {
+        "id": 0,
+        "action": "Distracting other ninjas",
+        "price": 1,
+        "unit": "Silver"
+      },
+      {
+        "id": 1,
+        "action": "Looking up riddles answers",
+        "price": 1,
+        "unit": "Gold"
+      },
+      {
+        "id": 2,
+        "action": "Swearing",
+        "price": 1,
+        "unit": "Gold"
+      }
+    ]
+  },
+  "prizesPageData": {
+    "prizesList": [
+      {
+        "id": 0,
+        "name": "Sanrio Keychains",
+        "price": 3,
+        "unit": "Gold",
+        "quantity": 96,
+        "variations": [
+          {
+            "id": 2,
+            "variation": "Kuromi"
+          },
+          {
+            "id": 4,
+            "variation": "Hello Kitty"
+          },
+          {
+            "id": 5,
+            "variation": "Cinnamonroll"
+          },
+          {
+            "id": 6,
+            "variation": "My Melody"
+          }
+        ],
+        "visible": true,
+        "description": "Keychains of Sanrio characters!!",
+        "imagesPaths": [
+          {
+            "id": 2,
+            "file": {},
+            "path": "SanrioKeychains-2.jpg"
+          }
+        ]
+      },
+      {
+        "id": 1,
+        "name": "DIY Minecraft Keychains",
+        "price": 3,
+        "unit": "Gold",
+        "quantity": 10,
+        "variations": [
+          {
+            "id": 0,
+            "variation": "Pig"
+          },
+          {
+            "id": 1,
+            "variation": "Creeper"
+          },
+          {
+            "id": 2,
+            "variation": "Enderman"
+          }
+        ],
+        "visible": true,
+        "description": "Minecraft keychains that you can build.",
+        "imagesPaths": [
+          {
+            "id": 0,
+            "file": {},
+            "path": "DIYMinecraftKeychains-0.jpg"
+          }
+        ]
+      },
+      {
+        "id": 2,
+        "name": "Fidget Toy",
+        "price": 1,
+        "unit": "Gold",
+        "quantity": 30,
+        "variations": [],
+        "visible": true,
+        "description": "A very cool fidget toy!",
+        "imagesPaths": [
+          {
+            "id": 0,
+            "file": {},
+            "path": "FidgetToy-0.png"
+          }
+        ]
+      },
+      {
+        "id": 3,
+        "name": "Pins",
+        "price": 2,
+        "unit": "Gold",
+        "quantity": 500,
+        "variations": [
+          {
+            "id": 0,
+            "variation": "Many designs to choose from!"
+          }
+        ],
+        "visible": true,
+        "description": "Small pin badges",
+        "imagesPaths": [
+          {
+            "id": 0,
+            "file": {},
+            "path": "Pins-0.jpg"
+          }
+        ]
+      },
+      {
+        "id": 4,
+        "name": "Evie",
+        "price": 1,
+        "unit": "Silver",
+        "quantity": 1,
+        "variations": [],
+        "visible": true,
+        "description": "BEVIEVIE",
+        "imagesPaths": [
+          {
+            "id": 0,
+            "file": {},
+            "path": "Evie-0.jpg"
+          }
+        ]
+      }
+    ],
+    "premiumPrizesList": [
+      {
+        "id": 1,
+        "name": "POOBIES",
+        "price": 1,
+        "unit": "Silver",
+        "quantity": 1,
+        "variations": [
+          {
+            "id": 0,
+            "variation": "Dead"
+          },
+          {
+            "id": 1,
+            "variation": "Alive"
+          },
+          {
+            "id": 2,
+            "variation": "Skinned"
+          }
+        ],
+        "visible": true,
+        "description": "Supreme king rat (smells like piss) 🤢🤢",
+        "imagesPaths": [
+          {
+            "id": 1,
+            "file": {},
+            "path": "POOBIES-1.jpg"
+          },
+          {
+            "id": 2,
+            "file": {},
+            "path": "POOBIES-2.jpg"
+          },
+          {
+            "id": 3,
+            "file": {},
+            "path": "POOBIES-3.jpg"
+          },
+          {
+            "id": 4,
+            "file": {},
+            "path": "POOBIES-4.jpg"
+          }
+        ]
+      },
+      {
+        "id": 2,
+        "name": "Katana",
+        "price": 3,
+        "unit": "Obsidian",
+        "quantity": 4,
+        "variations": [
+          {
+            "id": 0,
+            "variation": "Red"
+          },
+          {
+            "id": 1,
+            "variation": "Blue"
+          },
+          {
+            "id": 2,
+            "variation": "Green"
+          }
+        ],
+        "visible": true,
+        "description": "Expandable katana.",
+        "imagesPaths": [
+          {
+            "id": 1,
+            "file": {},
+            "path": "Katana-1.jpg"
+          },
+          {
+            "id": 2,
+            "file": {},
+            "path": "Katana-2.png"
+          }
+        ]
+      },
+      {
+        "id": 3,
+        "name": "Dragon",
+        "price": 5,
+        "unit": "Obsidian",
+        "quantity": 9,
+        "variations": [],
+        "visible": true,
+        "description": "Very cool dragon!",
+        "imagesPaths": [
+          {
+            "id": 0,
+            "file": {},
+            "path": "Dragon-0.jpg"
+          }
+        ]
+      },
+      {
+        "id": 4,
+        "name": "Mini Katana",
+        "price": 1,
+        "unit": "Obsidian",
+        "quantity": 3,
+        "variations": [],
+        "visible": true,
+        "description": "A smaller version of the Katana",
+        "imagesPaths": [
+          {
+            "id": 0,
+            "file": {},
+            "path": "MiniKatana-0.png"
+          }
+        ]
+      }
+    ],
+    "availableColors": [
+      {
+        "id": 0,
+        "color": "Random"
+      },
+      {
+        "id": 3,
+        "color": "Silver"
+      },
+      {
+        "id": 4,
+        "color": "Gold"
+      },
+      {
+        "id": 5,
+        "color": "Orange"
+      },
+      {
+        "id": 6,
+        "color": "Purple"
+      },
+      {
+        "id": 7,
+        "color": "Magenta"
+      },
+      {
+        "id": 8,
+        "color": "Red"
+      },
+      {
+        "id": 9,
+        "color": "Blue"
+      }
+    ]
+  },
+  "gameOfTheMonthPageData": {
+    "current": {
+      "gameName": "Tanuki Sunset",
+      "gameLink": "https://rewindgames.itch.io/tanuki-sunset",
+      "leaderBoard": [
+        {
+          "firstName": "Adam",
+          "lastInitial": "F",
+          "score": 19934
+        },
+        {
+          "firstName": "John",
+          "lastInitial": "M",
+          "score": 19727
+        }
+      ]
+    },
+    "past": [
+      {
+        "gameName": "SAMPLE GAME 1",
+        "gameLink": "https://youtube.com",
+        "leaderBoard": []
+      },
+      {
+        "gameName": "SAMPLE GAME 2",
+        "gameLink": "https://google.com",
+        "leaderBoard": []
+      }
+    ]
+  }
+}

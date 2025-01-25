@@ -1,0 +1,64 @@
+@import "../colors.css";
+
+footer {
+    background-color: var(--color-brand-primary);
+    width: 100vw;
+    max-width: 100%;
+
+    bottom: 0;
+
+    padding-top: 50px;
+}
+footer button {
+    border-color: var(--color-brand-black);
+
+    color: var(--color-brand-black);
+
+    &::after {
+        background-color: var(--color-brand-primary);
+    }    
+    &::before {
+        background-color: var(--color-brand-black);
+    }
+    &:hover {
+        color: var(--color-brand-primary);
+    }
+}
+
+footer ul {
+    list-style: none;
+    padding-left: 0px;
+
+    display: flex;
+    gap: 30px;
+    justify-content: center;
+    align-items: center;
+
+    padding: 40px 20px;
+
+}
+footer ul li .link-styles {
+    position: relative;
+    
+    width: 150px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-size: 24px;
+    font-weight: 500;
+    color: var(--color-brand-black);
+    text-decoration: none;
+}
+footer ul li .link-styles:hover {
+    cursor: pointer;
+    text-decoration: underline;
+}
+
+footer p {
+    margin: 0px;
+
+    color: var(--color-brand-primary-dark);
+    font-size: 12px;
+}

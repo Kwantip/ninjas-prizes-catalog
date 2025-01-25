@@ -1,0 +1,21 @@
+:root {
+    --color-brand-primary: #3090C0;
+    --color-brand-primary-dark: #297CA5;
+    --color-brand-primary-light: #7ECEF7;
+    --color-brand-black: #060606;
+    --color-brand-white: #FCFCFC;
+    --color-brand-red: #F16767;
+
+    --color-form-input-primary: #EAEAEA;
+    --color-form-input-border: #A0A0A0;
+
+    --color-belt-white: #FFFFFF;
+    --color-belt-yellow: #EABB5C;
+    --color-belt-orange: #D96D32;
+    --color-belt-green: #A7C839;
+    --color-belt-blue: #4673B9;
+    --color-belt-purple: #893F98;
+    --color-belt-brown: #553426;
+    --color-belt-red: #EF3E40;
+    --color-belt-black: #000000;
+}

@@ -1,0 +1,62 @@
+@import "../colors.css";
+
+.request-manager {
+    height: 100px;
+
+    display: grid;
+    grid-template-columns: 2.5fr 4fr 5fr 3fr 1fr;
+    align-items: center;
+
+    background-color: var(--color-brand-primary-light);
+
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    opacity: 1;
+    transform: translateY(0);
+}
+.request-manager.animating {
+    opacity: 0;
+    transform: translateY(-10px);
+}
+
+.request-manager .status-section {
+    height: 100%;
+    background-color: var(--color-brand-primary);
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    color: var(--color-brand-white);
+}
+.request-manager .details-section {
+    text-align: left;
+    padding-left: 20px;
+}
+.request-manager .update-status-section .yes-no {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+}
+.request-manager .update-status-section .yes-no span {
+    width: 50px;
+    height: 50px;
+
+    margin: 0;
+
+    background-color: var(--color-brand-primary);
+
+    color: var(--color-brand-white);
+    font-weight: 900;
+    font-size: 36px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    border-radius: 5px;
+}
+.request-manager .update-status-section .yes-no span:hover {
+    background-color: var(--color-brand-white);
+    color: var(--color-brand-primary);
+}

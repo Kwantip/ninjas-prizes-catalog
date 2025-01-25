@@ -1,0 +1,19 @@
+@import "../colors.css";
+
+.step {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 50px;
+}
+.step .step-number {
+    font-size: 96px;
+    font-weight: 900;
+
+    color: var(--color-brand-primary);
+}
+.step .step-message {
+    text-align: left;
+
+    width: 500px;
+}
