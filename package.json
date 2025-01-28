@@ -5,7 +5,6 @@
   "type": "module",
   "scripts": {
     "dev": "concurrently \"npm run dev --prefix client -- --host\" \"node server/server.js -- --host\"",
-    "bbuild": "tsc -b && vite build",
     "build": "tsc -b && npm run build --prefix client",
     "lint": "eslint .",
     "preview": "vite preview",

@@ -1,4 +1,4 @@
-# React + TypeScript + Vite
+<!-- # React + TypeScript + Vite
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
@@ -47,4 +47,14 @@ export default tseslint.config({
     ...react.configs['jsx-runtime'].rules,
   },
 })
+``` -->
+# NPC - Ninjas Prizes Catalog
+To run in dev mode:
+```
+npm run dev
+```
+To run in deployment mode 
+```
+npm run build
+npm run start
 ```
