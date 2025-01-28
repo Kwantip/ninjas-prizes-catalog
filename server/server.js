@@ -3,17 +3,14 @@ import fs from 'fs/promises';
 import path from 'path';
 import cors from 'cors';
 import multer from 'multer';
-import { json } from 'stream/consumers';
-import { data } from 'react-router-dom';
 
 const app = express();
 const PORT = 5000;
 
-// const __filename = fileURLToPath(import.meta.url);
-// const __dirname = path.dirname(__filename);
+const IMG_PATH = "server/images/prizes-images/";
+const ANNOUNCEMENT_IMG_PATH = "server/images/announcement/";
 
-const IMG_PATH = "server/prizes-images/";
-const ANNOUNCEMENT_IMG_PATH = "server/announcement/";
+const IP = "10.107.223.111";
 
 const prizeImagesStorage = multer.diskStorage({
     destination: (req, file, cb) => {
@@ -45,13 +42,35 @@ const uploadAnnouncementImage = multer({ storage: announcmentImageStorage });
 // Middleware to parse JSON
 app.use(express.json());
 app.use(cors({
-    origin: "http://localhost:5173",
+    origin: `http://${IP}:5173`,
 }));
 
 // Get the path to siteData.json
-const dataFilePath = path.resolve('server/siteData.json');
+const dataFilePath = path.resolve('server/data/siteData.json');
 // Get the path to printsRequests.json
-const printsRequestFilePath = path.resolve('server/printsRequests.json');
+const printsRequestFilePath = path.resolve('server/data/printsRequests.json');
+
+// Password verification for admin mode access
+app.post('/api/verify-password', async (req, res) => {
+    const { password } = req.body;
+
+    if (!password) {
+        res.status(400).json({ message: "No password received!!" });
+    }
+
+    try {
+        if (password === "@2633Ninjas") {
+            console.log("I'm in");
+            res.json({ success: true });
+        } else {
+            console.error("BOOOOO");
+            res.status(400).json({ success: false, message: "Invalid password!!" });
+        }
+    } catch (error) {
+        console.error("Error during password verification");
+        res.status(500).json({ message: "An error occured during password verification" });
+    }
+});
 
 // Route to fetch earn coins page data
 app.get('/api/earnLoseCoins', async (req, res) => {
@@ -69,8 +88,6 @@ app.get('/api/earnLoseCoins', async (req, res) => {
 app.put('/api/earnCoins', async (req, res) => {
     const newEarnCoins = req.body;
 
-    // console.log(newEarnCoins)
-
     try {
         const data = await fs.readFile(dataFilePath, 'utf-8');
         const jsonData = JSON.parse(data);
@@ -87,8 +104,6 @@ app.put('/api/earnCoins', async (req, res) => {
 // Route to update lose coins
 app.put('/api/loseCoins', async (req, res) => {
     const newLoseCoins = req.body;
-
-    // console.log(newLoseCoins)
 
     try {
         const data = await fs.readFile(dataFilePath, 'utf-8');
@@ -269,9 +284,9 @@ app.put('/api/prizesList', uploadPrizeImages.array("file"), async (req, res) => 
     const imagesToDelete = JSON.parse(req.body.imagesToDelete);
     const premium = req.body.premium;
 
-    console.log("PREMIUM: ", premium);
+    // console.log("PREMIUM: ", premium);
 
-    console.log(req.body);
+    // console.log(req.body);
     // Adding new images
     let index = updatedPrizeData.imagesPaths.findIndex((img) => img.path === null);
     req.files.forEach(file => {
@@ -660,11 +675,11 @@ app.post("/api/reopenOrder", async (req, res) => {
     }
 })
 
-app.use("/server/prizes-images/", express.static("server/prizes-images"));
-app.use("/server/announcement/", express.static("server/announcement"));
+app.use("/server/prizes-images/", express.static("server/images/prizes-images"));
+app.use("/server/announcement/", express.static("server/images/announcement"));
 
 
 // Start the server
 app.listen(PORT, () => {
-    console.log(`Server is running on http://localhost:${PORT}`);
+    console.log(`Server is running on http://${IP}:${PORT}`);
 });

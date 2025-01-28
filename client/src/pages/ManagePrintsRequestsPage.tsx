@@ -4,6 +4,8 @@ import RequestManager, {RequestManagerProps} from "../components/RequestManager"
 import DetailedRequestPopup from "../components/DetailedRequestPopup";
 import PastOrdersPopup from "../components/PastOrdersPopup";
 
+import { IP } from "../App";
+
 import "./ManagePrintsRequestsPage.css";
 
 function ManagePrintsRequestsPage() {
@@ -52,7 +54,6 @@ function ManagePrintsRequestsPage() {
         printerAvailable: false
     });
     const [isPrinterFree, setIsPrinterFree] = useState<boolean>(true);
-    const [searchBar, setSearchBar] = useState<string>("")
 
     const applyFilter = (filterField: string) => {
         document.getElementById("filter-new-order-btn")?.classList.remove("selected");
@@ -121,7 +122,7 @@ function ManagePrintsRequestsPage() {
             });
         }
         if (newStatus === "Fulfilled" || newStatus === "Cancelled") {
-            fetch("http://localhost:5000/api/updateStatus", {
+            fetch(`http://${IP}:5000/api/updateStatus`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(reqBody),
@@ -137,7 +138,7 @@ function ManagePrintsRequestsPage() {
                     console.error("Error details: ", error);
                 });
         } else {
-            fetch("http://localhost:5000/api/updateStatus", {
+            fetch(`http://${IP}:5000/api/updateStatus`, {
                 method: "PATCH",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(reqBody),
@@ -161,7 +162,7 @@ function ManagePrintsRequestsPage() {
     }
 
     useEffect(() => {
-        fetch("http://localhost:5000/api/printsQueue")
+        fetch(`http://${IP}:5000/api/printsQueue`)
             .then((res) => res.json())
             .then(setRequestsList)
             .catch((err) => console.error("Failed to fetch prints queue: ", err));

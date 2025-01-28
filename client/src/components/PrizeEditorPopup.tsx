@@ -1,4 +1,6 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
+
+import { IP } from "../App";
 
 import "./PrizeEditorPopup.css";
 
@@ -32,7 +34,7 @@ interface ImagePreviewProps {
     handleDelete: (id: number) => void;
     handleFileChange: (id: number, file: File) => void;
 }
-function ImagePreview({ id, path, file, handleDelete, handleFileChange }: ImagePreviewProps) {
+function ImagePreview({ id, path, handleDelete, handleFileChange }: ImagePreviewProps) {
     // console.log(id)
     return (
         <div className="image-preview">
@@ -176,7 +178,7 @@ function PrizeEditorPopup({ handleClose, prize, editing, premium }: PrizeEditorP
             imagesToDelete && formData.append("imagesToDelete", JSON.stringify(imagesToDelete));
             formData.append("premium", JSON.stringify(premium));
 
-            fetch("http://localhost:5000/api/prizesList", {
+            fetch(`http://${IP}:5000/api/prizesList`, {
                 method: "PUT",
                 body: formData,
             })
@@ -213,7 +215,7 @@ function PrizeEditorPopup({ handleClose, prize, editing, premium }: PrizeEditorP
             });
             formData.append("premium", JSON.stringify(premium))
 
-            fetch("http://localhost:5000/api/prizesList", {
+            fetch(`http://${IP}:5000/api/prizesList`, {
                 method: "POST",
                 body: formData,
             })
@@ -234,7 +236,7 @@ function PrizeEditorPopup({ handleClose, prize, editing, premium }: PrizeEditorP
     // Delete prize 
     const handleDeletePrize = () => {
         confirm(`Delete ${prize?.name}?`) &&
-            fetch("http://localhost:5000/api/prizesList", {
+            fetch(`http://${IP}:5000/api/prizesList`, {
                 method: "DELETE",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ premium: premium, id: prize?.id }),

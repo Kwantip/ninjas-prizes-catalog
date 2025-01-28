@@ -1,3 +1,5 @@
+import { IP } from "../App";
+
 import "./Prize.css";
 
 export interface PrizeProps {
@@ -12,8 +14,8 @@ export interface PrizeProps {
     imagesPaths: { id: number, file: File | null, path: string | null }[] | null;
     handleClick: () => void;
 }
-function Prize({ id, name, price, unit, quantity, variations, visible, description, imagesPaths, handleClick }: PrizeProps) {
-    const backgroundImage = imagesPaths?.[0]?.path ? `url(http://localhost:5000/server/prizes-images/${imagesPaths[0].path})` : "none";
+function Prize({ name, price, unit, imagesPaths, handleClick }: PrizeProps) {
+    const backgroundImage = imagesPaths?.[0]?.path ? `url(http://${IP}:5000/server/prizes-images/${imagesPaths[0].path})` : "none";
 
     return(
         <div className="prize-preview" style={{backgroundImage}} onClick={handleClick}>

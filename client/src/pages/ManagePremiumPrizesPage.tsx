@@ -4,7 +4,7 @@ import PrizeManager, { PrizeManagerProps } from "../components/PrizeManager";
 import FilamentManagerPopup from "../components/FilamentManagerPopup";
 import PrizeEditorPopup from "../components/PrizeEditorPopup";
 
-import { adminModeSetter } from "../NinjasPrizesCatalog";
+import { IP,  adminModeSetter } from "../App";
 
 function ManagePremiumPrizesPage() {
     const { isAdmin } = adminModeSetter();
@@ -26,7 +26,7 @@ function ManagePremiumPrizesPage() {
     const [editing, setEditing] = useState(false);
 
     useEffect(() => {
-        fetch("http://localhost:5000/api/premiumPrizesList")
+        fetch(`http://${IP}:5000/api/premiumPrizesList`)
             .then((res) => res.json())
             .then(setPremiumPrizesList)
             .catch((err) => console.error("Failed to fetch data:", err));

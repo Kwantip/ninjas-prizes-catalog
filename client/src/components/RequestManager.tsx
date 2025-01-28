@@ -2,6 +2,8 @@ import { useState, useEffect } from "react";
 
 import "./RequestManager.css";
 
+import { IP } from "../App";
+
 export interface RequestManagerProps {
     id: string;
     firstName: string;
@@ -18,7 +20,7 @@ export interface RequestManagerProps {
     updateStatus: (id: string, newStatus: string | number, adjustQueue: boolean) => void;
 }
 
-function RequestManager({ id, firstName, lastInitial, printName, linkToPrint, color, note, status, receivedDate, animating, printerAvailable, handleClick, updateStatus }: RequestManagerProps) {
+function RequestManager({ id, firstName, lastInitial, printName, linkToPrint, status, animating, printerAvailable, handleClick, updateStatus }: RequestManagerProps) {
     const [statusQuestion, setStatusQuestion] = useState("");
     const [statusLabel, setStatusLabel] = useState("");
     const [showQuestion, setShowQuestion] = useState(true);
@@ -62,13 +64,14 @@ function RequestManager({ id, firstName, lastInitial, printName, linkToPrint, co
                 case "Reopened":
                     setStatusLabel("Reopened");
                     setShowQuestion(false);
+                    break;
                 default:
                     break;
             }
         }
     }, [status, printerAvailable]);
     useEffect(() => {
-        fetch("http://localhost:5000/api/queueLength")
+        fetch(`http://${IP}:5000/api/queueLength`)
             .then((res) => {
                 if (!res.ok) {
                     throw new Error(`HTTP error! status: ${res.status}`);

@@ -7,7 +7,7 @@ import EarnCoinPage from './pages/EarnCoinPage'
 import GameOfTheMonthPage from './pages/GameOfTheMonthPage'
 import PrizesPage from './pages/PrizesPage'
 import RequestPrintPage from './pages/RequestPrintPage'
-import PremiumPrizesPage from './pages/PremiumPrizesPage'
+// import PremiumPrizesPage from './pages/PremiumPrizesPage'
 import RequestPremiumPrizePage from './pages/RequestPremiumPrizePage'
 import PrintsQueuePage from './pages/PrintsQueuePage'
 
@@ -16,11 +16,13 @@ import ManagePrizesPage from './pages/ManagePrizesPage'
 import ManagePremiumPrizesPage from './pages/ManagePremiumPrizesPage'
 import ManagePrintsRequestsPage from './pages/ManagePrintsRequestsPage'
 
-import './NinjasPrizesCatalog.css'
+import './App.css'
+
+export const IP = "10.107.223.111";
 
 interface AdminContextType {
   isAdmin: boolean;
-  enableAdmin: (passwordOrLogout: string | boolean) => boolean;
+  enableAdmin: (passwordOrLogout: string | boolean) => Promise<boolean>;
 }
 const AdminContext = createContext<AdminContextType | undefined>(undefined);
 export const adminModeSetter = () => {
@@ -34,34 +36,58 @@ const AdminProvider = ({ children }: any) => {
   const [isAdmin, setAdmin] = useState(() => {
     // Retrieve the value from localStorage during initialization
     const storedValue = localStorage.getItem("isAdmin");
-    return storedValue === "true"; // Convert string to boolean
+    return storedValue === "true";
   });
 
-  const enableAdmin = (passwordOrLogout: string | boolean): boolean => {
-    const correctPassword = "ninja1";
-
+  const enableAdmin = async (passwordOrLogout: string | boolean): Promise<boolean> => {
     if (typeof passwordOrLogout === "boolean" && passwordOrLogout === false) {
       setAdmin(false);
       localStorage.removeItem("isAdmin");
       return false;
     }
-
-    if (passwordOrLogout === correctPassword) {
-      setAdmin(true);
-      localStorage.setItem("isAdmin", "true");
-
-      // Automatically reset isAdmin after 10 minutes
-      setTimeout(() => {
-        setAdmin(false);
-        localStorage.removeItem("isAdmin");
-        console.log("Admin access expired");
-      }, 600000);
-
-      console.log("Admin access enabled");
-      return true;
+  
+    if (typeof passwordOrLogout === "string") {
+      try {
+        const response = await fetch(`http://${IP}:5000/api/verify-password`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ password: passwordOrLogout }),
+        });
+  
+        if (response.ok) {
+          const result = await response.json();
+          if (result.success) {
+            setAdmin(true);
+            localStorage.setItem("isAdmin", "true");
+  
+            // Automatically reset isAdmin after 10 minutes
+            setTimeout(() => {
+              setAdmin(false);
+              localStorage.removeItem("isAdmin");
+              console.log("Admin access expired");
+            }, 600000);
+  
+            console.log("Admin access enabled");
+            return true;
+          } else {
+            console.error("Incorrect password");
+            return false;
+          }
+        } else {
+          console.error("Error verifying password:", response.statusText);
+          return false;
+        }
+      } catch (error) {
+        console.error("Failed to verify password:", error);
+        return false;
+      }
     }
+  
     return false;
   };
+  
 
   useEffect(() => {
     // Sync state with localStorage when isAdmin changes
@@ -74,7 +100,7 @@ const AdminProvider = ({ children }: any) => {
     </AdminContext.Provider>
   );
 };
-function NinjasPrizesCatalog() {
+function App() {
   return (
     <>
       <Router>
@@ -103,4 +129,4 @@ function NinjasPrizesCatalog() {
   )
 }
 
-export default NinjasPrizesCatalog
+export default App

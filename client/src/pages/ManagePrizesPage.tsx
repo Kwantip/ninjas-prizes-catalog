@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import PrizeManager, { PrizeManagerProps } from "../components/PrizeManager";
 import FilamentManagerPopup from "../components/FilamentManagerPopup";
 import PrizeEditorPopup from "../components/PrizeEditorPopup";
-import { adminModeSetter } from "../NinjasPrizesCatalog";
+import { IP,  adminModeSetter } from "../App";
 
 import "./ManagePrizesPages.css";
 
@@ -26,7 +26,7 @@ function ManagePrizesPage() {
     const [editing, setEditing] = useState(false);
 
     useEffect(() => {
-        fetch("http://localhost:5000/api/prizesList")
+        fetch(`http://${IP}:5000/api/prizesList`)
             .then((res) => res.json())
             .then(setPrizesList)
             .catch((err) => console.error("Failed to fetch data:", err));

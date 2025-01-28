@@ -1,11 +1,20 @@
 @import "../colors.css";
 
-.earn-lose-coins-editor {
+.lose-coins-editor, .earn-coins-editor {
     display: grid;
-    grid-template-columns: 3fr 2fr 2fr 1fr;
     column-gap: 10px;
 }
-.earn-lose-coins-editor .delete-btn {
+.earn-coins-editor {
+    grid-template-columns: 3fr 2fr 2fr 1fr 1fr;
+    width: 100%;
+}
+.earn-coins-editor input[type="number"] {
+    width: 139px;
+}
+.lose-coins-editor {
+    grid-template-columns: 3fr 2fr 2fr 1fr;
+}
+.delete-btn {
     cursor: pointer;
     font-weight: 900;
     color: var(--color-brand-white);

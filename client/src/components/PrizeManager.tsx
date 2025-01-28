@@ -1,6 +1,6 @@
-import { useState } from "react";
-
 import "./PrizeManager.css";
+
+import { IP } from "../App";
 
 export interface PrizeManagerProps {
     id: number;
@@ -15,9 +15,9 @@ export interface PrizeManagerProps {
     premium: boolean;
     handleEdit: () => void;
 }
-function PrizeManager({id, name, price, unit, quantity, variations, visible, description, imagesPaths, premium, handleEdit}: PrizeManagerProps) {
+function PrizeManager({id, name, price, unit, quantity, visible, premium, handleEdit}: PrizeManagerProps) {
     const handleVisibility = () => {
-        fetch("http://localhost:5000/api/prizesList", {
+        fetch(`http://${IP}:5000/api/prizesList`, {
             method: "PATCH",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({premium: premium, id: id, field: "visible", value: !visible})
@@ -36,7 +36,7 @@ function PrizeManager({id, name, price, unit, quantity, variations, visible, des
     }
     const handleDecreaseQuantity = () => {
         let newQuantity = quantity - 1;
-        fetch("http://localhost:5000/api/prizesList", {
+        fetch(`http://${IP}:5000/api/prizesList`, {
             method: "PATCH",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({premium: premium, id: id, field: "quantity", value: newQuantity})

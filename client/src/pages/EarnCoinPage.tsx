@@ -1,18 +1,19 @@
 import { useState, useEffect } from "react";
 
-import { adminModeSetter } from "../NinjasPrizesCatalog";
+import { adminModeSetter } from "../App";
 import CoinCard from "../components/CoinCard";
-import EarnLoseCoinsEditor, {EarnLoseCoinsEditorProps} from "../components/EarnLoseCoinsEditor";
+import EarnLoseCoinsEditor from "../components/EarnLoseCoinsEditor";
 
 import "./EarnCoinPage.css";
 
+import { IP } from "../App";
 
 function EarnCoinPage() {
     const { isAdmin } = adminModeSetter();
     const [isEditingEarnCoins, setEditingEarnCoins] = useState(false);
     const [isEditingLoseCoins, setEditingLoseCoins] = useState(false);
-    const [earnCoinsRows, setEarnCoinsRows] = useState<{ id: number; action: string; price: number; unit: string }[]>([]);
-    const [loseCoinsRows, setLoseCoinsRows] = useState<{ id: number; action: string; price: number; unit: string }[]>([]);
+    const [earnCoinsRows, setEarnCoinsRows] = useState<{ id: number; action: string; price: number; unit: string; multipliable: boolean; }[]>([]);
+    const [loseCoinsRows, setLoseCoinsRows] = useState<{ id: number; action: string; price: number; unit: string; multipliable: null}[]>([]);
     const [earnCoinsErrorMessage, setEarnCoinsErrorMessage] = useState("");
     const [loseCoinsErrorMessage, setLoseCoinsErrorMessage] = useState("");
     const [calcCoin, setCalcCoin] = useState("Enter the fields above");
@@ -24,8 +25,9 @@ function EarnCoinPage() {
     }>();
     const [announcementMsg, setAnnouncementMsg] = useState("");
 
+    console.log(IP)
     useEffect(() => {
-        fetch("http://localhost:5000/api/earnLoseCoins")
+        fetch(`http://${IP}:5000/api/earnLoseCoins`)
             .then((res) => res.json())
             .then((data) => {
                 setEarnCoinsRows(data.earnCoins);
@@ -69,7 +71,10 @@ function EarnCoinPage() {
         }
 
         if (action) {
-            setCalcCoin(`${action?.price * multiplier} ${action?.unit}s`);
+            const calculatedCoin = action.multipliable
+                ? `${action.price * multiplier} ${action.unit}s`
+                : `${action.price} ${action.unit}s`;
+            setCalcCoin(calculatedCoin);
         } else {
             console.error("That action don't exist womp womp");
         }
@@ -107,14 +112,14 @@ function EarnCoinPage() {
             setEarnCoinsRows((prevRows) => {
                 return [
                     ...prevRows,
-                    { id: earnCoinsIdCounter++, action: "", price: 0, unit: "Silver" },
+                    { id: earnCoinsIdCounter++, action: "", price: 0, unit: "Silver", multipliable: true },
                 ];
             });
         } else if (type === "loseCoins") {
             setLoseCoinsRows((prevRows) => {
                 return [
                     ...prevRows,
-                    { id: loseCoinsIdCounter++, action: "", price: 0, unit: "Silver" },
+                    { id: loseCoinsIdCounter++, action: "", price: 0, unit: "Silver", multipliable: null },
                 ];
             });
         }
@@ -127,18 +132,18 @@ function EarnCoinPage() {
     
         try {
             // Validate the rows
-            const parsedData = rows.map(({ id, action, price, unit }) => {
+            const parsedData = rows.map(({ id, action, price, unit, multipliable }) => {
                 if (!action?.trim() || price <= 0 || !unit?.trim()) {
                     setErrorMessage("Invalid format. Each row must have 'action', 'price', and 'unit'.");
                     throw new Error("Validation failed");
                 }
-                return { id, action: action.trim(), price: Number(price), unit: unit.trim() };
+                return { id, action: action.trim(), price: Number(price), unit: unit.trim(), multipliable: multipliable };
             });
     
             console.log("Submitting data:", JSON.stringify(parsedData));
 
             // Send the data to the server
-            fetch(`http://localhost:5000/api/${type}`, {
+            fetch(`http://${IP}:5000/api/${type}`, {
                 method: "PUT",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(parsedData),
@@ -173,7 +178,7 @@ function EarnCoinPage() {
         const formData = new FormData();
         formData.append("image", imageFile);
       
-        fetch("http://localhost:5000/api/newAnnouncement", {
+        fetch(`http://${IP}:5000/api/newAnnouncement`, {
             method: "POST",
             body: formData,
         })
@@ -192,7 +197,7 @@ function EarnCoinPage() {
       };
       
     const handleAnnouncementVisibility = () => {
-        fetch("http://localhost:5000/api/announcementVisibility", {
+        fetch(`http://${IP}:5000/api/announcementVisibility`, {
             method: "PATCH",
             headers: {"Content-Type": "application/json"},
             body: JSON.stringify({visible: !announcementData?.visible})
@@ -203,7 +208,7 @@ function EarnCoinPage() {
                     console.error("Server response error:", errorDetails);
                     throw new Error("Failed to update announcement visibility");
                 }
-                fetch("http://localhost:5000/api/earnLoseCoins")
+                fetch(`http://${IP}:5000/api/earnLoseCoins`)
                     .then((res) => res.json())
                     .then((data) => {
                         setAnnouncementData(data.announcement);
@@ -214,7 +219,6 @@ function EarnCoinPage() {
     
     return (
         <main className="earn-coins-page">
-            {/* <img src="src\assets\Announcement Banner.jpg" className="announcement-banner"/> */}
             <div className="announcement-container">
                 {isAdmin ? (
                     <>
@@ -241,7 +245,7 @@ function EarnCoinPage() {
                         {announcementData?.visible &&
                             <>
                                 <h2>Announcement</h2>
-                                <img className="announcement-banner" src={`http://localhost:5000/server/announcement/${announcementData.imagePath}`}/>
+                                <img className="announcement-banner" src={`http://${IP}:5000/server/announcement/${announcementData.imagePath}`}/>
                             </>
                         }
                     </>
@@ -252,10 +256,11 @@ function EarnCoinPage() {
                     <h2>How to Earn Coins</h2>
                     {isEditingEarnCoins && isAdmin ? (
                         <div className="container">
-                            <div className="labels-area">
+                            <div className="earn-coins-labels-area">
                                 <h4>Action</h4>
                                 <h4>Price</h4>
                                 <h4>Unit</h4>
+                                <h4>Mult.</h4>
                                 <h4>X</h4>
                             </div>
                             <div className="edit-area">
@@ -290,7 +295,7 @@ function EarnCoinPage() {
                     <h2>How to Lose Coins</h2>
                     {isEditingLoseCoins && isAdmin ? (
                         <div className="container">
-                            <div className="labels-area">
+                            <div className="lose-coins-labels-area">
                                 <h4>Action</h4>
                                 <h4>Price</h4>
                                 <h4>Unit</h4>
@@ -325,31 +330,31 @@ function EarnCoinPage() {
                 <p>Hover to see the coin belt multiplier</p>
                 <div className="belt-multiplier-block container">
                     <div className="ninja white">
-                        <img src="src\assets\CN_WhiteBelt@8x.png" alt="white belt" />
+                        <img src="./assets/CN_WhiteBelt@8x.png" alt="white belt" />
                     </div>
                     <div className="ninja yellow">
-                        <img src="src\assets\CN_YellowBelt@8x.png" alt="yellow belt" />
+                        <img src="./assets/CN_YellowBelt@8x.png" alt="yellow belt" />
                     </div>
                     <div className="ninja orange">
-                        <img src="src\assets\CN_OrangeBelt@8x.png" alt="orange belt" />
+                        <img src="./assets/CN_OrangeBelt@8x.png" alt="orange belt" />
                     </div>
                     <div className="ninja green">
-                        <img src="src\assets\CN_GreenBelt@8x.png" alt="green belt" />
+                        <img src="./assets/CN_GreenBelt@8x.png" alt="green belt" />
                     </div>
                     <div className="ninja blue">
-                        <img src="src\assets\CN_BlueBelt@8x.png" alt="blue belt" />
+                        <img src="./assets/CN_BlueBelt@8x.png" alt="blue belt" />
                     </div>
                     <div className="ninja purple">
-                        <img src="src\assets\CN_PurpleBelt@8x.png" alt="purple belt" />
+                        <img src="./assets/CN_PurpleBelt@8x.png" alt="purple belt" />
                     </div>
                     <div className="ninja brown">
-                        <img src="src\assets\CN_BrownBelt@8x.png" alt="brown belt" />
+                        <img src="./assets/CN_BrownBelt@8x.png" alt="brown belt" />
                     </div>
                     <div className="ninja red">
-                        <img src="src\assets\CN_RedBelt@8x.png" alt="red belt" />
+                        <img src="./assets/CN_RedBelt@8x.png" alt="red belt" />
                     </div>
                     <div className="ninja black">
-                        <img src="src\assets\CN_BlackBelt@8x.png" alt="black belt" />
+                        <img src="./assets/CN_BlackBelt@8x.png" alt="black belt" />
                     </div>
                 </div>
             </div>

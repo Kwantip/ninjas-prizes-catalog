@@ -3,6 +3,8 @@ import { useNavigate } from "react-router-dom";
 
 import "./DetailedPrizePopup.css"
 
+import { IP } from "../App";
+
 interface ImageCarouselProps {
   imagesPaths: {
     id: number;
@@ -18,7 +20,7 @@ function ImageCarousel({ imagesPaths }: ImageCarouselProps) {
         ? imagesPaths[imgIndex].path
         : null
     );
-    const backgroundImage = imagesPaths?.[0]?.path ? `url(http://localhost:5000/server/prizes-images/${currentImg})` : "none";
+    const backgroundImage = imagesPaths?.[0]?.path ? `url(http://${IP}:5000/server/prizes-images/${currentImg})` : "none";
 
     const handleLeftArrow = () => {
         if (imagesPaths) {

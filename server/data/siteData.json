@@ -9,31 +9,36 @@
         "id": 0,
         "action": "Good behavior",
         "price": 1,
-        "unit": "Silver"
+        "unit": "Silver",
+        "multipliable": true
       },
       {
         "id": 1,
         "action": "Complete a Build",
         "price": 1,
-        "unit": "Silver"
+        "unit": "Silver",
+        "multipliable": true
       },
       {
         "id": 2,
         "action": "Complete a Solve",
         "price": 1,
-        "unit": "Silver"
+        "unit": "Silver",
+        "multipliable": true
       },
       {
         "id": 3,
         "action": "Complete an Adventure",
         "price": 1,
-        "unit": "Silver"
+        "unit": "Silver",
+        "multipliable": true
       },
       {
         "id": 4,
         "action": "Answer the riddle",
         "price": 1,
-        "unit": "Silver"
+        "unit": "Silver",
+        "multipliable": false
       }
     ],
     "loseCoins": [
@@ -64,7 +69,7 @@
         "name": "Sanrio Keychains",
         "price": 3,
         "unit": "Gold",
-        "quantity": 96,
+        "quantity": 92,
         "variations": [
           {
             "id": 2,
@@ -166,7 +171,7 @@
         "id": 4,
         "name": "Evie",
         "price": 1,
-        "unit": "Silver",
+        "unit": "Gold",
         "quantity": 1,
         "variations": [],
         "visible": true,

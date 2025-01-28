@@ -1,9 +1,9 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
 
-import { adminModeSetter } from "../NinjasPrizesCatalog";
 import Prize, {PrizeProps} from "../components/Prize"
 import DetailedPrizePopup from "../components/DetailedPrizePopup"
+
+import { IP } from "../App";
 
 import "./PrizesPage.css";
 
@@ -31,10 +31,9 @@ function PremiumPrizesPage() {
         description: "FAKE ITEM FAKE ITEM",
         imagesPaths: null
      });
-     const navigate = useNavigate();
 
      useEffect(() => {
-        fetch("http://localhost:5000/api/premiumPrizesList")
+        fetch(`http://${IP}:5000/api/premiumPrizesList`)
             .then((res) => res.json())
             .then(setPremiumPrizesList)
             .catch((err) => console.error("Failed to fetch data:", err));

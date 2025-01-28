@@ -1,7 +1,7 @@
 import { Link, useNavigate } from "react-router-dom";
 import "./Footer.css";
 
-import { adminModeSetter } from '../NinjasPrizesCatalog';
+import { adminModeSetter } from '../App';
 import { useState } from "react";
 
 function Footer() {
@@ -38,10 +38,10 @@ function Footer() {
                 <>
                     {superDuperSecretThing === 3 ? (
                         <Link to="/admin-access" className={"link-styles"}>
-                            <img onClick={resetScroll} src="src\assets\CodeNinjasLogoHorizontal_w_Outline.svg" />
+                            <img onClick={resetScroll} src="./assets/CodeNinjasLogoHorizontal_w_Outline.svg" />
                         </Link>
                     ) : (
-                        <img onClick={() => setSuperDuperSecretThing(prev => prev + 1)} src="src\assets\CodeNinjasLogoHorizontal_1Color.svg" />
+                        <img onClick={() => setSuperDuperSecretThing(prev => prev + 1)} src="./assets/CodeNinjasLogoHorizontal_1Color.svg" />
                     )}
                     <ul>
                         <li><Link to="/" className={"link-styles"} onClick={resetScroll}>Earn Coins</Link></li>

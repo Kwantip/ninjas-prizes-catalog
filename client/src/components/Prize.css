@@ -6,7 +6,7 @@
 
     /* background-color: red; */
     background-image: url("../assets/Announcement Banner.jpg");
-    /* background-image: url(http://localhost:5000/server/prizes-images/SanrioKeychains-0.png); */
+    /* background-image: url(http://${IP}:5000/server/prizes-images/SanrioKeychains-0.png); */
 
     position: relative;
 

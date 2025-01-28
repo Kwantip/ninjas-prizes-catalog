@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import "./Header.css";
-import { adminModeSetter } from '../NinjasPrizesCatalog';
+import { adminModeSetter } from '../App';
 import { useNavigate } from "react-router-dom";
 
 function Header() {

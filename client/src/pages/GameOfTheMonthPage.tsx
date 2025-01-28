@@ -1,6 +1,7 @@
 
 import { useEffect, useState } from "react";
-import { adminModeSetter } from "../NinjasPrizesCatalog";
+
+import { IP,  adminModeSetter } from "../App";
 
 import "./GameOfTheMonthPage.css";
 
@@ -69,7 +70,7 @@ function GameOfTheMonthPage() {
         setCopyMsg("Copied!");
     }
     const handleNewGameSubmit = () => {
-        fetch("http://localhost:5000/api/setNewGame", {
+        fetch(`http://${IP}:5000/api/setNewGame`, {
             method: "POST",
             headers: {"Content-Type": "application/json"},
             body: JSON.stringify(newGame)
@@ -81,7 +82,7 @@ function GameOfTheMonthPage() {
                     throw new Error("Failed to set new game");
                 }
                 // Re-fetch game of the month data
-                return fetch("http://localhost:5000/api/gameOfTheMonth")
+                return fetch(`http://${IP}:5000/api/gameOfTheMonth`)
                     .then((res) => res.json())
                     .then(setGameOfTheMonthData)
                     .catch((err) => console.error("Failed to data: ", err));
@@ -98,7 +99,7 @@ function GameOfTheMonthPage() {
             });
     }
     const handleNewScoreSubmit = () => {
-        fetch("http://localhost:5000/api/newScore", {
+        fetch(`http://${IP}:5000/api/newScore`, {
             method: "POST",
             headers: {"Content-Type": "application/json"},
             body: JSON.stringify(newScore),
@@ -110,7 +111,7 @@ function GameOfTheMonthPage() {
                     throw new Error("Failed to add new score");
                 }
                 // Re-fetch leaderboard data after successful score submission
-                return fetch("http://localhost:5000/api/gameOfTheMonth")
+                return fetch(`http://${IP}:5000/api/gameOfTheMonth`)
                     .then((res) => res.json())
                     .then(setGameOfTheMonthData)
                     .catch((err) => console.error("Failed to refresh leaderboard: ", err));
@@ -129,7 +130,7 @@ function GameOfTheMonthPage() {
     }
 
     useEffect(() => {
-        fetch("http://localhost:5000/api/gameOfTheMonth")
+        fetch(`http://${IP}:5000/api/gameOfTheMonth`)
             .then((res) => res.json())
             .then(setGameOfTheMonthData)
             .catch((err) => console.error("Failed to fetch data: ", err));

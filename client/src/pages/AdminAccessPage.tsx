@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from "react-router-dom";
 
-import { adminModeSetter } from '../NinjasPrizesCatalog';
+import { adminModeSetter } from '../App';
 
 function AdminAcessPage() {
     const { isAdmin, enableAdmin } = adminModeSetter();
@@ -10,10 +10,10 @@ function AdminAcessPage() {
 
     const navigate = useNavigate();
 
-    const handleLogin = (event: React.FormEvent) => {
+    const handleLogin = async (event: React.FormEvent) => {
         event.preventDefault();
 
-        const correctPwd = enableAdmin(password);
+        const correctPwd = await enableAdmin(password);
         if (correctPwd) {
             navigate("/")
         } else {

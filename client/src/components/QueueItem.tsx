@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import React from "react";
 
 import "./QueueItem.css";
 
@@ -15,7 +14,7 @@ interface QueueItemProps {
     receivedDate: string;
 }
 
-function QueueItem({ id, firstName, lastInitial, printName, linkToPrint, color, note, status, receivedDate }: QueueItemProps) {
+function QueueItem({ id, firstName, lastInitial, printName, status }: QueueItemProps) {
     const [statusLabel, setStatusLabel] = useState("");
     const [statusExpanded, setStatusExpanded] = useState("");
 

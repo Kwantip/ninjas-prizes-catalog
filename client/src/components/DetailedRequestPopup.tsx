@@ -1,6 +1,8 @@
 import { useState } from "react";
 import "./DetailedRequestPopup.css";
 
+import { IP } from "../App";
+
 interface DetailedRequestPopupProps {
     handleClose: () => void;
     request: {
@@ -23,7 +25,7 @@ function DetailedRequestPopup({ handleClose, request }: DetailedRequestPopupProp
 
     const handleSave = () => {
         if (newStatus === "Fulfilled" || newStatus === "Cancelled") {
-            fetch("http://localhost:5000/api/updateStatus", {
+            fetch(`http://${IP}:5000/api/updateStatus`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify([{id: request.id, field: "status", value: newStatus}]),
@@ -40,7 +42,7 @@ function DetailedRequestPopup({ handleClose, request }: DetailedRequestPopupProp
                     console.error("Error details: ", error);
                 });
         } else {
-            fetch("http://localhost:5000/api/updateStatus", {
+            fetch(`http://${IP}:5000/api/updateStatus`, {
                 method: "PATCH",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify([{id: request.id, field: "status", value: newStatus}]),

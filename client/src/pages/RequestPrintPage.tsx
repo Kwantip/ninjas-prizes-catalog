@@ -4,6 +4,8 @@ import Step from "../components/Step";
 
 import "./RequestPrintPage.css";
 
+import { IP } from "../App";
+
 function RequestPrintPage() {
     const [contClicked, setContClicked] = useState(false);
     const [submitClicked, setSubmitClicked] = useState(false);
@@ -22,7 +24,7 @@ function RequestPrintPage() {
     const [id, setId] = useState("Ewwor 3:");
 
     useEffect(() => {
-        fetch("http://localhost:5000/api/availableColors")
+        fetch(`http://${IP}:5000/api/availableColors`)
             .then((res) => res.json())
             .then(setAvailableColors)
             .catch((err) => console.error("Failed to fetch colors:", err));
@@ -43,7 +45,7 @@ function RequestPrintPage() {
             return;
         }
     
-        fetch("http://localhost:5000/api/printsQueue", {
+        fetch(`http://${IP}:5000/api/printsQueue`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(requestData)

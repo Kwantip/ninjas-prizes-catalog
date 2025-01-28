@@ -1,5 +1,7 @@
 import { useState, useEffect } from "react";
 
+import { IP } from "../App";
+
 import QueueItem from "../components/QueueItem";
 
 import "./PrintsQueuePage.css";
@@ -31,7 +33,7 @@ function PrintsQueuePage() {
     const [currentFilterField, setCurrentFilterField] = useState<string>("");
 
     useEffect(() => {
-        fetch("http://localhost:5000/api/printsQueue")
+        fetch(`http://${IP}:5000/api/printsQueue`)
             .then((res) => res.json())
             .then(setPrintsQueue)
             .catch((err) => console.error("Failed to fetch prints queue: ", err));

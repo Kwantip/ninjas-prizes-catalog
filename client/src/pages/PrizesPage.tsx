@@ -1,8 +1,9 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
 
 import Prize, {PrizeProps} from "../components/Prize"
 import DetailedPrizePopup from "../components/DetailedPrizePopup"
+
+import { IP } from "../App";
 
 import "./PrizesPage.css";
 
@@ -42,16 +43,15 @@ function PrizesPage() {
         imagesPaths: null
     });
     const [premium, setPremium] = useState(false);
-     const navigate = useNavigate();
 
     useEffect(() => {
-        fetch("http://localhost:5000/api/prizesList")
+        fetch(`http://${IP}:5000/api/prizesList`)
             .then((res) => res.json())
             .then(setPrizesList)
             .catch((err) => console.error("Failed to fetch data:", err));
     }, []);
     useEffect(() => {
-        fetch("http://localhost:5000/api/premiumPrizesList")
+        fetch(`http://${IP}:5000/api/premiumPrizesList`)
             .then((res) => res.json())
             .then(setPremiumPrizesList)
             .catch((err) => console.error("Failed to fetch data:", err));

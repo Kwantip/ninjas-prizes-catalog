@@ -3,6 +3,8 @@ import { useNavigate, useLocation } from "react-router-dom";
 
 import "./RequestPrintPage.css";
 
+import { IP } from "../App";
+
 function RequestPremiumPrizePage() {
     const location = useLocation();
     const navigate = useNavigate();
@@ -26,8 +28,8 @@ function RequestPremiumPrizePage() {
     // Fetch available colors and prizes
     useEffect(() => {
         Promise.all([
-            fetch("http://localhost:5000/api/availableColors").then((res) => res.json()),
-            fetch("http://localhost:5000/api/premiumPrizesNames").then((res) => res.json())
+            fetch(`http://${IP}:5000/api/availableColors`).then((res) => res.json()),
+            fetch(`http://${IP}:5000/api/premiumPrizesNames`).then((res) => res.json())
         ])
             .then(([colors, prizes]) => {
                 setAvailableColors(colors);
@@ -48,7 +50,7 @@ function RequestPremiumPrizePage() {
             return;
         }
 
-        fetch("http://localhost:5000/api/printsQueue", {
+        fetch(`http://${IP}:5000/api/printsQueue`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(requestData)

@@ -2,6 +2,8 @@ import { useState, useEffect } from "react";
 
 import "./PastOrdersPopup.css";
 
+import { IP } from "../App";
+
 interface PastOrdersProps {
     id: string;
     firstName: string;
@@ -51,7 +53,7 @@ function PastOrdersPopup({ handleClose }: PastOrdersPopupProps) {
     }
     const handleReopen = (id: string) => {
         confirm(`Reopen order?`) &&
-        fetch("http://localhost:5000/api/reopenOrder", {
+        fetch(`http://${IP}:5000/api/reopenOrder`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({id: id})
@@ -61,12 +63,12 @@ function PastOrdersPopup({ handleClose }: PastOrdersPopupProps) {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const res = await fetch(`http://localhost:5000/api/pastOrders?increment=${increment}`);
+                const res = await fetch(`http://${IP}:5000/api/pastOrders?increment=${increment}`);
                 const data = await res.json();
     
                 setPastOrdersList(prev => {
                     const newItems = data.dataChunk.filter(
-                        item => !prev.some(prevItem => prevItem.id === item.id)
+                        (item:any) => !prev.some(prevItem => prevItem.id === item.id)
                     );
                     return [...prev, ...newItems];
                 });

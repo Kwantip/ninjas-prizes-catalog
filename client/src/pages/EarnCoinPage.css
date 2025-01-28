@@ -71,11 +71,20 @@ form.edit-earn-coins textarea {
         color: var(--color-brand-primary);
     }
 }
-.earn-coins-page .labels-area {
+.earn-coins-page .lose-coins-labels-area, .earn-coins-page .earn-coins-labels-area {
     display: grid;
-    grid-template-columns: 6fr 6fr 2fr 1fr;
-    column-gap: 15px;
+    /* column-gap: 15px; */
+}
+.earn-coins-page .earn-coins-labels-area {
+    grid-template-columns: 10fr 8fr 3fr 3fr 1fr;
+    width: 100%;
+    text-align: left;
     margin-bottom: 10px;
+}
+.earn-coins-page .lose-coins-labels-area {
+    grid-template-columns: 5fr 5fr 2fr 1fr;
+    margin-bottom: 10px;
+    text-align: left;
 }
 .earn-coins-page .labels-area h4 {
     margin: 0;
@@ -83,7 +92,7 @@ form.edit-earn-coins textarea {
     font-weight: bold;
     color: var(--color-brand-white);
 }
-.earn-coins-page .labels-area h4:last-child {
+.earn-coins-page .earn-coins-labels-area h4:last-child, .earn-coins-page .lose-coins-labels-area h4:last-child {
     display: none;
 }
 .edit-area {

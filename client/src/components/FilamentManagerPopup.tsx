@@ -3,6 +3,8 @@ import { useState, useEffect } from "react";
 
 import "./FilamentManagerPopup.css";
 
+import { IP } from "../App";
+
 interface FilamentEditorProps {
     id: number;
     color: string;
@@ -25,7 +27,7 @@ function FilamentManagerPopup({ handleClose }: FilamentManagerPopupProps) {
     const [message, setMessage] = useState("");
 
     useEffect(() => {
-        fetch("http://localhost:5000/api/availableColors")
+        fetch(`http://${IP}:5000/api/availableColors`)
             .then((res) => res.json())
             .then(setAvailableColors)
             .catch((err) => console.error("Failed to fetch colors:", err));
@@ -61,7 +63,7 @@ function FilamentManagerPopup({ handleClose }: FilamentManagerPopupProps) {
             return;
         }
 
-        fetch("http://localhost:5000/api/availableColors", {
+        fetch(`http://${IP}:5000/api/availableColors`, {
             method: "PUT",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(availableColors),
