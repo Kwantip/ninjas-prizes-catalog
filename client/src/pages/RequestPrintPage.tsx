@@ -98,6 +98,7 @@ function RequestPrintPage() {
                             <input
                                 type="text"
                                 value={requestData.firstName}
+                                maxLength={15}
                                 onChange={(e) => handleFieldChange("firstName", e.target.value)}
                                 required
                             />

@@ -15,7 +15,7 @@ function LeaderBoardItem({ firstName, lastInitial, score, rank }: LeaderBoardIte
     return (
         <div className="leader-board-item">
             <p>{`${rank + 1}. ${firstName} ${lastInitial}.`}</p>
-            <p>{score}</p>
+            <p>{score.toLocaleString()}</p>
         </div>
     );
 }
@@ -99,6 +99,11 @@ function GameOfTheMonthPage() {
             });
     }
     const handleNewScoreSubmit = () => {
+        if (!newScore.firstName || !newScore.lastInitial || !newScore.score) {
+            console.error("INVALID DATA!!");
+            return;
+        }
+        console.log(`${newScore.firstName} ${newScore.lastInitial}: ${newScore.score}`);
         fetch(`http://${IP}:5000/api/newScore`, {
             method: "POST",
             headers: {"Content-Type": "application/json"},
@@ -150,7 +155,6 @@ function GameOfTheMonthPage() {
     
     return (
         <main className="game-of-the-month-page">
-            {/* <h1>Game of the Month</h1> */}
             {gameOfTheMonthData && (
                 <>
                     <div className="game-of-the-month-container">
@@ -187,21 +191,9 @@ function GameOfTheMonthPage() {
                     <div className="leader-board-container">
                         <h2>Leader Board</h2>
                         <div className="leader-board-block container">
-                            {/* <div className="leader-board-cols"> */}
-                                {/* <div>
-                                    {col1.map((item, index) => (
-                                        <LeaderBoardItem key={index} {...item} rank={index} />
-                                    ))}
-                                </div>
-                                <div>
-                                    {col2.map((item, index) => (
-                                        <LeaderBoardItem key={index+5} {...item} rank={index + 5} />
-                                    ))}
-                                </div> */}
                                     {gameOfTheMonthData.current.leaderBoard.map((item, index) => (
                                         <LeaderBoardItem key={index} {...item} rank={index} />
                                     ))}
-                            {/* </div> */}
                             {isAdmin && (addingNewScore ? (
                                 <>
                                     <br></br>
@@ -211,7 +203,7 @@ function GameOfTheMonthPage() {
                                             <input value={newScore.firstName} onChange={(e) => setNewScore((prev) => ({ ...prev, ["firstName"]: e.target.value }))} />
                                         </label>
                                         <label>Last Initial
-                                            <input value={newScore.lastInitial} onChange={(e) => setNewScore((prev) => ({ ...prev, ["lastInitial"]: e.target.value }))} maxLength={1} />
+                                            <input value={newScore.lastInitial} onChange={(e) => setNewScore((prev) => ({ ...prev, ["lastInitial"]: e.target.value }))} maxLength={2} />
                                         </label>
                                         <label>Score
                                             <input value={newScore.score} onChange={(e) => setNewScore((prev) => ({ ...prev, ["score"]: +e.target.value }))} type="Number" />

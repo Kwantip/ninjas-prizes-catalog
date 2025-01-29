@@ -349,19 +349,59 @@
         {
           "firstName": "John",
           "lastInitial": "M",
-          "score": 19727
+          "score": 46584
+        },
+        {
+          "firstName": "sm",
+          "lastInitial": "sm",
+          "score": 1
+        },
+        {
+          "firstName": "Ian",
+          "lastInitial": "K",
+          "score": 26447
+        },
+        {
+          "firstName": "Jason",
+          "lastInitial": "K",
+          "score": 17248
+        },
+        {
+          "firstName": "Ollie",
+          "lastInitial": "P",
+          "score": 18791
+        },
+        {
+          "firstName": "Kane",
+          "lastInitial": "L",
+          "score": 5600
+        },
+        {
+          "firstName": "Steve",
+          "lastInitial": "M",
+          "score": 13679
+        },
+        {
+          "firstName": "Logan",
+          "lastInitial": "L",
+          "score": 17709
+        },
+        {
+          "firstName": "Aithan",
+          "lastInitial": "A",
+          "score": 4730
+        },
+        {
+          "firstName": "Keanu",
+          "lastInitial": "I",
+          "score": 19853
         }
       ]
     },
     "past": [
       {
-        "gameName": "SAMPLE GAME 1",
-        "gameLink": "https://youtube.com",
-        "leaderBoard": []
-      },
-      {
-        "gameName": "SAMPLE GAME 2",
-        "gameLink": "https://google.com",
+        "gameName": "Blocky Tower",
+        "gameLink": "https://stmn.itch.io/blocky-tower",
         "leaderBoard": []
       }
     ]

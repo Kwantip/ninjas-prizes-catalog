@@ -10,7 +10,7 @@ const PORT = 5000;
 const IMG_PATH = "server/images/prizes-images/";
 const ANNOUNCEMENT_IMG_PATH = "server/images/announcement/";
 
-const IP = "10.107.223.111";
+const IP = "localhost";
 
 const prizeImagesStorage = multer.diskStorage({
     destination: (req, file, cb) => {
@@ -211,16 +211,20 @@ app.post('/api/setNewGame', async(req, res) => {
 // Update leaderboard
 app.post('/api/newScore', async (req, res) => {
     const {firstName, lastInitial, score} = req.body;
-    
+
     try {
         const jsonData = JSON.parse(await fs.readFile(dataFilePath, 'utf-8'));
         let leaderBoard = jsonData.gameOfTheMonthPageData.current.leaderBoard;
-        const index = leaderBoard.findIndex((item) => item.firstName === firstName && item.lastInitial === lastInitial);
+        const index = leaderBoard.findIndex((item) => item.firstName.toLowerCase() === firstName.toLowerCase() && item.lastInitial.toLowerCase() === lastInitial.toLowerCase());
+
+        // Reformatting the first name and last name
+        let formattedFirstName = firstName[0].toUpperCase() + firstName.slice(1).toLowerCase();
+        let formattedLastInitial = lastInitial[0].toUpperCase() + lastInitial.slice(1).toLowerCase();
 
         if (index === -1) { // Adding a new person to the leaderboard
-            leaderBoard.push({firstName, lastInitial, score});
+            leaderBoard.push({firstName: formattedFirstName, lastInitial: formattedLastInitial, score});
         } else { // Updating the score on the leaderboard
-            leaderBoard[index].score = Math.max(leaderBoard[index].score, score);
+            leaderBoard[index].score = score;
         }
 
         // Update the leaderboard

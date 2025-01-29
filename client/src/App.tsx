@@ -18,7 +18,7 @@ import ManagePrintsRequestsPage from './pages/ManagePrintsRequestsPage'
 
 import './App.css'
 
-export const IP = "10.107.223.111";
+export const IP = "localhost";
 
 interface AdminContextType {
   isAdmin: boolean;
