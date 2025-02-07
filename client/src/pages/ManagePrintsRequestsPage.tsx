@@ -149,6 +149,10 @@ function ManagePrintsRequestsPage() {
                         console.error("Server response: ", errorDetails);
                         throw new Error("Failed to update status");
                     }
+                    fetch(`http://${IP}:5000/api/printsQueue`)
+                        .then((res) => res.json())
+                        .then(setRequestsList)
+                        .catch((err) => console.error("Failed to fetch prints queue: ", err));
                 })
                 .catch((error) => {
                     console.error("Error details: ", error);
@@ -166,7 +170,7 @@ function ManagePrintsRequestsPage() {
             .then((res) => res.json())
             .then(setRequestsList)
             .catch((err) => console.error("Failed to fetch prints queue: ", err));
-    }, [isPrinterFree, handleUpdateStatus]);
+    }, [handleUpdateStatus]);
 
     useEffect(() => {
         const printerStatus = requestsList.find((item) => item.status === "Printing");

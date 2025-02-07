@@ -25,7 +25,7 @@ function EarnCoinPage() {
     }>();
     const [announcementMsg, setAnnouncementMsg] = useState("");
 
-    console.log(IP)
+    // console.log(IP)
     useEffect(() => {
         fetch(`http://${IP}:5000/api/earnLoseCoins`)
             .then((res) => res.json())

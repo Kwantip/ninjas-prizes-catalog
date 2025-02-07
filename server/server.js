@@ -43,6 +43,7 @@ const uploadAnnouncementImage = multer({ storage: announcmentImageStorage });
 app.use(express.json());
 app.use(cors({
     origin: `http://${IP}:5173`,
+    // origin: "http://10.107.223.111:5173"
 }));
 
 // Get the path to siteData.json

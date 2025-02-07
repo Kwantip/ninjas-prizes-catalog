@@ -69,7 +69,7 @@ function PrizesPage() {
         document.body.classList.add("no-scroll");
     }
 
-    console.log(prizesList)
+    // console.log(prizesList)
     return (
         <main>
             <h1>Prizes</h1>
@@ -92,7 +92,7 @@ function PrizesPage() {
                     <p>Talk to a sensei to buy these items!</p>
                     <div className="prizes">
                         {prizesList.filter((item) => `${item.price} ${item.unit}` === "1 Gold").map((prize) => (
-                            <Prize
+                            prize.visible && <Prize
                                 key={prize.id}
                                 {...prize}
                                 handleClick={() => {
@@ -107,7 +107,7 @@ function PrizesPage() {
                     <p>Talk to a sensei to buy these items!</p>
                     <div className="prizes">
                         {prizesList.filter((item) => `${item.price} ${item.unit}` === "2 Gold").map((prize) => (
-                            <Prize
+                            prize.visible && <Prize
                                 key={prize.id}
                                 {...prize}
                                 handleClick={() => {
@@ -122,7 +122,7 @@ function PrizesPage() {
                     <p>Talk to a sensei to buy these items!</p>
                     <div className="prizes">
                         {prizesList.filter((item) => `${item.price} ${item.unit}` === "3 Gold").map((prize) => (
-                            <Prize
+                            prize.visible && <Prize
                                 key={prize.id}
                                 {...prize}
                                 handleClick={() => {
@@ -137,7 +137,7 @@ function PrizesPage() {
                     <p>Click "Order" to submit a request</p>
                     <div className="prizes">
                         {premiumPrizesList.map((prize) => (
-                            <Prize 
+                            prize.visible && <Prize 
                                 key={prize.id}
                                 {...prize}
                                 handleClick={() => {
