@@ -156,31 +156,14 @@ app.patch('/api/announcementVisibility', async (req, res) => {
 // Game of the Month data
 app.get('/api/gameOfTheMonth', async (req, res) => {
     try {
-        const data = await fs.readFile(dataFilePath, 'utf-8');
-        const jsonData = JSON.parse(data);
-        let leaderBoard = jsonData.gameOfTheMonthPageData.current.leaderBoard;
-
-        // Sort leaderboard by score in descending order
-        leaderBoard.sort((a, b) => b.score - a.score);
-
-        if (leaderBoard.length > 10) {
-            leaderBoard = leaderBoard.slice(0, 10);
-        } else if (leaderBoard.length < 10) {
-            const placeholders = Array(10 - leaderBoard.length).fill({
-                firstName: null,
-                lastInitial: null,
-                score: 0,
-            });
-            leaderBoard = leaderBoard.concat(placeholders);
-        }
-
-        jsonData.gameOfTheMonthPageData.current.leaderBoard = leaderBoard;
-        res.json(jsonData.gameOfTheMonthPageData);
+        const data = JSON.parse(await fs.readFile(dataFilePath, 'utf-8'));
+        res.json(data.gameOfTheMonthPageData);
     } catch (error) {
         console.error("Error reading file: ", error);
         res.status(500).json({ messasge: "Error reading data file" });
     }
 });
+// Set new game of the month
 app.post('/api/setNewGame', async(req, res) => {
     const {gameName, gameLink} = req.body;
 
@@ -209,13 +192,24 @@ app.post('/api/setNewGame', async(req, res) => {
         res.status(500).json({message: "Error reading data file"});
     }
 });
-// Update leaderboard
-app.post('/api/newScore', async (req, res) => {
-    const {firstName, lastInitial, score} = req.body;
+app.get('/api/leaderboardScore', async (req, res) => {
+    try {
+        const data = JSON.parse(await fs.readFile(dataFilePath, 'utf-8'));
+        res.json(data.gameOfTheMonthPageData.current.leaderBoard);
+    } catch (error) {
+        console.error("Error reading file: ", error);
+        res.status(500).json({ messasge: "Error reading data file" });
+    }
+});
+// Adding new score to the leaderboard
+app.post('/api/leaderboardScore', async (req, res) => {
+    const {id, firstName, lastInitial, score} = req.body;
+
+    console.log(req.body)
 
     try {
-        const jsonData = JSON.parse(await fs.readFile(dataFilePath, 'utf-8'));
-        let leaderBoard = jsonData.gameOfTheMonthPageData.current.leaderBoard;
+        const data = JSON.parse(await fs.readFile(dataFilePath, 'utf-8'));
+        let leaderBoard = data.gameOfTheMonthPageData.current.leaderBoard;
         const index = leaderBoard.findIndex((item) => item.firstName.toLowerCase() === firstName.toLowerCase() && item.lastInitial.toLowerCase() === lastInitial.toLowerCase());
 
         // Reformatting the first name and last name
@@ -223,22 +217,40 @@ app.post('/api/newScore', async (req, res) => {
         let formattedLastInitial = lastInitial[0].toUpperCase() + lastInitial.slice(1).toLowerCase();
 
         if (index === -1) { // Adding a new person to the leaderboard
-            leaderBoard.push({firstName: formattedFirstName, lastInitial: formattedLastInitial, score});
+            leaderBoard.push({id: id, firstName: formattedFirstName, lastInitial: formattedLastInitial, score});
         } else { // Updating the score on the leaderboard
             leaderBoard[index].score = score;
         }
 
         // Update the leaderboard
-        jsonData.gameOfTheMonthPageData.current.leaderBoard = leaderBoard;
+        data.gameOfTheMonthPageData.current.leaderBoard = leaderBoard;
 
         // Write to file
-        await fs.writeFile(dataFilePath, JSON.stringify(jsonData, null, 2));
+        await fs.writeFile(dataFilePath, JSON.stringify(data, null, 2));
+
+        // Response with a success
+        res.status(200).send("Score added successfully");
+    } catch (error) {
+        console.error("Error reading file: ", error);
+        res.status(500).json({message: "Error reading data file"});
+    }
+});
+// Updating the leaderboard score
+app.patch('/api/leaderboardScore', async (req, res) => {
+    try {
+        const data = JSON.parse(await fs.readFile(dataFilePath, 'utf-8'));
+
+        // Update the leaderboard
+        data.gameOfTheMonthPageData.current.leaderBoard = req.body;
+
+        // Write to file
+        await fs.writeFile(dataFilePath, JSON.stringify(data, null, 2));
 
         // Response with a success
         res.status(200).send("Prize updated successfully");
     } catch (error) {
-        console.error("Error reading file: ", error);
-        res.status(500).json({message: "Error reading data file"});
+        console.error('Error reading file: ', error);
+        res.status(500).json({ message: 'Error reading data file' });
     }
 });
 
@@ -247,7 +259,6 @@ app.get('/api/prizesList', async (req, res) => {
     try {
         const data = await fs.readFile(dataFilePath, 'utf-8');
         const jsonData = JSON.parse(data);
-        // console.log(jsonData);
 
         res.json(jsonData.prizesPageData.prizesList);
     } catch (error) {
@@ -394,6 +405,7 @@ app.post('/api/prizesList', uploadPrizeImages.array("file"), async (req, res) =>
 app.patch('/api/prizesList', async (req, res) => {
     const {premium, id, field, value} = req.body;
     if (premium === true || premium === "true") {
+        console.log("MEEEEEEEP")
         try {
             const data = await fs.readFile(dataFilePath, 'utf-8');
             const jsonData = JSON.parse(data);
