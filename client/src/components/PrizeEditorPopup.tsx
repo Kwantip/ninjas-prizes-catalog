@@ -85,12 +85,13 @@ function PrizeEditorPopup({ handleClose, prize, editing, premium }: PrizeEditorP
         unit: prize?.unit || "Silver",
         quantity: prize?.quantity || 0,
         variations: prize?.variations || [],
-        visible: prize?.visible || true,
+        visible: prize?.visible ?? true,
         description: prize?.description || "",
         imagesPaths: prize?.imagesPaths || []
     });
     const [imagesToDelete, setImagesToDelete] = useState<number[]>([]);
-    
+    const [savedMsg, setSavedMsg] = useState("");
+
     // INPUT FIELDS
     // General
     const handleFieldChange = (field: string, value: any) => {
@@ -167,6 +168,7 @@ function PrizeEditorPopup({ handleClose, prize, editing, premium }: PrizeEditorP
             prizeData.visible === null ||
             !prizeData.description
         ) {
+            setSavedMsg("Invalid data!")
             console.error("INVALID DATA!!");
         } else {
             const formData = new FormData();
@@ -186,11 +188,10 @@ function PrizeEditorPopup({ handleClose, prize, editing, premium }: PrizeEditorP
                     if (!res.ok) {
                         const errorDetails = await res.text();
                         console.error("Server response:", errorDetails);
+                        setSavedMsg("Error updating prize.")
                         throw new Error("Failed to update prize.");
                     }
-                    console.log("YIPPEEEE!!!");
-                    handleClose();
-                    location.reload();
+                    setSavedMsg("Prize successfully updated!")
                 })
                 .catch((err) => console.error(err));
         }
@@ -255,6 +256,7 @@ function PrizeEditorPopup({ handleClose, prize, editing, premium }: PrizeEditorP
                 });
     };
 
+    console.log(prizeData.visible);
     return (
         <>
             <div className="overlay-background" onClick={handleClose}></div>
@@ -334,9 +336,7 @@ function PrizeEditorPopup({ handleClose, prize, editing, premium }: PrizeEditorP
                                     type="radio"
                                     name="visibility"
                                     checked={prizeData.visible}
-                                    onChange={() =>
-                                        handleFieldChange("visible", true)
-                                    }
+                                    onChange={() => handleFieldChange("visible", true)}
                                 />
                             </label>
                             <label className="radio">
@@ -345,18 +345,14 @@ function PrizeEditorPopup({ handleClose, prize, editing, premium }: PrizeEditorP
                                     type="radio"
                                     name="visibility"
                                     checked={!prizeData.visible}
-                                    onChange={() =>
-                                        handleFieldChange("visible", false)
-                                    }
+                                    onChange={() => handleFieldChange("visible", false)}
                                 />
                             </label>
                         </label>
                         <label>Description</label>
                         <textarea
                             value={prizeData.description}
-                            onChange={(e) =>
-                                handleFieldChange("description", e.target.value)
-                            }
+                            onChange={(e) => handleFieldChange("description", e.target.value)}
                             rows={10}
                         />
                         <label>
@@ -392,6 +388,7 @@ function PrizeEditorPopup({ handleClose, prize, editing, premium }: PrizeEditorP
                 >
                     close
                 </span>
+                <p>{savedMsg}</p>
             </div>
         </>
     );

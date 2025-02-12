@@ -6,6 +6,7 @@ import { IP,  adminModeSetter } from "../App";
 import "./GameOfTheMonthPage.css";
 
 interface LeaderBoardItemProps {
+    id: number;
     firstName: string;
     lastInitial: string;
     score: number;
@@ -13,11 +14,29 @@ interface LeaderBoardItemProps {
 }
 function LeaderBoardItem({ firstName, lastInitial, score, rank }: LeaderBoardItemProps) {
     return (
-        <div className="leader-board-item">
+        <div className="leaderboard-item">
             <p>{`${rank + 1}. ${firstName} ${lastInitial}.`}</p>
             <p>{score.toLocaleString()}</p>
         </div>
     );
+}
+interface LeaderBoardEditorProps {
+    id: number;
+    firstName: string;
+    lastInitial: string;
+    score: number;
+    handleFieldChange: (id: number, field: string, value: any) => void;
+    handleDelete: (id: number) => void;
+}
+function LeaderBoardEditor({ id, firstName, lastInitial, score, handleFieldChange, handleDelete }: LeaderBoardEditorProps) {
+    return (
+        <form className="leaderboard-editor">
+            <input value={firstName} onChange={(e) => handleFieldChange(id, "firstName", e.target.value)} />
+            <input value={lastInitial} onChange={(e) => handleFieldChange(id, "lastInitial", e.target.value)} />
+            <input value={score} onChange={(e) => handleFieldChange(id, "score", e.target.value)} />
+            <span className="material-symbols-outlined clickable" onClick={() => handleDelete(id)}>close</span>
+        </form>
+    )
 }
 interface PastGameItemProps {
     gameName: string;
@@ -36,12 +55,32 @@ function PastGameItem({ gameName, gameLink, number }: PastGameItemProps) {
 function GameOfTheMonthPage() {
     const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
     const currentMonth = months[new Date().getMonth()];
+
     const { isAdmin } = adminModeSetter();
+
+    const [leaderboard, setLeaderboard] = useState<{ id: number; firstName: string; lastInitial: string; score: number}[]>([]);
+    const [displayLeaderboard, setDisplayLeaderboard] = useState<{ id: number; firstName: string; lastInitial: string; score: number}[]>([]);
+    const [editingLeaderboard, setEditingLeaderboard] = useState(false);
+    let scoreIdCounter = Math.max(...leaderboard.map((item) => item.id), 0) + 1;
+    const [newScore, setNewScore] = useState({
+        id: scoreIdCounter,
+        firstName: "",
+        lastInitial: "",
+        score: 0
+    });
+    const [copyMsg, setCopyMsg] = useState("Click to Copy");
+    const [settingNewGame, setSettingNewGame] = useState(false);
+    const [newGame, setNewGame] = useState({
+        gameName: "",
+        gameLink: ""
+    });
+
+    // Fetching the game of the month
     const [gameOfTheMonthData, setGameOfTheMonthData] = useState<{
         current: {
             gameName: string;
             gameLink: string;
-            leaderBoard: { firstName: string; lastInitial: string; score: number }[];
+            leaderBoard: { id: number; firstName: string; lastInitial: string; score: number }[];
         };
         past: {
             gameName: string;
@@ -49,26 +88,40 @@ function GameOfTheMonthPage() {
             leaderBoard: { firstName: string; lastInitial: string; score: number }[];
         }[];
     }>();
+    useEffect(() => {
+        fetch(`http://${IP}:5000/api/gameOfTheMonth`)
+            .then((res) => res.json())
+            .then((data) => {
+                setGameOfTheMonthData(data);
+                
+                // Set full leaderboard for tracking
+                setLeaderboard(data.current.leaderBoard);
     
-    const [copyMsg, setCopyMsg] = useState("Click to Copy");
-    const [addingNewScore, setAddingNewScore] = useState(false);
-    const [newScore, setNewScore] = useState({
-        firstName: "",
-        lastInitial: "",
-        score: 0
-    });
-    const [settingNewGame, setSettingNewGame] = useState(false);
-    const [newGame, setNewGame] = useState({
-        gameName: "",
-        gameLink: ""
-    })
-    let col1 = [];
-    let col2 = [];
+                // Sort for display leaderboard
+                const sortedLeaderboard = [...data.current.leaderBoard].sort((a, b) => b.score - a.score);
 
+                if (sortedLeaderboard.length > 10) {
+                    setDisplayLeaderboard(sortedLeaderboard.slice(0, 10));
+                } else {
+                    const placeholders = Array(10 - sortedLeaderboard.length).fill({
+                        id: null,
+                        firstName: null,
+                        lastInitial: null,
+                        score: 0
+                    });
+                    setDisplayLeaderboard([...sortedLeaderboard, ...placeholders])
+                }
+            })
+            .catch((err) => console.error("Failed to fetch data: ", err));
+    }, []);
+
+    // GAME OF THE MONTH SECTION
+    // Copy link to clipboard
     const copyLink = () => {
         gameOfTheMonthData && navigator.clipboard.writeText(gameOfTheMonthData?.current.gameLink);
         setCopyMsg("Copied!");
     }
+    // Submit new game of the month
     const handleNewGameSubmit = () => {
         fetch(`http://${IP}:5000/api/setNewGame`, {
             method: "POST",
@@ -98,13 +151,17 @@ function GameOfTheMonthPage() {
                 console.error("Error details:", err);
             });
     }
+
+    // LEADERBOARD SECTION
+    // Submit new score to the leaderboard 
+
     const handleNewScoreSubmit = () => {
         if (!newScore.firstName || !newScore.lastInitial || !newScore.score) {
             console.error("INVALID DATA!!");
             return;
         }
         console.log(`${newScore.firstName} ${newScore.lastInitial}: ${newScore.score}`);
-        fetch(`http://${IP}:5000/api/newScore`, {
+        fetch(`http://${IP}:5000/api/leaderboardScore`, {
             method: "POST",
             headers: {"Content-Type": "application/json"},
             body: JSON.stringify(newScore),
@@ -116,14 +173,15 @@ function GameOfTheMonthPage() {
                     throw new Error("Failed to add new score");
                 }
                 // Re-fetch leaderboard data after successful score submission
-                return fetch(`http://${IP}:5000/api/gameOfTheMonth`)
+                return fetch(`http://${IP}:5000/api/leaderboardScore`)
                     .then((res) => res.json())
-                    .then(setGameOfTheMonthData)
+                    .then(setLeaderboard)
                     .catch((err) => console.error("Failed to refresh leaderboard: ", err));
             })
             .then(() => {
-                setAddingNewScore(false);
+                setEditingLeaderboard(false);
                 setNewScore({
+                    id: scoreIdCounter++,
                     firstName: "",
                     lastInitial: "",
                     score: 0
@@ -133,26 +191,61 @@ function GameOfTheMonthPage() {
                 console.error("Error details:", err);
             });
     }
-
-    useEffect(() => {
-        fetch(`http://${IP}:5000/api/gameOfTheMonth`)
-            .then((res) => res.json())
-            .then(setGameOfTheMonthData)
-            .catch((err) => console.error("Failed to fetch data: ", err));
-    }, []);
-
-    console.log("LEADER: ", gameOfTheMonthData?.current.leaderBoard)
-
-    if (gameOfTheMonthData) {
-        for (let i = 0; i < 10; i++) {
-            if (i < 5) {
-                col1.push(gameOfTheMonthData.current.leaderBoard[i]);
-            } else {
-                col2.push(gameOfTheMonthData.current.leaderBoard[i]);
-            }
-        }
+    // Handle editing score
+    const handleScoreFieldChange = (id: number, field: string, value: any) => {
+        setLeaderboard((prev) => prev.map((item) => item.id === id ? { ...item, [field]: value } : item));
+        setDisplayLeaderboard((prev) => prev.map((item) => item.id === id ? { ...item, [field]: value } : item))
     }
-    
+    // Handle deleting existing score
+    const handleScoreDelete = (id: number) => {
+        setLeaderboard(leaderboard.filter((item) => item.id !== id));
+        setDisplayLeaderboard(displayLeaderboard.filter((item) => item.id !== id));
+    }
+    // Handle updating the leaderboard
+    const handleUpdateLeaderboard = () => {
+        fetch(`http://${IP}:5000/api/leaderboardScore`, {
+            method: 'PATCH',
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify(leaderboard),
+        })
+            .then(async (res) => {
+                if (!res.ok) {
+                    const errorDetails = await res.text();
+                    console.error("Server response: ", errorDetails);
+                    throw new Error("Failed to update leaderboard");                
+                }
+                setEditingLeaderboard(false);
+                fetch(`http://${IP}:5000/api/gameOfTheMonth`)
+                    .then((res) => res.json())
+                    .then((data) => {                        
+                        // Set full leaderboard for tracking
+                        setLeaderboard(data.current.leaderBoard);
+            
+                        // Sort for the display leaderboard
+                        const sortedLeaderboard = [...data.current.leaderBoard].sort((a, b) => b.score - a.score);
+
+                        if (sortedLeaderboard.length > 10) {
+                            setDisplayLeaderboard(sortedLeaderboard.slice(0, 10));
+                        } else {
+                            const placeholders = Array(10 - sortedLeaderboard.length).fill({
+                                id: null,
+                                firstName: null,
+                                lastInitial: null,
+                                score: 0
+                            });
+                            setDisplayLeaderboard([...sortedLeaderboard, ...placeholders])
+                        }
+                    })
+                    .catch((err) => console.error("Failed to fetch data: ", err));
+
+                    })
+            .catch((err) => {
+                console.error("Error details: ", err);
+            })
+    }
+
+    console.log("LEADER: ", displayLeaderboard)
+
     return (
         <main className="game-of-the-month-page">
             {gameOfTheMonthData && (
@@ -188,22 +281,32 @@ function GameOfTheMonthPage() {
                             )}
                         </div>
                     </div>
-                    <div className="leader-board-container">
+                    <div className="leaderboard-container">
                         <h2>Leader Board</h2>
-                        <div className="leader-board-block container">
-                                    {gameOfTheMonthData.current.leaderBoard.map((item, index) => (
-                                        <LeaderBoardItem key={index} {...item} rank={index} />
+                        <div className="leaderboard-block container">
+                            {editingLeaderboard ? (
+                                <>
+                                    {displayLeaderboard.map((item) => (
+                                        <LeaderBoardEditor key={item.id} {...item} handleFieldChange={handleScoreFieldChange} handleDelete={handleScoreDelete}/>
                                     ))}
-                            {isAdmin && (addingNewScore ? (
+                                    <br></br>
+                                    <button onClick={handleUpdateLeaderboard}>Update</button>
+                                </>
+                                ) : (
+                                displayLeaderboard.map((item, index) => (
+                                    <LeaderBoardItem key={item.id} {...item} rank={index} />
+                                ))
+                            )}
+                            {isAdmin && (editingLeaderboard ? (
                                 <>
                                     <br></br>
                                     <h3>Add New Score</h3>
-                                    <form>
+                                    <form className="leaderboard-add-new-score">
                                         <label>First Name
                                             <input value={newScore.firstName} onChange={(e) => setNewScore((prev) => ({ ...prev, ["firstName"]: e.target.value }))} />
                                         </label>
                                         <label>Last Initial
-                                            <input value={newScore.lastInitial} onChange={(e) => setNewScore((prev) => ({ ...prev, ["lastInitial"]: e.target.value }))} maxLength={2} />
+                                            <input value={newScore.lastInitial} onChange={(e) => setNewScore((prev) => ({ ...prev, ["lastInitial"]: e.target.value }))} />
                                         </label>
                                         <label>Score
                                             <input value={newScore.score} onChange={(e) => setNewScore((prev) => ({ ...prev, ["score"]: +e.target.value }))} type="Number" />
@@ -213,7 +316,9 @@ function GameOfTheMonthPage() {
                                     <button onClick={handleNewScoreSubmit}>Submit</button>
                                 </>
                             ) : (
-                                <button onClick={() => setAddingNewScore(true)}>Add New</button>
+                                <>
+                                    <button onClick={() => setEditingLeaderboard(true)}>Edit</button>
+                                </>
                             ))}
                         </div>
                     </div>

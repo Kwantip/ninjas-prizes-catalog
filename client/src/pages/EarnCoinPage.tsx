@@ -38,8 +38,8 @@ function EarnCoinPage() {
 
     }, []);
 
-    let earnCoinsIdCounter = Math.max(...earnCoinsRows.map((row) => row.id), 0);
-    let loseCoinsIdCounter = Math.max(...loseCoinsRows.map((row) => row.id), 0);
+    let earnCoinsIdCounter = Math.max(...earnCoinsRows.map((row) => row.id), 0) + 1;
+    let loseCoinsIdCounter = Math.max(...loseCoinsRows.map((row) => row.id), 0) + 1;
     
     const handleCalc = () => {
         const action = earnCoinsRows.find((item) => item.id === calcField.actionId);
@@ -108,18 +108,19 @@ function EarnCoinPage() {
         }
     };
     const handleAddRow = (type: "earnCoins" | "loseCoins") => {
+        console.log(earnCoinsIdCounter)
         if (type === "earnCoins") {
             setEarnCoinsRows((prevRows) => {
                 return [
                     ...prevRows,
-                    { id: earnCoinsIdCounter++, action: "", price: 0, unit: "Silver", multipliable: true },
+                    { id: earnCoinsIdCounter, action: "", price: 0, unit: "Silver", multipliable: true },
                 ];
             });
         } else if (type === "loseCoins") {
             setLoseCoinsRows((prevRows) => {
                 return [
                     ...prevRows,
-                    { id: loseCoinsIdCounter++, action: "", price: 0, unit: "Silver", multipliable: null },
+                    { id: loseCoinsIdCounter, action: "", price: 0, unit: "Silver", multipliable: null },
                 ];
             });
         }

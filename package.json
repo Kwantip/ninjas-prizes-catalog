@@ -4,7 +4,7 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "concurrently \"npm run dev --prefix client -- --host\" \"node server/server.js -- --host\"",
+    "dev": "concurrently \"npm run dev --prefix client\" \"node server/server.js\"",
     "build": "tsc -b && npm run build --prefix client",
     "lint": "eslint .",
     "preview": "vite preview",

@@ -20,9 +20,9 @@ function ManagePrizesPage() {
         visible: boolean;
         description: string;
         imagesPaths: {id: number, file: File | null, path: string | null}[] | null;
-        premium: false
+        premium: false;
     }[]>([]);
-    const [selectedPrize, setSelectedPrize] = useState<Omit<PrizeManagerProps, "handleEdit"> | null>(null);
+    const [selectedPrize, setSelectedPrize] = useState<Omit<PrizeManagerProps, "handleEdit" | "handleDecreaseQuantity" | "handleVisibility"> | null>(null);
     const [editing, setEditing] = useState(false);
 
     useEffect(() => {
@@ -34,10 +34,17 @@ function ManagePrizesPage() {
 
     const resetScroll = () => {
         window.scrollTo(0, 0);
+        document.body.classList.add("no-scroll");
     };
     const handleClose = (type: "filamentManager" | "prizeEditor") => {
         type === "filamentManager" ? setFilamentManagerPopupVisible(false) : setPrizeEditorPopupVisible(false);
         document.body.classList.remove("no-scroll");
+
+        // Reload the data once the popup is closed
+        fetch(`http://${IP}:5000/api/prizesList`)
+            .then((res) => res.json())
+            .then(setPrizesList)
+            .catch((err) => console.error("Failed to fetch data:", err));
     };
     const handleAddNewPrize = () => {
         let newPrizeIdNum = Math.max(...prizesList.map((item) => item.id), 0) + 1;
@@ -60,12 +67,60 @@ function ManagePrizesPage() {
         document.body.classList.add("no-scroll");
     };
 
-    const handleEditPrize = (prize: Omit<PrizeManagerProps, "handleEdit">) => {
+    const handleEditPrize = (prize: Omit<PrizeManagerProps, "handleEdit" | "handleDecreaseQuantity" | "handleVisibility">) => {
         setSelectedPrize(prize);
         setEditing(true);
         resetScroll();
         setPrizeEditorPopupVisible(true);
     };
+
+    const handleDecreaseQuantity = (prize: Omit<PrizeManagerProps, "handleEdit" | "handleDecreaseQuantity" | "handleVisibility">) => {
+        let newQuantity = prize.quantity - 1;
+        fetch(`http://${IP}:5000/api/prizesList`, {
+            method: "PATCH",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({premium: false, id: prize.id, field: "quantity", value: newQuantity})
+        })
+            .then(async (res) => {
+                if (!res.ok) {
+                    const errorDetails = await res.text();
+                    console.error("Server response:", errorDetails);
+                    throw new Error("Failed to update prize.");
+                }
+                // Reload the data after the button is clicked
+                fetch(`http://${IP}:5000/api/prizesList`)
+                    .then((res) => res.json())
+                    .then(setPrizesList)
+                    .catch((err) => console.error("Failed to fetch data:", err));
+            })
+            .catch((err) => {
+                console.error("Error details:", err);
+            });
+    }
+
+    const handleVisibility = (prize: Omit<PrizeManagerProps, "handleEdit" | "handleDecreaseQuantity" | "handleVisibility">) => {
+        console.log(prize.premium)
+        fetch(`http://${IP}:5000/api/prizesList`, {
+            method: "PATCH",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({premium: false, id: prize.id, field: "visible", value: !prize.visible})
+        })
+            .then(async (res) => {
+                if (!res.ok) {
+                    const errorDetails = await res.text();
+                    console.error("Server response:", errorDetails);
+                    throw new Error("Failed to update prize.");
+                }
+                // Reload the data after the button is clicked
+                fetch(`http://${IP}:5000/api/prizesList`)
+                    .then((res) => res.json())
+                    .then(setPrizesList)
+                    .catch((err) => console.error("Failed to fetch data:", err));
+            })
+            .catch((err) => {
+                console.error("Error details:", err);
+            });
+    }
 
     return isAdmin ? (
         <main className="manage-prizes-page">
@@ -92,11 +147,10 @@ function ManagePrizesPage() {
                     <PrizeManager
                         key={item.id}
                         {...item}
-                        handleEdit={() => {
-                            handleEditPrize(item);
-                            document.body.classList.add("no-scroll");
-                        }}
+                        handleEdit={() => {handleEditPrize(item)}}
                         premium={false}
+                        handleDecreaseQuantity={() => handleDecreaseQuantity(item)}
+                        handleVisibility={() => handleVisibility(item)}
                     />
                 ))}
             </div>

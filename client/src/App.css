@@ -190,6 +190,7 @@ form.prints-request-form .input-area input:valid {
 }
 .clickable {
     cursor: pointer;
+    user-select: none;
 }
 
 .no-scroll {
