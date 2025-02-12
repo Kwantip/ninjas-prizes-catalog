@@ -1,8 +1,5 @@
 import "./PrizeManager.css";
 
-import { IP } from "../App";
-import { useState } from "react";
-
 export interface PrizeManagerProps {
     id: number;
     name: string;
@@ -18,7 +15,7 @@ export interface PrizeManagerProps {
     handleDecreaseQuantity: () => void;
     handleVisibility: () => void;
 }
-function PrizeManager({id, name, price, unit, quantity, visible, premium, handleEdit, handleDecreaseQuantity, handleVisibility}: PrizeManagerProps) {
+function PrizeManager({ name, price, unit, quantity, visible, handleEdit, handleDecreaseQuantity, handleVisibility}: PrizeManagerProps) {
 
     return (
         <div className="prize">
