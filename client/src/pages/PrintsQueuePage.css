@@ -15,7 +15,10 @@
 .queue-items-section {
     display: flex;
     justify-content: space-around;
-    flex-wrap: wrap;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    /* flex-wrap: wrap; */
     row-gap: 30px;
 }
 

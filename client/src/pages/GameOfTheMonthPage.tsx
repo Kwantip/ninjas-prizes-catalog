@@ -31,9 +31,9 @@ interface LeaderBoardEditorProps {
 function LeaderBoardEditor({ id, firstName, lastInitial, score, handleFieldChange, handleDelete }: LeaderBoardEditorProps) {
     return (
         <form className="leaderboard-editor">
-            <input value={firstName} onChange={(e) => handleFieldChange(id, "firstName", e.target.value)} />
-            <input value={lastInitial} onChange={(e) => handleFieldChange(id, "lastInitial", e.target.value)} />
-            <input value={score} onChange={(e) => handleFieldChange(id, "score", e.target.value)} />
+            <input type="text" value={firstName} onChange={(e) => handleFieldChange(id, "firstName", e.target.value)} />
+            <input type="text" value={lastInitial} onChange={(e) => handleFieldChange(id, "lastInitial", e.target.value)} />
+            <input type="number" value={score} onChange={(e) => handleFieldChange(id, "score", e.target.value)} />
             <span className="material-symbols-outlined clickable" onClick={() => handleDelete(id)}>close</span>
         </form>
     )
@@ -62,12 +62,12 @@ function GameOfTheMonthPage() {
     const [displayLeaderboard, setDisplayLeaderboard] = useState<{ id: number; firstName: string; lastInitial: string; score: number}[]>([]);
     const [editingLeaderboard, setEditingLeaderboard] = useState(false);
     let scoreIdCounter = Math.max(...leaderboard.map((item) => item.id), 0) + 1;
-    const [newScore, setNewScore] = useState({
-        id: scoreIdCounter,
-        firstName: "",
-        lastInitial: "",
-        score: 0
-    });
+    // const [newScore, setNewScore] = useState({
+    //     id: scoreIdCounter,
+    //     firstName: "",
+    //     lastInitial: "",
+    //     score: 0
+    // });
     const [copyMsg, setCopyMsg] = useState("Click to Copy");
     const [settingNewGame, setSettingNewGame] = useState(false);
     const [newGame, setNewGame] = useState({
@@ -154,43 +154,42 @@ function GameOfTheMonthPage() {
 
     // LEADERBOARD SECTION
     // Submit new score to the leaderboard 
-
-    const handleNewScoreSubmit = () => {
-        if (!newScore.firstName || !newScore.lastInitial || !newScore.score) {
-            console.error("INVALID DATA!!");
-            return;
-        }
-        console.log(`${newScore.firstName} ${newScore.lastInitial}: ${newScore.score}`);
-        fetch(`http://${IP}:5000/api/leaderboardScore`, {
-            method: "POST",
-            headers: {"Content-Type": "application/json"},
-            body: JSON.stringify(newScore),
-        })
-            .then(async (res) => {
-                if (!res.ok) {
-                    const errorDetails = await res.text();
-                    console.error("Server response: ", errorDetails);
-                    throw new Error("Failed to add new score");
-                }
-                // Re-fetch leaderboard data after successful score submission
-                return fetch(`http://${IP}:5000/api/leaderboardScore`)
-                    .then((res) => res.json())
-                    .then(setLeaderboard)
-                    .catch((err) => console.error("Failed to refresh leaderboard: ", err));
-            })
-            .then(() => {
-                setEditingLeaderboard(false);
-                setNewScore({
-                    id: scoreIdCounter++,
-                    firstName: "",
-                    lastInitial: "",
-                    score: 0
-                });
-            })
-            .catch((err) => {
-                console.error("Error details:", err);
-            });
-    }
+    // const handleNewScoreSubmit = () => {
+    //     if (!newScore.firstName || !newScore.lastInitial || !newScore.score) {
+    //         console.error("INVALID DATA!!");
+    //         return;
+    //     }
+    //     console.log(`${newScore.firstName} ${newScore.lastInitial}: ${newScore.score}`);
+    //     fetch(`http://${IP}:5000/api/leaderboardScore`, {
+    //         method: "POST",
+    //         headers: {"Content-Type": "application/json"},
+    //         body: JSON.stringify(newScore),
+    //     })
+    //         .then(async (res) => {
+    //             if (!res.ok) {
+    //                 const errorDetails = await res.text();
+    //                 console.error("Server response: ", errorDetails);
+    //                 throw new Error("Failed to add new score");
+    //             }
+    //             // Re-fetch leaderboard data after successful score submission
+    //             return fetch(`http://${IP}:5000/api/leaderboardScore`)
+    //                 .then((res) => res.json())
+    //                 .then(setLeaderboard)
+    //                 .catch((err) => console.error("Failed to refresh leaderboard: ", err));
+    //         })
+    //         .then(() => {
+    //             setEditingLeaderboard(false);
+    //             setNewScore({
+    //                 id: scoreIdCounter++,
+    //                 firstName: "",
+    //                 lastInitial: "",
+    //                 score: 0
+    //             });
+    //         })
+    //         .catch((err) => {
+    //             console.error("Error details:", err);
+    //         });
+    // }
     // Handle editing score
     const handleScoreFieldChange = (id: number, field: string, value: any) => {
         setLeaderboard((prev) => prev.map((item) => item.id === id ? { ...item, [field]: value } : item));
@@ -201,10 +200,35 @@ function GameOfTheMonthPage() {
         setLeaderboard(leaderboard.filter((item) => item.id !== id));
         setDisplayLeaderboard(displayLeaderboard.filter((item) => item.id !== id));
     }
+    // Handle adding new row to the leaderboard
+    const handleAddNewScore = () => {
+        console.log(`New ID: ${scoreIdCounter}`)
+        setLeaderboard((prev) => {
+            return [
+                ...prev,
+                {id: scoreIdCounter, firstName: "", lastInitial: "", score: 0}
+            ];
+        })
+        setDisplayLeaderboard((prev) => {
+            return [
+                ...prev,
+                {id: scoreIdCounter, firstName: "", lastInitial: "", score: 0}
+            ];
+        })
+    }
     // Handle updating the leaderboard
     const handleUpdateLeaderboard = () => {
+        // Validate the data
+        leaderboard.forEach(element => {
+            if (element.id === null || 
+                !element.firstName || element.firstName === "" ||
+                !element.lastInitial || element.lastInitial === "" ||
+                element.score <= 0) {
+                throw new Error("Invalid score!")
+            }
+        });
         fetch(`http://${IP}:5000/api/leaderboardScore`, {
-            method: 'PATCH',
+            method: 'PUT',
             headers: {"Content-Type": "application/json"},
             body: JSON.stringify(leaderboard),
         })
@@ -243,8 +267,6 @@ function GameOfTheMonthPage() {
                 console.error("Error details: ", err);
             })
     }
-
-    console.log("LEADER: ", displayLeaderboard)
 
     return (
         <main className="game-of-the-month-page">
@@ -287,17 +309,19 @@ function GameOfTheMonthPage() {
                             {editingLeaderboard ? (
                                 <>
                                     {displayLeaderboard.map((item) => (
-                                        <LeaderBoardEditor key={item.id} {...item} handleFieldChange={handleScoreFieldChange} handleDelete={handleScoreDelete}/>
+                                        item.id !== null && <LeaderBoardEditor key={item.id} {...item} handleFieldChange={handleScoreFieldChange} handleDelete={handleScoreDelete}/>
                                     ))}
                                     <br></br>
+                                    <p className="add-new-btn" onClick={handleAddNewScore}>+</p>
                                     <button onClick={handleUpdateLeaderboard}>Update</button>
                                 </>
                                 ) : (
                                 displayLeaderboard.map((item, index) => (
-                                    <LeaderBoardItem key={item.id} {...item} rank={index} />
+                                    item.id !== null && <LeaderBoardItem key={item.id} {...item} rank={index} />
                                 ))
                             )}
-                            {isAdmin && (editingLeaderboard ? (
+                            {isAdmin && !editingLeaderboard && <button onClick={() => setEditingLeaderboard(true)}>Edit</button>}
+                            {/* {isAdmin && (editingLeaderboard ? (
                                 <>
                                     <br></br>
                                     <h3>Add New Score</h3>
@@ -319,7 +343,7 @@ function GameOfTheMonthPage() {
                                 <>
                                     <button onClick={() => setEditingLeaderboard(true)}>Edit</button>
                                 </>
-                            ))}
+                            ))} */}
                         </div>
                     </div>
                     <div className="past-games-container">

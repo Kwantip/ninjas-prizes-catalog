@@ -34,7 +34,7 @@ function QueueItem({ id, firstName, lastInitial, printName, status }: QueueItemP
                     break;
                 case "PaymentRequired":
                     setStatusLabel("$");
-                    setStatusExpanded("$ Required")
+                    setStatusExpanded("$ Needed")
                     break;
                 case "OrderDenied":
                     setStatusLabel("X");
@@ -54,16 +54,18 @@ function QueueItem({ id, firstName, lastInitial, printName, status }: QueueItemP
     return (
         <div className="queue-item">
             <div className="detail-section">
-                <div className="label-section">
+                <div className="status-section">
                     {status === "Completed" ? <span className='material-symbols-outlined status-label'>check</span>
                         : status === "OrderDenied" ? <span className='material-symbols-outlined status-label'>close</span>
                         : <div className="status-label">{statusLabel}</div>
                     }
                     <div className="status-expanded">{statusExpanded}</div>
                 </div>
-                <h2>{`${firstName} ${lastInitial}.`}</h2>
-                <p><strong>Print ID </strong>{id}</p>
-                <p><strong>Print Name </strong>{printName}</p>
+                <div className="label-section">
+                    <h2>{`${firstName} ${lastInitial}.`}</h2>
+                    <p><strong>Print ID </strong>{id}</p>
+                    <p><strong>Print Name </strong>{printName}</p>
+                </div>
             </div>
         </div>
     );

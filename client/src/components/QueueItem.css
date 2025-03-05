@@ -5,13 +5,14 @@
 }
 .detail-section {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     justify-content: center;
+    align-items: center;
 
     position: relative;
     box-sizing: border-box;
 
-    padding-left: 35%;
+    /* padding-left: 35%; */
 
     width: 500px;
     height: 150px;
@@ -25,7 +26,7 @@
 .detail-section p {
     padding-left: 20px;
 }
-.label-section {
+.status-section {
     position: absolute;
     left: 0;
 
@@ -61,7 +62,7 @@ span.status-label {
     font-size: 96px;
     font-weight: 900;
 }
-.detail-section:hover .label-section {
+.detail-section:hover .status-section {
     width: 100%;
 }
 .detail-section:hover .status-label {

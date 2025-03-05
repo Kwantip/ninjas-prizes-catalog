@@ -13,8 +13,6 @@ export interface EarnLoseCoinsEditorProps {
 
 
 function EarnLoseCoinsEditor({ id, action, price, unit, type, multipliable, handleDelete, handleUpdateRow }: EarnLoseCoinsEditorProps) {
-    // console.log(`${action} yay ${multipliable}`)
-
     return (
         <form className={type==="earnCoins" ? (`earn-coins-editor`) : ("lose-coins-editor")}>
             <input type="text" value={action} onChange={(e) => handleUpdateRow(id, "action", e.target.value, type)} />

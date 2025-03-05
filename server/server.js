@@ -236,7 +236,7 @@ app.post('/api/leaderboardScore', async (req, res) => {
     }
 });
 // Updating the leaderboard score
-app.patch('/api/leaderboardScore', async (req, res) => {
+app.put('/api/leaderboardScore', async (req, res) => {
     try {
         const data = JSON.parse(await fs.readFile(dataFilePath, 'utf-8'));
 
@@ -253,6 +253,13 @@ app.patch('/api/leaderboardScore', async (req, res) => {
         res.status(500).json({ message: 'Error reading data file' });
     }
 });
+// app.put('/api/leaderboardScore', async (req, res) => {
+//     try {
+//         const data = JSON.parse(await fs.readFile(dataFilePath, 'utf-8'));
+
+//         // Update the leaderboard
+//     }
+// });
 
 // Route to fetch prizes page data
 app.get('/api/prizesList', async (req, res) => {
