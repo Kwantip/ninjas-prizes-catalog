@@ -14,7 +14,7 @@
 
     /* padding-left: 35%; */
 
-    width: 500px;
+    width: 700px;
     height: 150px;
 
     border: 3px solid var(--color-brand-primary);
@@ -22,11 +22,12 @@
 
     text-align: left;
 
+    overflow: hidden;
 }
 .detail-section p {
-    padding-left: 20px;
+    /* padding-left: 10px; */
 }
-.status-section {
+.detail-section .status-section {
     position: absolute;
     left: 0;
 
@@ -48,6 +49,8 @@
     opacity: 0;
 
     transition: all 0.5s;
+
+    text-overflow: clip;
 }
 .status-label {
     position: absolute;
