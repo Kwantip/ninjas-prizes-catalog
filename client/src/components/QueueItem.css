@@ -6,7 +6,7 @@
 .detail-section {
     display: flex;
     flex-direction: row;
-    justify-content: center;
+    /* justify-content: center; */
     align-items: center;
 
     position: relative;
@@ -44,20 +44,20 @@
     color: var(--color-brand-white);
 
     transition: width 1s;
+
+    z-index: 2;
 }
 .status-expanded {
     opacity: 0;
-
     transition: all 0.5s;
-
-    text-overflow: clip;
+    height: 0;
 }
 .status-label {
     position: absolute;
     left: 50%;
     top: 50%;
     transform: translate(-50%, -50%);
-    opacity: 1;
+    opacity: 2;
 
     transition: all 1.5s;
 }
@@ -72,5 +72,12 @@ span.status-label {
     opacity: 0;
 }
 .detail-section:hover .status-expanded {
+    height: 100%;
     opacity: 1;
+}
+
+.queue-item .label-section {
+    position: absolute;
+    left: 35%;
+    z-index: 1;
 }

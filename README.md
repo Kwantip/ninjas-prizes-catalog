@@ -54,7 +54,18 @@ To run in dev mode:
 npm run dev
 ```
 To run in deployment mode 
-```
+1. Run ```
 npm run build
-npm run start
+```
+2. Move the dist folder into the Apache24 > htdocs
+3. Move the .htacess file into the dist directory
+4. Find the bin directory and copy its path
+5. Open cmd in admin mode
+6. cd into the bin directory
+7. Run ```
+httpd.exe -k start
+```
+8. Go to the ninjas-prizes-catalog root directory
+9. Run ```
+npm run start-server
 ```

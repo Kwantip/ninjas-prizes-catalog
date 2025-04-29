@@ -67,6 +67,7 @@ const AdminProvider = ({ children }: any) => {
             setTimeout(() => {
               setAdmin(false);
               localStorage.removeItem("isAdmin");
+              document.body.classList.remove("no-scroll");
               console.log("Admin access expired");
             }, 600000);
   

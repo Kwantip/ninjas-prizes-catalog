@@ -5,7 +5,7 @@
     height: 75%;
 
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1.25fr 1fr;
 
     background-color: var(--color-brand-white);
 

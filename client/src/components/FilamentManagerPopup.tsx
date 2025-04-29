@@ -33,7 +33,7 @@ function FilamentManagerPopup({ handleClose }: FilamentManagerPopupProps) {
             .catch((err) => console.error("Failed to fetch colors:", err));
     }, []);
 
-    let colorIdCounter = Math.max(...availableColors.map((item) => item.id), 0);
+    let colorIdCounter = Math.max(...availableColors.map((item) => item.id), 0) + 1;
 
     const handleUpdate = (id: number, value: any) => {
         setAvailableColors((prev) =>
@@ -46,7 +46,7 @@ function FilamentManagerPopup({ handleClose }: FilamentManagerPopupProps) {
         setAvailableColors((prev) => {
             return [
                 ...prev,
-                { id: colorIdCounter++, color: "" },
+                { id: colorIdCounter, color: "" },
             ];
         })
     };
