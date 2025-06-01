@@ -337,7 +337,7 @@ form.edit-earn-coins textarea {
 
 .available-coins-block {
     display: flex;
-    margin:2rem 0 3rem;
+    margin-top:2rem;
     justify-content: center;
     gap: 75px;
 }
