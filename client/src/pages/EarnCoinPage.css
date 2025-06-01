@@ -17,17 +17,18 @@ main{
     margin:0;
 }
 
-/* main:after {
+main:after {
   content: "";
-  background-image: url("/client/public/assets/grid.svg");
+  background-image: url('/assets/grid.svg');
   z-index: 0;
   position: absolute;
-  width: 100%;
-  height: 100%;
-  top: 0;
+  width: 100vw;
+  height: 105%;
+  top: -50px;
+  left:-100px;
   opacity: 0.4;
   filter: invert(1);
-} */
+}
 
 main.earn-coins-page {
     display: flex;
