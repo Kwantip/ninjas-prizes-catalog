@@ -1,40 +1,5 @@
 @import "../colors.css";
 
-main::before {
-  content: "";
-  display: block;
-  position: absolute;
-  width: 100vw;
-  height: 100%;
-  background: radial-gradient(circle, rgba(2, 0, 36, 0) 0%, #fafafa 100%);
-  z-index: 0;
-  top: -50px;
-  left: -100px;
-  pointer-events: none;
-}
-
-main{
-    position:relative;
-    margin:0;
-}
-
-main > * {
-    z-index: 2;
-}
-
-main:after {
-  content: "";
-  background-image: url('/assets/grid.svg');
-  z-index: 0;
-  position: absolute;
-  width: 100vw;
-  height: 125%;
-  top: -50px;
-  left:-100px;
-  opacity: 0.4;
-  filter: invert(1);
-  pointer-events: none;
-}
 
 .gradient {
   height: fit-content;
@@ -372,7 +337,7 @@ form.edit-earn-coins textarea {
 
 .available-coins-block {
     display: flex;
-    margin-top:2rem;
+    margin:2rem 0 3rem;
     justify-content: center;
     gap: 75px;
 }

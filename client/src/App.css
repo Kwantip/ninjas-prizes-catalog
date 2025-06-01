@@ -10,6 +10,7 @@
 main {
     margin: 50px 100px;
     min-height: calc(100vh - 150px);
+    z-index: 2;
 }
 main.admin-access-page {
     display: flex;
@@ -18,6 +19,41 @@ main.admin-access-page {
     align-items: center;
     gap: 50px;
 }
+
+main::before {
+  content: "";
+  display: block;
+  position: absolute;
+  width: 100vw;
+  height: 100%;
+  /* background: linear-gradient(0.25turn, rgba(245, 245, 245, 0.75) 0%, rgba(255, 255, 255, .25) 30%, rgba(255, 255, 255, 0) 50%, rgba(255, 255, 255, .25) 70%, rgba(255, 255, 255, 0.75) 100%); */
+  z-index: 1;
+  top: 0;
+  pointer-events: none;
+}
+
+main{
+    position:relative;
+    margin:0;
+}
+
+main > * {
+    z-index: 2;
+}
+
+main:after {
+  content: "";
+  background-image: url('/assets/grid.svg');
+  z-index: 0;
+  position: absolute;
+  width: 100vw;
+  height: 125%;
+  top: 0;
+  opacity: 0.4;
+  filter: invert(1);
+  pointer-events: none;
+}
+
 
 h1, h2, h3, h4, p {
     margin: 0;
