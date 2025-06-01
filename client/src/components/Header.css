@@ -3,6 +3,7 @@ nav {
     background-color: var(--color-brand-primary);
     width: 100vw;
     max-width: 100%;
+    z-index: 2;
 }
 nav p.logout {
     background-color: var(--color-brand-red);
