@@ -10,6 +10,7 @@ main::before {
   z-index: 0;
   top: -50px;
   left: -100px;
+  pointer-events: none;
 }
 
 main{
@@ -32,6 +33,7 @@ main:after {
   left:-100px;
   opacity: 0.4;
   filter: invert(1);
+  pointer-events: none;
 }
 
 .gradient {
@@ -213,7 +215,6 @@ form.edit-earn-coins textarea {
     align-items: center;
 
     width: 100%;
-    height: 100%;
 
     position: absolute;
     top: 0;
@@ -224,7 +225,7 @@ form.edit-earn-coins textarea {
     border-radius: 500px;
 
     opacity:0;
-    transition: opacity 0.15s;
+    transition: opacity 0.4s;
 
     transform-origin: center;
 
@@ -232,7 +233,7 @@ form.edit-earn-coins textarea {
     font-weight: 900;
 }
 .belt-multiplier-block .ninja:hover::after {
-    opacity:1;
+    opacity:.95;
 }
 .belt-multiplier-block .ninja img {
     display: block;
