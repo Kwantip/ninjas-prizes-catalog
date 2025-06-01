@@ -17,6 +17,10 @@ main{
     margin:0;
 }
 
+main > * {
+    z-index: 2;
+}
+
 main:after {
   content: "";
   background-image: url('/assets/grid.svg');
