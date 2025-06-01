@@ -40,6 +40,45 @@ function EarnCoinPage() {
 
     let earnCoinsIdCounter = Math.max(...earnCoinsRows.map((row) => row.id), 0) + 1;
     let loseCoinsIdCounter = Math.max(...loseCoinsRows.map((row) => row.id), 0) + 1;
+
+    const useScrollAnimation = () => {
+        useEffect(() => {
+            const observer = new IntersectionObserver(
+                (entries) => {
+                    entries.forEach((entry) => {
+                        if (entry.isIntersecting) {
+                            entry.target.classList.add('animate-in');
+                            
+                            if (entry.target.classList.contains('belt-multiplier-block')) {
+                                const ninjas = entry.target.querySelectorAll('.ninja');
+                                ninjas.forEach((ninja, index) => {
+                                    setTimeout(() => {
+                                        ninja.classList.add('animate-in');
+                                    }, index * 100); 
+                                });
+                            }
+                        }
+                    });
+                },
+                {
+                    threshold: 0.1,
+                    rootMargin: '0px 0px -50px 0px'
+                }
+            );
+
+            const animatedElements = document.querySelectorAll(
+                '.animate-slide-left, .animate-slide-right, .animate-slide-bottom, .animate-fade-scale, .belt-multiplier-block'
+            );
+            
+            animatedElements.forEach((el) => observer.observe(el));
+
+            return () => {
+                animatedElements.forEach((el) => observer.unobserve(el));
+            };
+        }, [earnCoinsRows, loseCoinsRows]);
+    };
+
+    useScrollAnimation();
     
     const handleCalc = () => {
         const action = earnCoinsRows.find((item) => item.id === calcField.actionId);
@@ -221,7 +260,7 @@ function EarnCoinPage() {
     return (
         <main className="earn-coins-page">
             <div className="gradient"></div>
-            <div className="announcement-container">
+            <div className="announcement-container animate-slide-bottom">
                 {isAdmin ? (
                     <>
                         <h2>Announcement</h2>
@@ -254,7 +293,7 @@ function EarnCoinPage() {
                 )}
             </div>
             <div className="earn-lose-coins-blocks-container">
-                <div>
+                <div className = "animate-slide-left">
                     <h2>How to Earn Coins</h2>
                     {isEditingEarnCoins && isAdmin ? (
                         <div className="container">
@@ -293,7 +332,7 @@ function EarnCoinPage() {
                         </div>
                     )}
                 </div>
-                <div>
+                <div className="animate-slide-right">
                     <h2>How to Lose Coins</h2>
                     {isEditingLoseCoins && isAdmin ? (
                         <div className="container">
@@ -327,7 +366,7 @@ function EarnCoinPage() {
                     )}
                 </div>
             </div>
-            <div className="belt-multiplier-container">
+            <div className="belt-multiplier-container animate-fade-scale">
                 <h2>Belt Multiplier</h2>
                 <p>Hover to see the coin belt multiplier</p>
                 <div className="belt-multiplier-block container">
@@ -396,7 +435,7 @@ function EarnCoinPage() {
                     </div>
                 </div>
             </div>
-            <div className="coins-calculator-container">
+            <div className="coins-calculator-container animate-slide-bottom">
                 <h2>Coins Calculator</h2>
                 <p>Calculate how many coins you've earned and ask a sensei for them!</p>
                 <div className="coins-calculator-block container">
@@ -430,7 +469,7 @@ function EarnCoinPage() {
                     <p>{calcCoin}</p>
                 </div>
             </div>
-            <div className="available-coins-container">
+            <div className="available-coins-container animate-slide-bottom">
                 <h2>Available Coins</h2>
                 <p>Hover to see how to get each coin</p>
                 <div className="available-coins-block">

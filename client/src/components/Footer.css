@@ -15,7 +15,7 @@ footer {
 
     background: linear-gradient(135deg, #2b6cb0 0%, #1e4a8c 100%);
     
-    margin-top:2rem;
+    margin-top:8rem;
 }
 footer button {
     border-color: var(--color-brand-black);
