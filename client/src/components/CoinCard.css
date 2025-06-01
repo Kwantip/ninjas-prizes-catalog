@@ -7,8 +7,12 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    flex-flow:column nowrap;
+    gap:1rem;
 
-    border: 7px solid var(--color-brand-primary);
+    background-color: rgba(255,255,255,.75);
+
+    border: 4px solid var(--color-brand-primary);
     border-radius: 25px;
 
     font-weight: 800;
@@ -17,6 +21,11 @@
     position: relative;
     z-index: 1;
 
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+
+
+    
+    
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
 
     &::after {
@@ -43,19 +52,74 @@
         border-radius: 5000px;
 
 
-        transition: all 0.5s;
+
 
         background-color: var(--color-brand-primary);
     }
     &:hover {
-        color: var(--color-brand-white);
         cursor: default;
-        &::before {
-            left: 0;
-            bottom: 0;
-            height: 100%;
-            width: 100%;
-            border-radius: 5px;
-        }
+        
+         .coin-card-description{
+            opacity: 1;
+            transform:translateY(0);
+            }
+    }
+}
+
+.coin-card-emoji{
+    padding:.5rem;
+    border-radius: 5rem;
+    width:2.75rem;
+    height:2.75rem;
+
+    /* position: absolute; */
+    /* top: 20%; */
+
+    transition: transform 0.3s ease;
+}
+
+.coin-card:hover .coin-card-emoji{
+    transform: scale(1.1) rotate(45deg);
+}
+
+.coin-card:hover{
+    transform: translateY(-10px) scale(1.02);
+    box-shadow: 0 20px 40px rgba(74,158,255,0.3);
+}
+.coin-card-header{
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+.coin-card-description{
+    opacity: 0;
+    transform:translateY(50%);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    height:5rem;
+
+    font-weight: 400;
+    font-size: 20px;
+}
+
+.pulse {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(74,158,255, 0.1);
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% {
+        width: 0;
+        height: 0;
+        opacity: 1;
+    }
+    100% {
+        width: 250px;
+        height: 250px;
+        opacity: 0;
     }
 }

@@ -396,9 +396,9 @@ function EarnCoinPage() {
                 <h2>Available Coins</h2>
                 <p>Hover to see how to get each coin</p>
                 <div className="available-coins-block">
-                    <CoinCard coin="Silver Coin" conversion="See above" />
-                    <CoinCard coin="Gold Coin" conversion="Trade 5 Silver Coins" />
-                    <CoinCard coin="Obsidian Coin" conversion="Trade 5 Gold Coins" />
+                    <CoinCard coin="Silver Coin" conversion="See above" emoji="🟡" emojiColor="yellow"/>
+                    <CoinCard coin="Gold Coin" conversion="Trade 5 Silver Coins" emoji="⚪" emojiColor="silver"/>
+                    <CoinCard coin="Obsidian Coin" conversion="Trade 5 Gold Coins" emoji="⚫" emojiColor="black"/>
                 </div>
             </div>
         </main>
