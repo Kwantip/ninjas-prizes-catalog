@@ -220,6 +220,7 @@ function EarnCoinPage() {
     
     return (
         <main className="earn-coins-page">
+            <div className="gradient"></div>
             <div className="announcement-container">
                 {isAdmin ? (
                     <>

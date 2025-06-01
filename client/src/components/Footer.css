@@ -8,6 +8,11 @@ footer {
     bottom: 0;
 
     padding-top: 50px;
+
+    z-index: 2;
+
+    position:relative;
+
 }
 footer button {
     border-color: var(--color-brand-black);
