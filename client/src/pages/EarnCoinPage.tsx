@@ -365,9 +365,10 @@ function EarnCoinPage() {
                 <p>Calculate how many coins you've earned and ask a sensei for them!</p>
                 <div className="coins-calculator-block container">
                     <form>
-                        <label>My belt level
+                        <label>My belt level</label>
+                        <div className="custom-select">
                             <select value={calcField.multiplier} onChange={(e) => handleCalcFieldChange("multiplier", e.target.value)}>
-                                <option></option>
+                                <option value="">Select your belt level</option>
                                 <option value="white">White</option>
                                 <option value="yellow">Yellow</option>
                                 <option value="orange">Orange</option>
@@ -378,15 +379,16 @@ function EarnCoinPage() {
                                 <option value="red">Red</option>
                                 <option value="black">Black</option>
                             </select>
-                        </label>
-                        <label>What I did
+                        </div>
+                        <label>What I did</label>
+                        <div className="custom-select">
                             <select onChange={(e) => handleCalcFieldChange("actionId", +e.target.value)}>
-                                <option></option>
+                                <option value="">Select your activity</option>
                                 {earnCoinsRows.map((item) => (
                                     <option value={item.id}>{item.action}</option>
                                 ))}
                             </select>
-                        </label>
+                        </div>
                     </form>
                     <button onClick={handleCalc}>Calculate</button>
                     <p>{calcCoin}</p>
