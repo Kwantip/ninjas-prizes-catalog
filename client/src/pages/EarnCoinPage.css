@@ -202,17 +202,6 @@ form.edit-earn-coins textarea {
     pointer-events: none;
 }
 
-.tooltip::after {
-    content: '';
-    position: absolute;
-    top: 100%;
-    left: 52%;
-    transform: translateX(-50%);
-
-    border: 15px solid transparent;
-    border-top-color: rgba(0, 0, 0, 0.9);
-}
-
 .ninja:hover .tooltip {
     opacity: 1;
     visibility: visible;
