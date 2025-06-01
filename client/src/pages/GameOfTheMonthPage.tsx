@@ -270,6 +270,7 @@ function GameOfTheMonthPage() {
 
     return (
         <main className="game-of-the-month-page">
+            <div className="gradient"></div>
             {gameOfTheMonthData && (
                 <>
                     <div className="game-of-the-month-container">

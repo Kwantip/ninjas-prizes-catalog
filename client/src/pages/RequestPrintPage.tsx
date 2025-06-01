@@ -173,6 +173,7 @@ function RequestPrintPage() {
     } else {
         return (
             <main>
+            <div className="gradient"></div>
                 <h1>Before Requesting a Custom Print...</h1>
                 <div className="steps-container">
                     <Step stepNum={1} message="Make sure that the print fits in a 12” x 12” x 12” box."/>

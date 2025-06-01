@@ -77,6 +77,7 @@ function PrintsQueuePage() {
 
     return (
         <main className="prints-queue-page">
+            <div className="gradient"></div>
             <h1>Prints Queue</h1>
             <div className="filter-area">
                 <h4>Filter</h4>

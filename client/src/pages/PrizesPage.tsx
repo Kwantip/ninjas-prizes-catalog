@@ -72,6 +72,7 @@ function PrizesPage() {
     // console.log(prizesList)
     return (
         <main>
+            <div className="gradient"></div>
             <h1>Prizes</h1>
             <div className="prizes-container">
                 {/* <p>Talk to a sensei to buy these items!</p> */}
