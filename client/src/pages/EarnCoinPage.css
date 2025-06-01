@@ -217,6 +217,7 @@ form.edit-earn-coins textarea {
     z-index: 1000;
     backdrop-filter: blur(10px);
     border: 1px solid rgba(255, 255, 255, 0.2);
+    pointer-events: none;
 }
 
 .tooltip::after {
