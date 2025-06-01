@@ -333,37 +333,64 @@ function EarnCoinPage() {
                 <div className="belt-multiplier-block container">
                     <div className="ninja white">
                         <div className="tooltip">White Belt: 1x Multiplier</div>
+                        <div className="ninja-shimmer-wrapper">
+                            <div className="ninja-shimmer"></div>
+                        </div>
                         <img src="./assets/CN_WhiteBelt@8x.png" alt="white belt" />
                     </div>
                     <div className="ninja yellow">
+                        <div className="ninja-shimmer-wrapper">
+                            <div className="ninja-shimmer"></div>
+                        </div>
                         <div className="tooltip">Yellow Belt: 2x Multiplier</div>
                         <img src="./assets/CN_YellowBelt@8x.png" alt="yellow belt" />
                     </div>
                     <div className="ninja orange">
+                        <div className="ninja-shimmer-wrapper">
+                            <div className="ninja-shimmer"></div>
+                        </div>
                         <div className="tooltip">Orange Belt: 2x Multiplier</div>
                         <img src="./assets/CN_OrangeBelt@8x.png" alt="orange belt" />
                     </div>
                     <div className="ninja green">
+                        <div className="ninja-shimmer-wrapper">
+                            <div className="ninja-shimmer"></div>
+                        </div>
                         <div className="tooltip">Green Belt: 4x Multiplier</div>
                         <img src="./assets/CN_GreenBelt@8x.png" alt="green belt" />
                     </div>
                     <div className="ninja blue">
+                        <div className="ninja-shimmer-wrapper">
+                            <div className="ninja-shimmer"></div>
+                        </div>
                         <div className="tooltip">Blue Belt: 3x Multiplier</div>
                         <img src="./assets/CN_BlueBelt@8x.png" alt="blue belt" />
                     </div>
                     <div className="ninja purple">
+                        <div className="ninja-shimmer-wrapper">
+                            <div className="ninja-shimmer"></div>
+                        </div>
                         <div className="tooltip">Purple Belt: 4x Multiplier</div>
                         <img src="./assets/CN_PurpleBelt@8x.png" alt="purple belt" />
                     </div>
                     <div className="ninja brown">
+                        <div className="ninja-shimmer-wrapper">
+                            <div className="ninja-shimmer"></div>
+                        </div>
                         <div className="tooltip">Brown Belt: 4x Multiplier</div>
                         <img src="./assets/CN_BrownBelt@8x.png" alt="brown belt" />
                     </div>
                     <div className="ninja red">
+                        <div className="ninja-shimmer-wrapper">
+                            <div className="ninja-shimmer"></div>
+                        </div>
                         <div className="tooltip">Red Belt: 5x Multiplier</div>
                         <img src="./assets/CN_RedBelt@8x.png" alt="red belt" />
                     </div>
                     <div className="ninja black">
+                        <div className="ninja-shimmer-wrapper">
+                            <div className="ninja-shimmer"></div>
+                        </div>
                         <div className="tooltip">Black Belt: 5x Multiplier</div>
                         <img src="./assets/CN_BlackBelt@8x.png" alt="black belt" />
                     </div>
