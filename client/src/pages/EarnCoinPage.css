@@ -183,7 +183,7 @@ form.edit-earn-coins textarea {
 }
 .tooltip {
     position: absolute;
-    bottom: 100%;
+    bottom: 55%;
     left: 50%;
     transform: translateX(-50%);
     background: rgba(0, 0, 0, 0.9);
@@ -206,10 +206,10 @@ form.edit-earn-coins textarea {
     content: '';
     position: absolute;
     top: 100%;
-    left: 50%;
+    left: 52%;
     transform: translateX(-50%);
 
-    border: 6px solid transparent;
+    border: 15px solid transparent;
     border-top-color: rgba(0, 0, 0, 0.9);
 }
 
