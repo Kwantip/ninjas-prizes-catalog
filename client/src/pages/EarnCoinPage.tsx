@@ -332,30 +332,39 @@ function EarnCoinPage() {
                 <p>Hover to see the coin belt multiplier</p>
                 <div className="belt-multiplier-block container">
                     <div className="ninja white">
+                        <div className="tooltip">White Belt: 1x Multiplier</div>
                         <img src="./assets/CN_WhiteBelt@8x.png" alt="white belt" />
                     </div>
                     <div className="ninja yellow">
+                        <div className="tooltip">Yellow Belt: 2x Multiplier</div>
                         <img src="./assets/CN_YellowBelt@8x.png" alt="yellow belt" />
                     </div>
                     <div className="ninja orange">
+                        <div className="tooltip">Orange Belt: 2x Multiplier</div>
                         <img src="./assets/CN_OrangeBelt@8x.png" alt="orange belt" />
                     </div>
                     <div className="ninja green">
+                        <div className="tooltip">Green Belt: 4x Multiplier</div>
                         <img src="./assets/CN_GreenBelt@8x.png" alt="green belt" />
                     </div>
                     <div className="ninja blue">
+                        <div className="tooltip">Blue Belt: 3x Multiplier</div>
                         <img src="./assets/CN_BlueBelt@8x.png" alt="blue belt" />
                     </div>
                     <div className="ninja purple">
+                        <div className="tooltip">Purple Belt: 4x Multiplier</div>
                         <img src="./assets/CN_PurpleBelt@8x.png" alt="purple belt" />
                     </div>
                     <div className="ninja brown">
+                        <div className="tooltip">Brown Belt: 4x Multiplier</div>
                         <img src="./assets/CN_BrownBelt@8x.png" alt="brown belt" />
                     </div>
                     <div className="ninja red">
+                        <div className="tooltip">Red Belt: 5x Multiplier</div>
                         <img src="./assets/CN_RedBelt@8x.png" alt="red belt" />
                     </div>
                     <div className="ninja black">
+                        <div className="tooltip">Black Belt: 5x Multiplier</div>
                         <img src="./assets/CN_BlackBelt@8x.png" alt="black belt" />
                     </div>
                 </div>
@@ -398,9 +407,9 @@ function EarnCoinPage() {
                 <h2>Available Coins</h2>
                 <p>Hover to see how to get each coin</p>
                 <div className="available-coins-block">
-                    <CoinCard coin="Silver Coin" conversion="See above" emoji="🟡" emojiColor="yellow"/>
-                    <CoinCard coin="Gold Coin" conversion="Trade 5 Silver Coins" emoji="⚪" emojiColor="silver"/>
-                    <CoinCard coin="Obsidian Coin" conversion="Trade 5 Gold Coins" emoji="⚫" emojiColor="black"/>
+                    <CoinCard coin="Silver Coin" conversion="See above" />
+                    <CoinCard coin="Gold Coin" conversion="Trade 5 Silver Coins" />
+                    <CoinCard coin="Obsidian Coin" conversion="Trade 5 Gold Coins" />
                 </div>
             </div>
         </main>

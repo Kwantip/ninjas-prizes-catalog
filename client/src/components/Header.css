@@ -1,9 +1,15 @@
 @import "../colors.css";
 nav {
-    background-color: var(--color-brand-primary);
+    background: linear-gradient(135deg, #4299e1 0%, #2b6cb0 100%);
     width: 100vw;
     max-width: 100%;
     z-index: 2;
+
+    height:150px;
+    display:flex;
+    align-items: center;
+    justify-content: center;
+    
 }
 nav p.logout {
     background-color: var(--color-brand-red);
@@ -23,8 +29,8 @@ nav ul {
     gap: 20px;
 }
 nav ul li .link-styles {
-    height: 150px;
-    width: 140px;
+    /* height: 150px; */
+    /* width: 140px; */
 
     text-align: center;
 
@@ -40,6 +46,44 @@ nav ul li .link-styles {
     text-decoration: none;
 }
 nav ul li .link-styles:hover {
-    background-color: var(--color-brand-primary-dark);
+    /* background-color: var(--color-brand-primary-dark); */
+    cursor: pointer;
+}
+nav ul li {
+    color: white;
+    text-decoration: none;
+    font-size: 1.1rem;
+    font-weight: 600;
+    padding: 0.75rem 1.5rem;
+    border-radius: 12px;
+    transition: all 0.3s ease;
+    position: relative;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+
+}
+
+nav ul li::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(45deg, rgba(255, 255, 255, 0.1), transparent);
+    border-radius: 12px;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+nav ul li::before {
+    opacity: 1;
+}
+
+nav ul li:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+    background: rgba(255, 255, 255, 0.2);
     cursor: pointer;
 }

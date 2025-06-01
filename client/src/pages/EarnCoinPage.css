@@ -67,7 +67,7 @@ main.earn-coins-page {
     gap: 50px;
 }
 main .container {
-    background-color: var(--color-brand-primary);
+    background: linear-gradient(135deg, #4a9eff 0%, #357abd 100%);
     border-radius: 20px;
     padding: 50px;
 
@@ -189,6 +189,7 @@ form.edit-earn-coins textarea {
 .belt-multiplier-block .ninja {
 
 
+
     position: relative;
     z-index: 9;
 
@@ -200,10 +201,54 @@ form.edit-earn-coins textarea {
     position: relative;
     display: inline-block;
 
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+
+    border-radius: 5rem;
+
+    box-shadow: 0px 15px 25px rgba(0, 0, 0, 0.2);
+
+
     &:hover{
-        cursor:pointer;
+        transform: scale(1.1) translateY(-10%);
+        box-shadow: 0px 15px 25px rgba(0, 0, 0, 0.4);
     }
 }
+.tooltip {
+    position: absolute;
+    bottom: 120%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0, 0, 0, 0.9);
+    color: white;
+    padding: 0.8rem 1.2rem;
+    border-radius: 12px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    white-space: nowrap;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 1000;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.tooltip::after {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    border: 6px solid transparent;
+    border-top-color: rgba(0, 0, 0, 0.9);
+}
+
+.ninja:hover .tooltip {
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(-50%) translateY(-5px);
+}
+
 .belt-multiplier-block .ninja img {
     width: 130px;
     height: auto;
@@ -237,7 +282,8 @@ form.edit-earn-coins textarea {
 .belt-multiplier-block .ninja img {
     display: block;
 }
-.ninja.white::after {
+/* girl you dont neet to repeat everything LOL */
+/* .ninja.white::after {
     border-color: var(--color-belt-white);
     background-color: var(--color-belt-white);
     content: "×1";
@@ -283,7 +329,7 @@ form.edit-earn-coins textarea {
     background-color: var(--color-belt-black);
     color: var(--color-brand-white);
     content: "×5";
-}
+} */
 
 .belt-multiplier-container p, .available-coins-container p, .coins-calculator-container p {
     color: var(--color-brand-primary);
@@ -296,7 +342,6 @@ form.edit-earn-coins textarea {
 }
 .coins-calculator-block {
     width: 350px;
-    background: linear-gradient(135deg, #4a9eff 0%, #357abd 100%);
     display:flex;
     flex-flow:column nowrap;
     gap:2rem;
