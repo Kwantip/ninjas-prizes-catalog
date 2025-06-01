@@ -3,12 +3,14 @@ nav {
     background: linear-gradient(135deg, #4299e1 0%, #2b6cb0 100%);
     width: 100vw;
     max-width: 100%;
-    z-index: 2;
+    z-index: 3;
 
-    height:150px;
+    height:225px;
     display:flex;
     align-items: center;
     justify-content: center;
+    flex-flow:column;
+    gap:3rem;
     
 }
 nav p.logout {
@@ -28,7 +30,7 @@ nav ul {
     justify-content: center;
     gap: 20px;
 }
-nav ul li .link-styles {
+nav ul a .link-styles {
     /* height: 150px; */
     /* width: 140px; */
 
@@ -45,14 +47,14 @@ nav ul li .link-styles {
     color: var(--color-brand-white);
     text-decoration: none;
 }
-nav ul li .link-styles:hover {
+nav ul a .link-styles:hover {
     /* background-color: var(--color-brand-primary-dark); */
     cursor: pointer;
 }
-nav ul li {
+nav ul a {
     color: white;
     text-decoration: none;
-    font-size: 1.1rem;
+    font-size: 1.3rem;
     font-weight: 600;
     padding: 0.75rem 1.5rem;
     border-radius: 12px;
@@ -64,7 +66,7 @@ nav ul li {
 
 }
 
-nav ul li::before {
+nav ul a::before {
     content: '';
     position: absolute;
     top: 0;
@@ -78,11 +80,11 @@ nav ul li::before {
     pointer-events: none;
 }
 
-nav ul li::before {
+nav ul a::before {
     opacity: 1;
 }
 
-nav ul li:hover {
+nav ul a:hover {
     transform: translateY(-2px);
     box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
     background: rgba(255, 255, 255, 0.2);

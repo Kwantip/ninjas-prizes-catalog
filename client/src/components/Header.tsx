@@ -32,6 +32,7 @@ function Header() {
         ) : (
             <header>
                 <nav>
+                    <img src="./assets/CodeNinjasLogoHorizontal_w_Outline.svg"></img>
                     <ul>
                         <li><Link to="/" className={"link-styles"} onClick={resetScroll}>Earn Coins</Link></li>
                         <li><Link to="/game-of-the-month" className={'link-styles'} onClick={resetScroll}>Game of the Month</Link></li>

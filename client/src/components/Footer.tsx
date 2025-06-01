@@ -54,7 +54,7 @@ function Footer() {
                 </>
             )}
             
-            <p>♥ Designed & Implemented with love by Sensei Kwantip ♥</p>
+            <p className="kwantip">♥ Designed & Implemented with love by Sensei Kwantip ♥</p>
         </footer>
     )
 }
