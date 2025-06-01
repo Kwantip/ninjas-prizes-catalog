@@ -21,7 +21,7 @@
     position: relative;
     z-index: 1;
 
-    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 
     overflow:hidden;
 
@@ -86,7 +86,7 @@
 .coin-card-description{
     opacity: 0;
     transform:translateY(50%);
-    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
     height:5rem;
 
     font-weight: 400;
