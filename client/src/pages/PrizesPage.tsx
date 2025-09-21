@@ -7,40 +7,27 @@ import { IP } from "../App";
 
 import "./PrizesPage.css";
 
+import { COIN, Price, prizeCategoryList, prizeItemList } from "../data.ts";
+
 function PrizesPage() {
-    const [prizesList, setPrizesList] = useState<{
-        id: number;
-        name: string;
-        price: number;
-        unit: string;
-        quantity: number;
-        variations: {id: number, variation: string}[] | null;
-        visible: boolean;
-        description: string;
-        imagesPaths: {id: number, file: File| null, path: string | null}[] | null
-     }[]>([]);
+    const [prizesList, setPrizesList] = useState(prizeItemList);
      const [premiumPrizesList, setPremiumPrizesList] = useState<{
         id: number;
         name: string;
-        price: number;
-        unit: string;
-        quantity: number;
-        variations: {id: number, variation: string}[] | null;
-        visible: boolean;
+        price: Price;
         description: string;
-        imagesPaths: {id: number, file: File| null, path: string | null}[] | null
+        image: string | null
      }[]>([]);
      const [isDetailedPrizePopupVisible, setDetailedPrizePopupVisible] = useState(false);
      const [selectedPrize, setSelectedPrize] = useState<Omit<PrizeProps, "handleClick">>({
         id: 9999,
         name: "Fake Item",
-        price: 10,
-        unit: "Fake Unit",
-        quantity: 99999,
-        variations: null,
-        visible: false,
+        price: {
+            quantity: 9999,
+            coinType: COIN.Gold
+        },
         description: "FAKE ITEM FAKE ITEM",
-        imagesPaths: null
+        image: ""
     });
     const [premium, setPremium] = useState(false);
 
@@ -62,11 +49,16 @@ function PrizesPage() {
         document.body.classList.remove("no-scroll");
     }
     const handleClickPrize = (prize: Omit<PrizeProps, "handleClick">, premium: boolean) => {
-        setSelectedPrize(prize);
-        setPremium(premium);
-        setDetailedPrizePopupVisible(true);
-        window.scrollTo(0, 0);
-        document.body.classList.add("no-scroll");
+        let prizeItem = prizeItemList.find((item) => item.prizeCategoryId === prize.id)
+        if (prizeItem)
+        {
+            setSelectedPrize(prize);
+            setPremium(premium);
+            setPrizesList(prizeItemList.filter((item) => item.prizeCategoryId === prize.id));
+            setDetailedPrizePopupVisible(true);
+            window.scrollTo(0, 0);
+            document.body.classList.add("no-scroll");
+        }
     }
 
     // console.log(prizesList)
@@ -91,8 +83,8 @@ function PrizesPage() {
                     <h4>Tier 1 Prizes</h4>
                     <p>Talk to a sensei to buy these items!</p>
                     <div className="prizes">
-                        {prizesList.filter((item) => `${item.price} ${item.unit}` === "1 Gold").map((prize) => (
-                            prize.visible && <Prize
+                        {prizeCategoryList.filter((item) => `${item.price.quantity} ${item.price.coinType}` === "1 Gold").map((prize) => (
+                            <Prize
                                 key={prize.id}
                                 {...prize}
                                 handleClick={() => {
@@ -106,8 +98,8 @@ function PrizesPage() {
                     <h4>Tier 2 Prizes</h4>
                     <p>Talk to a sensei to buy these items!</p>
                     <div className="prizes">
-                        {prizesList.filter((item) => `${item.price} ${item.unit}` === "2 Gold").map((prize) => (
-                            prize.visible && <Prize
+                        {prizeCategoryList.filter((item) => `${item.price.quantity} ${item.price.coinType}` === "2 Gold").map((prize) => (
+                            <Prize
                                 key={prize.id}
                                 {...prize}
                                 handleClick={() => {
@@ -121,8 +113,8 @@ function PrizesPage() {
                     <h4>Tier 3 Prizes</h4>
                     <p>Talk to a sensei to buy these items!</p>
                     <div className="prizes">
-                        {prizesList.filter((item) => `${item.price} ${item.unit}` === "3 Gold").map((prize) => (
-                            prize.visible && <Prize
+                        {prizeCategoryList.filter((item) => `${item.price.quantity} ${item.price.coinType}` === "3 Gold").map((prize) => (
+                            <Prize
                                 key={prize.id}
                                 {...prize}
                                 handleClick={() => {
@@ -137,7 +129,7 @@ function PrizesPage() {
                     <p>Click "Order" to submit a request</p>
                     <div className="prizes">
                         {premiumPrizesList.map((prize) => (
-                            prize.visible && <Prize 
+                            <Prize 
                                 key={prize.id}
                                 {...prize}
                                 handleClick={() => {
@@ -160,7 +152,7 @@ function PrizesPage() {
                 ))} */}
             </div>
             <div className="overlay-area">
-                {isDetailedPrizePopupVisible && <DetailedPrizePopup handleClose={handleClose} prize={selectedPrize} premium={premium} />}
+                {isDetailedPrizePopupVisible && <DetailedPrizePopup handleClose={handleClose} prize={selectedPrize} premium={premium} prizeList={prizesList}/>}
             </div>
         </main>
     )

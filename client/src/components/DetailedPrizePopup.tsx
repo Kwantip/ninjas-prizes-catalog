@@ -5,11 +5,11 @@ import "./DetailedPrizePopup.css"
 
 import { IP } from "../App";
 
+import { Price, PrizeItem } from "../data.ts"
+
 interface ImageCarouselProps {
   imagesPaths: {
-    id: number;
-    file: File | null;
-    path: string | null;
+    path: string | null
   }[] | null;
 }
 
@@ -20,7 +20,7 @@ function ImageCarousel({ imagesPaths }: ImageCarouselProps) {
         ? imagesPaths[imgIndex].path
         : null
     );
-    const backgroundImage = imagesPaths?.[0]?.path ? `url(http://${IP}:5000/server/prizes-images/${currentImg})` : "none";
+    const backgroundImage = imagesPaths ? `url(http://${IP}:5000/server/prizes-images/${currentImg})` : "none";
 
     const handleLeftArrow = () => {
         if (imagesPaths) {
@@ -65,24 +65,14 @@ interface DetailedPrizePopupProps {
     prize: {
         id: number;
         name: string;
-        price: number;
-        unit: string;
-        quantity: number;
-        variations: {
-            id: number;
-            variation: string;
-        }[] | null;
-        visible: boolean;
+        price: Price;
         description: string;
-        imagesPaths: {
-            id: number;
-            file: File | null;
-            path: string | null;
-        }[] | null;
+        image: string | null;
     }
     premium: boolean;
+    prizeList: PrizeItem[];
 }
-function DetailedPrizePopup({ handleClose, prize, premium }: DetailedPrizePopupProps) {
+function DetailedPrizePopup({ handleClose, prize, premium, prizeList }: DetailedPrizePopupProps) {
     const navigate = useNavigate();
     const handleOrderClick = () => {
         document.body.classList.remove("no-scroll");
@@ -93,17 +83,18 @@ function DetailedPrizePopup({ handleClose, prize, premium }: DetailedPrizePopupP
         <>
             <div className="overlay-background" onClick={handleClose}></div>
             <div className="overlay detailed-prize-popup">
-                <ImageCarousel imagesPaths={prize.imagesPaths} />
+                <ImageCarousel imagesPaths={prizeList.map(item => {
+                    return {path: item.image}})} />
                 <div className="details-section">
                     <h1>{prize.name}</h1>
-                    <h2>{prize.price} {prize.unit}</h2>
-                    <h3>{prize.quantity} remaining in stock</h3>
-                    {prize.variations && prize.variations?.length > 0 &&
+                    <h2>{prize.price.quantity} {prize.price.coinType}</h2>
+                    {/* <h3>{prize.quantity} remaining in stock</h3> */}
+                    {prizeList && prizeList?.length > 0 &&
                         <div>
                             <h3>Variations</h3>
                             <div className="variations-container">
-                                {prize.variations.map((item) => (
-                                    <p key={item.id}>- {item.variation}</p>
+                                {prizeList.map((item) => (
+                                    <p key={item.id}>- {item.name}</p>
                                 ))}
                             </div>
                         </div>

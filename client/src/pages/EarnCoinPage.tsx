@@ -4,6 +4,8 @@ import { adminModeSetter } from "../App";
 import CoinCard from "../components/CoinCard";
 import EarnLoseCoinsEditor from "../components/EarnLoseCoinsEditor";
 
+import {beltMap} from "../data.ts";
+
 import "./EarnCoinPage.css";
 
 import { IP } from "../App";
@@ -17,7 +19,7 @@ function EarnCoinPage() {
     const [earnCoinsErrorMessage, setEarnCoinsErrorMessage] = useState("");
     const [loseCoinsErrorMessage, setLoseCoinsErrorMessage] = useState("");
     const [calcCoin, setCalcCoin] = useState("Enter the fields above");
-    const [calcField, setCalcField] = useState({ multiplier: "", actionId: 0 });
+    const [calcField, setCalcField] = useState({ multiplier: "Select", actionId: 0 });
     const [uploadingAnnouncement, setUploadingAnnouncement] = useState(false);
     const [announcementData, setAnnouncementData] = useState<{
         visible: boolean;
@@ -43,34 +45,9 @@ function EarnCoinPage() {
     
     const handleCalc = () => {
         const action = earnCoinsRows.find((item) => item.id === calcField.actionId);
-        let multiplier = 0;
+        let multiplier = beltMap.get(calcField.multiplier);
 
-        switch (calcField.multiplier) {
-            case "white":
-                multiplier = 1;
-                break;
-            case "yellow":
-            case "orange":
-                multiplier = 2;
-                break;
-            case "green":
-            case "blue":
-                multiplier = 3;
-                break;
-            case "purple":
-            case "brown":
-                multiplier = 4;
-                break;
-            case "red":
-            case "black":
-                multiplier = 5;
-                break;
-            default:
-                multiplier = 0;
-                break;
-        }
-
-        if (action) {
+        if (action && multiplier) {
             const calculatedCoin = action.multipliable
                 ? `${action.price * multiplier} ${action.unit}s`
                 : `${action.price} ${action.unit}s`;
@@ -366,21 +343,16 @@ function EarnCoinPage() {
                     <form>
                         <label>My belt level
                             <select value={calcField.multiplier} onChange={(e) => handleCalcFieldChange("multiplier", e.target.value)}>
-                                <option></option>
-                                <option value="white">White</option>
-                                <option value="yellow">Yellow</option>
-                                <option value="orange">Orange</option>
-                                <option value="green">Green</option>
-                                <option value="blue">Blue</option>
-                                <option value="purple">Purple</option>
-                                <option value="brown">Brown</option>
-                                <option value="red">Red</option>
-                                <option value="black">Black</option>
+                                {/* <option>Select</option> */}
+                                {Array.from(beltMap.entries()).map(([key]) => (
+                                <option value={key}>
+                                    {key}
+                                </option>))}
                             </select>
                         </label>
                         <label>What I did
-                            <select onChange={(e) => handleCalcFieldChange("actionId", +e.target.value)}>
-                                <option></option>
+                            <select value={calcField.actionId} onChange={(e) => handleCalcFieldChange("actionId", +e.target.value)}>
+                                <option>Select</option>
                                 {earnCoinsRows.map((item) => (
                                     <option value={item.id}>{item.action}</option>
                                 ))}
@@ -398,6 +370,7 @@ function EarnCoinPage() {
                     <CoinCard coin="Silver Coin" conversion="See above" />
                     <CoinCard coin="Gold Coin" conversion="Trade 5 Silver Coins" />
                     <CoinCard coin="Obsidian Coin" conversion="Trade 5 Gold Coins" />
+                    <img src="" alt="Platnium Coin" />
                 </div>
             </div>
         </main>
