@@ -7,17 +7,11 @@ import { IP } from "../App";
 
 import "./PrizesPage.css";
 
-import { COIN, Price, prizeCategoryList, prizeItemList } from "../data.ts";
+import { COIN, Price, prizeCategoryList, prizeItemList, premiumPrizeCategoryList, premiumPrizeItemList } from "../data.ts";
 
 function PrizesPage() {
     const [prizesList, setPrizesList] = useState(prizeItemList);
-     const [premiumPrizesList, setPremiumPrizesList] = useState<{
-        id: number;
-        name: string;
-        price: Price;
-        description: string;
-        image: string | null
-     }[]>([]);
+     const [premiumPrizesList, setPremiumPrizesList] = useState(premiumPrizeItemList);
      const [isDetailedPrizePopupVisible, setDetailedPrizePopupVisible] = useState(false);
      const [selectedPrize, setSelectedPrize] = useState<Omit<PrizeProps, "handleClick">>({
         id: 9999,
@@ -49,12 +43,15 @@ function PrizesPage() {
         document.body.classList.remove("no-scroll");
     }
     const handleClickPrize = (prize: Omit<PrizeProps, "handleClick">, premium: boolean) => {
-        let prizeItem = prizeItemList.find((item) => item.prizeCategoryId === prize.id)
+        let prizeItem = (premium) ? premiumPrizeItemList.find((item) => item.prizeCategoryId === prize.id) : prizeItemList.find((item) => item.prizeCategoryId === prize.id);
+
+        let prizeListFilter = (premium) ? premiumPrizeItemList.filter((item) => item.prizeCategoryId === prize.id) : prizeItemList.filter((item) => item.prizeCategoryId === prize.id);
+
         if (prizeItem)
         {
             setSelectedPrize(prize);
             setPremium(premium);
-            setPrizesList(prizeItemList.filter((item) => item.prizeCategoryId === prize.id));
+            setPrizesList(prizeListFilter);
             setDetailedPrizePopupVisible(true);
             window.scrollTo(0, 0);
             document.body.classList.add("no-scroll");
@@ -128,7 +125,7 @@ function PrizesPage() {
                     <h4>Premium Prizes</h4>
                     <p>Click "Order" to submit a request</p>
                     <div className="prizes">
-                        {premiumPrizesList.map((prize) => (
+                        {premiumPrizeCategoryList.map((prize) => (
                             <Prize 
                                 key={prize.id}
                                 {...prize}

@@ -11,6 +11,8 @@ export const beltMap = new Map<string, number>([
     ['Black', 5]
 ]);
 
+// Prizes Page
+
 export const COIN = {
     Silver: 'Silver',
     Gold: 'Gold',
@@ -105,7 +107,7 @@ export const prizeItemList: PrizeItem[] = [
         name: "Kuromi",
         description: "",
         URL: "",
-        image: "SanrioKeychains-1.jpg",
+        image: "",
         isInStock: true
     },
     {
@@ -187,6 +189,83 @@ export const prizeItemList: PrizeItem[] = [
         description: "BEVIEVIE",
         URL: "",
         image: "Evie-0.jpg",
+        isInStock: true
+    }
+]
+
+
+// Premium PrizeCategory list
+
+export const premiumPrizeCategoryList: PrizeCategory[] = [
+    {
+        id: 5,
+        name: "Katana",
+        price: {
+            quantity: 3,
+            coinType: COIN.Obsidian
+        },
+        image: "Katana-1.jpg",
+        description: "Expandable katana."
+    },
+    {
+        id: 6,
+        name: "Dragon",
+        price: {
+            quantity: 6,
+            coinType: COIN.Obsidian
+        },
+        image: "Dragon-0.jpg",
+        description: "Very cool dragon!"
+    },
+    {
+        id: 7,
+        name: "Mini Katana",
+        price: {
+            quantity: 1,
+            coinType: COIN.Obsidian
+        },
+        image: "MiniKatana-0.png",
+        description: "A smaller version of the Katana"
+    }
+]
+
+// Premium PrizeItem list
+
+export const premiumPrizeItemList: PrizeItem[] = [
+    {
+        id: 10,
+        name: "Red",
+        prizeCategoryId: 5,
+        description: "Red",
+        URL: "",
+        image: "Katana-1.jpg",
+        isInStock: true
+    },
+    {
+        id: 11,
+        name: "Blue",
+        prizeCategoryId: 5,
+        description: "Blue",
+        URL: "",
+        image: "Katana-2.png",
+        isInStock: true
+    },
+    {
+        id: 12,
+        name: "Dragon",
+        prizeCategoryId: 6,
+        description: "Very cool dragon!",
+        URL: "",
+        image: "Dragon-0.jpg",
+        isInStock: true
+    },
+    {
+        id: 13,
+        name: "Mini Katana",
+        prizeCategoryId: 7,
+        description: "A smaller version of the Katana",
+        URL: "",
+        image: "MiniKatana-0.png",
         isInStock: true
     }
 ]
