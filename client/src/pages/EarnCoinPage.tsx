@@ -40,6 +40,19 @@ function EarnCoinPage() {
 
     }, []);
 
+    const beltImages = [
+        "./assets/CN_WhiteBelt@8x.png",
+        "./assets/CN_YellowBelt@8x.png",
+        "./assets/CN_OrangeBelt@8x.png",
+        "./assets/CN_GreenBelt@8x.png",
+        "./assets/CN_BlueBelt@8x.png",
+        "./assets/CN_PurpleBelt@8x.png",
+        "./assets/CN_BrownBelt@8x.png",
+        "./assets/CN_RedBelt@8x.png",
+        "./assets/CN_BlackBelt@8x.png"
+    ];
+    let beltIndex = 0;
+
     let earnCoinsIdCounter = Math.max(...earnCoinsRows.map((row) => row.id), 0) + 1;
     let loseCoinsIdCounter = Math.max(...loseCoinsRows.map((row) => row.id), 0) + 1;
     
@@ -307,33 +320,13 @@ function EarnCoinPage() {
                 <h2>Belt Multiplier</h2>
                 <p>Hover to see the coin belt multiplier</p>
                 <div className="belt-multiplier-block container">
-                    <div className="ninja white">
-                        <img src="./assets/CN_WhiteBelt@8x.png" alt="white belt" />
-                    </div>
-                    <div className="ninja yellow">
-                        <img src="./assets/CN_YellowBelt@8x.png" alt="yellow belt" />
-                    </div>
-                    <div className="ninja orange">
-                        <img src="./assets/CN_OrangeBelt@8x.png" alt="orange belt" />
-                    </div>
-                    <div className="ninja green">
-                        <img src="./assets/CN_GreenBelt@8x.png" alt="green belt" />
-                    </div>
-                    <div className="ninja blue">
-                        <img src="./assets/CN_BlueBelt@8x.png" alt="blue belt" />
-                    </div>
-                    <div className="ninja purple">
-                        <img src="./assets/CN_PurpleBelt@8x.png" alt="purple belt" />
-                    </div>
-                    <div className="ninja brown">
-                        <img src="./assets/CN_BrownBelt@8x.png" alt="brown belt" />
-                    </div>
-                    <div className="ninja red">
-                        <img src="./assets/CN_RedBelt@8x.png" alt="red belt" />
-                    </div>
-                    <div className="ninja black">
-                        <img src="./assets/CN_BlackBelt@8x.png" alt="black belt" />
-                    </div>
+                    {/* <CoinCard image="./assets/CN_YellowBelt@8x.png" imageAltText="yellow belt" hoverText="x2" /> */}
+
+                    {Array.from(beltMap.entries()).map(([key]) =>
+                        <div className={"ninja " + key.toLowerCase()} key={key}>
+                            <img src={beltImages[beltIndex++]} alt={key + " belt"} />
+                        </div>
+                    )}
                 </div>
             </div>
             <div className="coins-calculator-container">
@@ -345,7 +338,7 @@ function EarnCoinPage() {
                             <select value={calcField.multiplier} onChange={(e) => handleCalcFieldChange("multiplier", e.target.value)}>
                                 {/* <option>Select</option> */}
                                 {Array.from(beltMap.entries()).map(([key]) => (
-                                <option value={key}>
+                                <option value={key} key={key}>
                                     {key}
                                 </option>))}
                             </select>
@@ -354,7 +347,7 @@ function EarnCoinPage() {
                             <select value={calcField.actionId} onChange={(e) => handleCalcFieldChange("actionId", +e.target.value)}>
                                 <option>Select</option>
                                 {earnCoinsRows.map((item) => (
-                                    <option value={item.id}>{item.action}</option>
+                                    <option value={item.id} key={item.id}>{item.action}</option>
                                 ))}
                             </select>
                         </label>
@@ -367,10 +360,9 @@ function EarnCoinPage() {
                 <h2>Available Coins</h2>
                 <p>Hover to see how to get each coin</p>
                 <div className="available-coins-block">
-                    <CoinCard coin="Silver Coin" conversion="See above" />
-                    <CoinCard coin="Gold Coin" conversion="Trade 5 Silver Coins" />
-                    <CoinCard coin="Obsidian Coin" conversion="Trade 5 Gold Coins" />
-                    <img src="" alt="Platnium Coin" />
+                    <CoinCard image="" imageAltText="Silver Coin" hoverText="See above" />
+                    <CoinCard image="" imageAltText="Gold Coin" hoverText="Trade 5 Silver Coins" />
+                    <CoinCard image="" imageAltText="Obsidian Coin" hoverText="Trade 5 Gold Coins" />
                 </div>
             </div>
         </main>
