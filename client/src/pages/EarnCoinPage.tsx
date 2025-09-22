@@ -360,9 +360,9 @@ function EarnCoinPage() {
                 <h2>Available Coins</h2>
                 <p>Hover to see how to get each coin</p>
                 <div className="available-coins-block">
-                    <CoinCard image="" imageAltText="Silver Coin" hoverText="See above" />
-                    <CoinCard image="" imageAltText="Gold Coin" hoverText="Trade 5 Silver Coins" />
-                    <CoinCard image="" imageAltText="Obsidian Coin" hoverText="Trade 5 Gold Coins" />
+                    <CoinCard coin="Silver Coin" conversion="See above" />
+                    <CoinCard coin="Gold Coin" conversion="Trade 5 Silver Coins" />
+                    <CoinCard coin="Obsidian Coin" conversion="Trade 5 Gold Coins" />
                 </div>
             </div>
         </main>
