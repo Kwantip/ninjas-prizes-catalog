@@ -1,5 +1,9 @@
 import express from 'express'
 
+import bodyParser from 'body-parser'
+import swaggerJsdoc from 'swagger-jsdoc'
+import swaggerUi from 'swagger-ui-express'
+
 import { getPrizeItems, getPrizeItem, createPrizeItem } from './database.js'
 
 const app = express()
@@ -30,6 +34,38 @@ app.use((err, req, res, next) => {
     console.error(err.stack)
     res.status(500).send('Something broke!')
 })
+
+const options = {
+    definition: {
+        openapi: "3.1.0",
+        info: {
+            title: "Ninja Prize Catalog API",
+            version: "0.1.0",
+            description: "CRUD API application made with Express and documented with Swagger",
+            license: {
+                name: "MIT",
+                url: "https://spdx.org/licenses/MIT.html",
+            },
+            contact: {
+                name: "Code Ninjas",
+                url: "https://www.codeninjas.com/ca-cerritos",
+            },
+        },
+        servers: [
+            {
+                url: "http://localhost:8080",
+            },
+        ],
+    },
+    apis: ["./routes/*.js"],
+};
+
+const specs = swaggerJsdoc(options);
+app.use(
+    "/api-docs",
+    swaggerUi.serve,
+    swaggerUi.setup(specs, { explorer: true })
+);
 
 app.listen(8080, () => {
     console.log('Server is running on port 8080')
