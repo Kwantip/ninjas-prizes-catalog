@@ -65,7 +65,8 @@ interface DetailedPrizePopupProps {
     prize: {
         id: number;
         name: string;
-        price: Price;
+        price_quantity: number;
+        price_coin_type: string;
         description: string;
         image: string | null;
     }
@@ -87,7 +88,7 @@ function DetailedPrizePopup({ handleClose, prize, premium, prizeList }: Detailed
                     return {path: item.image}})} />
                 <div className="details-section">
                     <h1>{prize.name}</h1>
-                    <h2>{prize.price.quantity} {prize.price.coinType}</h2>
+                    <h2>{prize.price_quantity} {prize.price_coin_type}</h2>
                     {/* <h3>{prize.quantity} remaining in stock</h3> */}
                     {prizeList && prizeList?.length > 0 &&
                         <div>

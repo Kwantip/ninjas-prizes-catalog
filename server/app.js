@@ -1,18 +1,40 @@
 import express from 'express'
 
+import cors from 'cors'
+
 import bodyParser from 'body-parser'
 import swaggerJsdoc from 'swagger-jsdoc'
 import swaggerUi from 'swagger-ui-express'
 
-import { getPrizeItems, getPrizeItem, createPrizeItem } from './database.js'
+import { getPrizeCategories, getPrizeCategory, createPrizeCategory, getPrizeItems, getPrizeItem, createPrizeItem } from './database.js'
 
 const app = express()
+app.use(cors())
 app.use(express.json())
 
 app.get('/', async (req, res) => {
     res.send("Hello World!")
 })
 
+// Prize Category API endpoints
+app.get("/prizeCategories", async (req, res) => {
+    const prizeCategories = await getPrizeCategories()
+    res.send(prizeCategories)
+})
+
+app.get("/prizeCategories/:id", async (req, res) => {
+    const id = req.params.id
+    const prizeCategory = await getPrizeCategory(id)
+    res.send(prizeCategory)
+})
+
+app.post("/prizeCategories", async (req, res) => {
+    const { name, price_quantity, price_coin_type, image, description } = req.body
+    const prizeCategory = await createPrizeCategory( name, price_quantity, price_coin_type, image, description)
+    res.status(201).send(prizeCategory)
+})
+
+// Prize Item API endpoints
 app.get("/prizeItems", async (req, res) => {
     const prizeItems = await getPrizeItems()
     res.send(prizeItems)
@@ -25,8 +47,8 @@ app.get("/prizeItems/:id", async (req, res) => {
 })
 
 app.post("/prizeItems", async (req, res) => {
-    const { name, description, url, image, isInStock } = req.body
-    const prizeItem = await createPrizeItem(name, description, url, image, isInStock)
+    const { name, description, url, image, isInStock, prize_category_id } = req.body
+    const prizeItem = await createPrizeItem(name, description, url, image, isInStock, prize_category_id)
     res.status(201).send(prizeItem)
 })
 

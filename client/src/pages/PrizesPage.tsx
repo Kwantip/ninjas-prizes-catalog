@@ -7,26 +7,34 @@ import { IP } from "../App";
 
 import "./PrizesPage.css";
 
-import { COIN, Price, prizeCategoryList, prizeItemList, premiumPrizeCategoryList, premiumPrizeItemList } from "../data.ts";
+import { COIN, Price, PrizeItem, PrizeCategory, premiumPrizeCategoryList, premiumPrizeItemList } from "../data.ts";
 
 function PrizesPage() {
-    const [prizesList, setPrizesList] = useState(prizeItemList);
-     const [premiumPrizesList, setPremiumPrizesList] = useState(premiumPrizeItemList);
-     const [isDetailedPrizePopupVisible, setDetailedPrizePopupVisible] = useState(false);
-     const [selectedPrize, setSelectedPrize] = useState<Omit<PrizeProps, "handleClick">>({
+    const [prizeCategoryList, setPrizeCategoryList] = useState<PrizeCategory[]>([]);
+    const [prizesList, setPrizesList] = useState<PrizeItem[]>([]);
+    const [premiumPrizesList, setPremiumPrizesList] = useState(premiumPrizeItemList);
+    const [isDetailedPrizePopupVisible, setDetailedPrizePopupVisible] = useState(false);
+    const [selectedPrizeCategory, setSelectedPrizeCategory] = useState<Omit<PrizeProps, "handleClick">>({
         id: 9999,
         name: "Fake Item",
-        price: {
-            quantity: 9999,
-            coinType: COIN.Gold
-        },
+        price_quantity: 9999,
+        price_coin_type: COIN.Gold,
         description: "FAKE ITEM FAKE ITEM",
         image: ""
     });
+    const [selectedPrizesList, setSelectedPrizesList] = useState<PrizeItem[]>([]);
     const [premium, setPremium] = useState(false);
 
     useEffect(() => {
-        fetch(`http://${IP}:5000/api/prizesList`)
+        fetch(`http://${IP}:8080/prizeCategories`)
+            .then((res) => res.json())
+            .then((data) => {
+                setPrizeCategoryList(data)
+            })
+            .catch((err) => console.error("Failed to fetch data:", err));
+    }, []);
+    useEffect(() => {
+        fetch(`http://${IP}:8080/prizeItems`)
             .then((res) => res.json())
             .then(setPrizesList)
             .catch((err) => console.error("Failed to fetch data:", err));
@@ -42,16 +50,15 @@ function PrizesPage() {
         setDetailedPrizePopupVisible(false);
         document.body.classList.remove("no-scroll");
     }
-    const handleClickPrize = (prize: Omit<PrizeProps, "handleClick">, premium: boolean) => {
-        let prizeItem = (premium) ? premiumPrizeItemList.find((item) => item.prizeCategoryId === prize.id) : prizeItemList.find((item) => item.prizeCategoryId === prize.id);
-
-        let prizeListFilter = (premium) ? premiumPrizeItemList.filter((item) => item.prizeCategoryId === prize.id) : prizeItemList.filter((item) => item.prizeCategoryId === prize.id);
+    const handleClickPrize = (prizeCategory: Omit<PrizeProps, "handleClick">, premium: boolean) => {
+        let prizeItem = (premium) ? premiumPrizeItemList.find((item) => item.prize_category_id === prizeCategory.id) : prizesList.find((item) => item.prize_category_id === prizeCategory.id);
+        let prizeListFilter = (premium) ? premiumPrizeItemList.filter((item) => item.prize_category_id === prizeCategory.id) : prizesList.filter((item) => item.prize_category_id === prizeCategory.id);
 
         if (prizeItem)
         {
-            setSelectedPrize(prize);
+            setSelectedPrizeCategory(prizeCategory);
             setPremium(premium);
-            setPrizesList(prizeListFilter);
+            setSelectedPrizesList(prizeListFilter);
             setDetailedPrizePopupVisible(true);
             window.scrollTo(0, 0);
             document.body.classList.add("no-scroll");
@@ -63,24 +70,12 @@ function PrizesPage() {
         <main>
             <h1>Prizes</h1>
             <div className="prizes-container">
-                {/* <p>Talk to a sensei to buy these items!</p> */}
-                {/* <div
-                    className="request-print-preview"
-                    onClick={() => {
-                        scrollTo(0, 0);
-                        navigate("/print-request");
-                }}>
-                    <div className="request-print-background">+</div>
-                    <div className="request-print-label-container">
-                        <p className="request-print-name-label">Request a Print</p>
-                        <p className="request-print-price-label">2 - 3 Golds</p>
-                    </div>
-                </div> */}
                 <div className="tier-1">
                     <h4>Tier 1 Prizes</h4>
                     <p>Talk to a sensei to buy these items!</p>
                     <div className="prizes">
-                        {prizeCategoryList.filter((item) => `${item.price.quantity} ${item.price.coinType}` === "1 Gold").map((prize) => (
+                        {/* {prizeCategoriesList.filter((item) => `${item.priceQuantity}` === '1').map((prize) => ( */}
+                        {prizeCategoryList.filter((item) => `${item.price_quantity} ${item.price_coin_type}` === "1 Gold").map((prize) => (
                             <Prize
                                 key={prize.id}
                                 {...prize}
@@ -95,7 +90,7 @@ function PrizesPage() {
                     <h4>Tier 2 Prizes</h4>
                     <p>Talk to a sensei to buy these items!</p>
                     <div className="prizes">
-                        {prizeCategoryList.filter((item) => `${item.price.quantity} ${item.price.coinType}` === "2 Gold").map((prize) => (
+                        {prizeCategoryList.filter((item) => `${item.price_quantity} ${item.price_coin_type}` === "2 Gold").map((prize) => (
                             <Prize
                                 key={prize.id}
                                 {...prize}
@@ -110,7 +105,7 @@ function PrizesPage() {
                     <h4>Tier 3 Prizes</h4>
                     <p>Talk to a sensei to buy these items!</p>
                     <div className="prizes">
-                        {prizeCategoryList.filter((item) => `${item.price.quantity} ${item.price.coinType}` === "3 Gold").map((prize) => (
+                        {prizeCategoryList.filter((item) => `${item.price_quantity} ${item.price_coin_type}` === "3 Gold").map((prize) => (
                             <Prize
                                 key={prize.id}
                                 {...prize}
@@ -149,7 +144,7 @@ function PrizesPage() {
                 ))} */}
             </div>
             <div className="overlay-area">
-                {isDetailedPrizePopupVisible && <DetailedPrizePopup handleClose={handleClose} prize={selectedPrize} premium={premium} prizeList={prizesList}/>}
+                {isDetailedPrizePopupVisible && <DetailedPrizePopup handleClose={handleClose} prize={selectedPrizeCategory} premium={premium} prizeList={selectedPrizesList}/>}
             </div>
         </main>
     )

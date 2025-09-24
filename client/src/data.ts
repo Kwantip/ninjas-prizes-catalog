@@ -29,7 +29,8 @@ export interface Price {
 export interface PrizeCategory {
     id: number;
     name: string;
-    price: Price;
+    price_quantity: number;
+    price_coin_type: string;
     image: string;
     description: string;
 }
@@ -37,7 +38,7 @@ export interface PrizeCategory {
 // PrizeItem
 export interface PrizeItem {
     id: number;
-    prizeCategoryId: number;
+    prize_category_id: number;
     name: string;
     description: string;
     URL: string;
@@ -50,50 +51,40 @@ export const prizeCategoryList: PrizeCategory[] = [
       {
         id: 0,
         name: "Sanrio Keychains",
-        price: {
-            quantity: 3,
-            coinType: COIN.Gold
-        },
+        price_quantity: 3,
+        price_coin_type: COIN.Gold,
         image: "SanrioKeychains-2.jpg",
         description: "Keychains of Sanrio characters!!"
       },
       {
         id: 1,
         name: "DIY Minecraft Keychains",
-        price: {
-            quantity: 3,
-            coinType: COIN.Gold
-        },
+        price_quantity: 3,
+        price_coin_type: COIN.Gold,
         image: "DIYMinecraftKeychains-0.jpg",
         description: "Minecraft keychains that you can build."
       },
       {
         id: 2,
         name: "Fidget Toy",
-        price: {
-            quantity: 1,
-            coinType: COIN.Gold
-        },
+        price_quantity: 1,
+        price_coin_type: COIN.Gold,
         image: "FidgetToy-0.png",
         description: "A very cool fidget toy!"
       },
       {
         id: 3,
         name: "Pins",
-        price: {
-            quantity: 2,
-            coinType: COIN.Gold
-        },
+        price_quantity: 2,
+        price_coin_type: COIN.Gold,
         image: "Pins-0.jpg",
         description: "Small pin badges"
       },
       {
         id: 4,
         name: "Evie",
-        price: {
-            quantity: 1,
-            coinType: COIN.Gold
-        },
+        price_quantity: 1,
+        price_coin_type: COIN.Gold,
         image: "Evie-0.jpg",
         description: "BEVIEVIE"
       }
@@ -103,7 +94,7 @@ export const prizeCategoryList: PrizeCategory[] = [
 export const prizeItemList: PrizeItem[] = [
     {
         id: 0,
-        prizeCategoryId: 0,
+        prize_category_id: 0,
         name: "Kuromi",
         description: "",
         URL: "",
@@ -112,7 +103,7 @@ export const prizeItemList: PrizeItem[] = [
     },
     {
         id: 1,
-        prizeCategoryId: 0,
+        prize_category_id: 0,
         name: "Hello Kitty",
         description: "",
         URL: "",
@@ -121,7 +112,7 @@ export const prizeItemList: PrizeItem[] = [
     },
     {
         id: 2,
-        prizeCategoryId: 0,
+        prize_category_id: 0,
         name: "Cinnamonroll",
         description: "",
         URL: "",
@@ -130,7 +121,7 @@ export const prizeItemList: PrizeItem[] = [
     },
     {
         id: 3,
-        prizeCategoryId: 0,
+        prize_category_id: 0,
         name: "My Melody",
         description: "",
         URL: "",
@@ -140,7 +131,7 @@ export const prizeItemList: PrizeItem[] = [
     {
         id: 4,
         name: "Pig",
-        prizeCategoryId: 1,
+        prize_category_id: 1,
         description: "",
         URL: "",
         image: "DIYMinecraftKeychains-0.jpg",
@@ -149,7 +140,7 @@ export const prizeItemList: PrizeItem[] = [
     {
         id: 5,
         name: "Creeper",
-        prizeCategoryId: 1,
+        prize_category_id: 1,
         description: "",
         URL: "",
         image: "",
@@ -158,7 +149,7 @@ export const prizeItemList: PrizeItem[] = [
     {
         id: 6,
         name: "Enderman",
-        prizeCategoryId: 1,
+        prize_category_id: 1,
         description: "",
         URL: "",
         image: "",
@@ -167,7 +158,7 @@ export const prizeItemList: PrizeItem[] = [
     {
         id: 7,
         name: "Fidget Toy",
-        prizeCategoryId: 2,
+        prize_category_id: 2,
         description: "A very cool fidget toy!",
         URL: "",
         image: "FidgetToy-0.png",
@@ -176,7 +167,7 @@ export const prizeItemList: PrizeItem[] = [
     {
         id: 8,
         name: "Pins",
-        prizeCategoryId: 3,
+        prize_category_id: 3,
         description: "Small pin badges",
         URL: "",
         image: "Pins-0.jpg",
@@ -185,7 +176,7 @@ export const prizeItemList: PrizeItem[] = [
     {
         id: 9,
         name: "Evie",
-        prizeCategoryId: 4,
+        prize_category_id: 4,
         description: "BEVIEVIE",
         URL: "",
         image: "Evie-0.jpg",
@@ -200,30 +191,24 @@ export const premiumPrizeCategoryList: PrizeCategory[] = [
     {
         id: 5,
         name: "Katana",
-        price: {
-            quantity: 3,
-            coinType: COIN.Obsidian
-        },
+        price_quantity: 3,
+        price_coin_type: COIN.Obsidian,
         image: "Katana-1.jpg",
         description: "Expandable katana."
     },
     {
         id: 6,
         name: "Dragon",
-        price: {
-            quantity: 6,
-            coinType: COIN.Obsidian
-        },
+        price_quantity: 6,
+        price_coin_type: COIN.Obsidian,
         image: "Dragon-0.jpg",
         description: "Very cool dragon!"
     },
     {
         id: 7,
         name: "Mini Katana",
-        price: {
-            quantity: 1,
-            coinType: COIN.Obsidian
-        },
+        price_quantity: 1,
+        price_coin_type: COIN.Obsidian,
         image: "MiniKatana-0.png",
         description: "A smaller version of the Katana"
     }
@@ -235,7 +220,7 @@ export const premiumPrizeItemList: PrizeItem[] = [
     {
         id: 10,
         name: "Red",
-        prizeCategoryId: 5,
+        prize_category_id: 5,
         description: "Red",
         URL: "",
         image: "Katana-1.jpg",
@@ -244,7 +229,7 @@ export const premiumPrizeItemList: PrizeItem[] = [
     {
         id: 11,
         name: "Blue",
-        prizeCategoryId: 5,
+        prize_category_id: 5,
         description: "Blue",
         URL: "",
         image: "Katana-2.png",
@@ -253,7 +238,7 @@ export const premiumPrizeItemList: PrizeItem[] = [
     {
         id: 12,
         name: "Dragon",
-        prizeCategoryId: 6,
+        prize_category_id: 6,
         description: "Very cool dragon!",
         URL: "",
         image: "Dragon-0.jpg",
@@ -262,7 +247,7 @@ export const premiumPrizeItemList: PrizeItem[] = [
     {
         id: 13,
         name: "Mini Katana",
-        prizeCategoryId: 7,
+        prize_category_id: 7,
         description: "A smaller version of the Katana",
         URL: "",
         image: "MiniKatana-0.png",
