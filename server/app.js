@@ -17,36 +17,36 @@ app.get('/', async (req, res) => {
 })
 
 // Prize Category API endpoints
-app.get("/prizeCategories", async (req, res) => {
+app.get("/prize-categories", async (req, res) => {
     const prizeCategories = await getPrizeCategories()
     res.send(prizeCategories)
 })
 
-app.get("/prizeCategories/:id", async (req, res) => {
+app.get("/prize-categories/:id", async (req, res) => {
     const id = req.params.id
     const prizeCategory = await getPrizeCategory(id)
     res.send(prizeCategory)
 })
 
-app.post("/prizeCategories", async (req, res) => {
+app.post("/prize-categories", async (req, res) => {
     const { name, price_quantity, price_coin_type, image, description } = req.body
     const prizeCategory = await createPrizeCategory( name, price_quantity, price_coin_type, image, description)
     res.status(201).send(prizeCategory)
 })
 
 // Prize Item API endpoints
-app.get("/prizeItems", async (req, res) => {
+app.get("/prize-items", async (req, res) => {
     const prizeItems = await getPrizeItems()
     res.send(prizeItems)
 })
 
-app.get("/prizeItems/:id", async (req, res) => {
+app.get("/prize-items/:id", async (req, res) => {
     const id = req.params.id
     const prizeItem = await getPrizeItem(id)
     res.send(prizeItem)
 })
 
-app.post("/prizeItems", async (req, res) => {
+app.post("/prize-items", async (req, res) => {
     const { name, description, url, image, isInStock, prize_category_id } = req.body
     const prizeItem = await createPrizeItem(name, description, url, image, isInStock, prize_category_id)
     res.status(201).send(prizeItem)

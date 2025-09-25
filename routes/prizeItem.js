@@ -44,7 +44,7 @@
  * tags:
  *   name: PrizeItem
  *   description: The prize item managing API
- * /prizeItems:
+ * /prize-items:
  *   get:
  *     summary: Lists all the prize items
  *     tags: [PrizeItem]
@@ -75,7 +75,7 @@
  *               $ref: '#/components/schemas/PrizeItem'
  *       500:
  *         description: Some server error
- * /prizeItems/{id}:
+ * /prize-items/{id}:
  *   get:
  *     summary: Get the prize item by id
  *     tags: [PrizeItem]
