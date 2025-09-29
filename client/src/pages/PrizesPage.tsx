@@ -26,7 +26,7 @@ function PrizesPage() {
     const [premium, setPremium] = useState(false);
 
     useEffect(() => {
-        fetch(`http://${IP}:8080/prizeCategories`)
+        fetch(`http://${IP}:8080/prize-categories`)
             .then((res) => res.json())
             .then((data) => {
                 setPrizeCategoryList(data)
@@ -34,7 +34,7 @@ function PrizesPage() {
             .catch((err) => console.error("Failed to fetch data:", err));
     }, []);
     useEffect(() => {
-        fetch(`http://${IP}:8080/prizeItems`)
+        fetch(`http://${IP}:8080/prize-items`)
             .then((res) => res.json())
             .then(setPrizesList)
             .catch((err) => console.error("Failed to fetch data:", err));
