@@ -11,6 +11,9 @@ import RequestPrintPage from './pages/RequestPrintPage'
 import RequestPremiumPrizePage from './pages/RequestPremiumPrizePage'
 import PrintsQueuePage from './pages/PrintsQueuePage'
 
+import Create from "./Create"
+import Edit from "./Edit"
+
 import AdminAcessPage from './pages/AdminAccessPage'
 import ManagePrizesPage from './pages/ManagePrizesPage'
 import ManagePremiumPrizesPage from './pages/ManagePremiumPrizesPage'
@@ -120,6 +123,8 @@ function App() {
 
               <Route path="/admin-access" element={<AdminAcessPage />} />
               <Route path="prizes-manager" element={<ManagePrizesPage />} />
+              <Route path="prizes-manager/create" element={<Create />} />
+              <Route path="prizes-manager/edit/:id" element={<Edit />} />
               <Route path="/premium-prizes-manager" element={<ManagePremiumPrizesPage />} />
               <Route path="/prints-requests-manager" element={<ManagePrintsRequestsPage />}/>
             </Routes>

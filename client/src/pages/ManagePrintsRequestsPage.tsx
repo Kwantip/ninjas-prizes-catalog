@@ -5,11 +5,15 @@ import DetailedRequestPopup from "../components/DetailedRequestPopup";
 import PastOrdersPopup from "../components/PastOrdersPopup";
 
 import { IP } from "../App";
+import { AsyncOrder } from "../OrderState";
 
 import "./ManagePrintsRequestsPage.css";
 
 function ManagePrintsRequestsPage() {
+    const [orderList, setOrderList] = useState<AsyncOrder[]>([])
+
     const [requestsList, setRequestsList] = useState<{
+        orderItem: AsyncOrder
         id: string
         firstName: string;
         lastInitial: string;
@@ -23,6 +27,7 @@ function ManagePrintsRequestsPage() {
         printerAvailable: boolean;
     }[]>([]);
     const [filteredRequestsList, setFilteredRequestsList] = useState<{
+        orderItem: AsyncOrder
         id: string
         firstName: string;
         lastInitial: string;
@@ -41,6 +46,7 @@ function ManagePrintsRequestsPage() {
     const [isDetailedRequestPopupVisible, setDetailedRequestPopupVisible] = useState(false);
     const [isPastOrdersPopupVisible, setPastOrdersPopupVisible] = useState(false);
     const [selectedRequest, setSelectedRequest] = useState<Omit<RequestManagerProps, "handleClick" | "updateQueue" | "updateStatus">>({
+        orderItem: undefined,
         id: "DAL00",
         firstName: "Fake",
         lastInitial: "N",
@@ -109,6 +115,9 @@ function ManagePrintsRequestsPage() {
         document.body.classList.add("no-scroll");
     };
     const handleUpdateStatus = useCallback((id: string, newStatus: string | number, adjustQueue: boolean) => {
+        // TODO: transition order state
+        console.log(orderList.find(order => order.getId() === id)?.getCurrentState().getName())
+
         let reqBody = [{id: id, field: "status", value: newStatus}];
         console.log(adjustQueue)
         if (adjustQueue) {
@@ -174,8 +183,15 @@ function ManagePrintsRequestsPage() {
 
     useEffect(() => {
         const printerStatus = requestsList.find((item) => item.status === "Printing");
-        setIsPrinterFree(printerStatus ? false : true);
+        // setIsPrinterFree(printerStatus ? false : true);
     }, [requestsList]);
+
+    useEffect(() => {
+        // TODO: create order state
+        requestsList.map(item => {
+            orderList.push(new AsyncOrder(item.id, item.firstName, item.lastInitial, item.printName))
+        })
+    });
 
     return (
         <main className="manage-requests-page">
@@ -209,6 +225,7 @@ function ManagePrintsRequestsPage() {
                         <RequestManager
                             key={item.id}
                             {...item}
+                            orderItem={orderList.find(order => order.getId() === item.id)}
                             animating={isAnimating}
                             printerAvailable={isPrinterFree}
                             handleClick={() => handleClick(item)}
@@ -220,6 +237,7 @@ function ManagePrintsRequestsPage() {
                         <RequestManager
                             key={item.id}
                             {...item}
+                            orderItem={orderList.find(order => order.getId() === item.id)}
                             animating={isAnimating}
                             printerAvailable={isPrinterFree}
                             handleClick={() => {handleClick(item)}}

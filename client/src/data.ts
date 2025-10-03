@@ -254,3 +254,14 @@ export const premiumPrizeItemList: PrizeItem[] = [
         isInStock: true
     }
 ]
+
+// Order Status
+export const STATUS = {
+    Pending: 'PENDING',
+    PaymentRequired: 'PAYMENT REQUIRED',
+    InQueue: 'IN QUEUE',
+    Processing: 'PROCESSING',
+    Completed: 'COMPLETED',
+    Delivered: 'DELIVERED',
+    Denied: 'DENIED'
+} as const;
