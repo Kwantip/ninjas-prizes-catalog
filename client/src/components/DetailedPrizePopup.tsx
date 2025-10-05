@@ -5,7 +5,7 @@ import "./DetailedPrizePopup.css"
 
 import { IP } from "../App";
 
-import { Price, PrizeItem } from "../data.ts"
+import { PrizeCategory, PrizeItem } from "../data.ts"
 
 interface ImageCarouselProps {
   imagesPaths: {
@@ -62,14 +62,7 @@ function ImageCarousel({ imagesPaths }: ImageCarouselProps) {
 
 interface DetailedPrizePopupProps {
     handleClose: () => void;
-    prize: {
-        id: number;
-        name: string;
-        price_quantity: number;
-        price_coin_type: string;
-        description: string;
-        image: string | null;
-    }
+    prize: PrizeCategory;
     premium: boolean;
     prizeList: PrizeItem[];
 }

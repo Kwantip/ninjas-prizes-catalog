@@ -7,25 +7,20 @@ import { IP } from "../App";
 
 import "./PrizesPage.css";
 
-import { COIN, Price, PrizeItem, PrizeCategory, premiumPrizeCategoryList, premiumPrizeItemList } from "../data.ts";
+import { COIN, PrizeItem, PrizeCategory } from "../data.ts";
 
 function PrizesPage() {
     const [prizeCategoryList, setPrizeCategoryList] = useState<PrizeCategory[]>([]);
     const [prizesList, setPrizesList] = useState<PrizeItem[]>([]);
-    const [premiumPrizesList, setPremiumPrizesList] = useState(premiumPrizeItemList);
+
     const [isDetailedPrizePopupVisible, setDetailedPrizePopupVisible] = useState(false);
-    const [selectedPrizeCategory, setSelectedPrizeCategory] = useState<Omit<PrizeProps, "handleClick">>({
-        id: 9999,
-        name: "Fake Item",
-        price_quantity: 9999,
-        price_coin_type: COIN.Gold,
-        description: "FAKE ITEM FAKE ITEM",
-        image: ""
-    });
+
+    const [selectedPrizeCategory, setSelectedPrizeCategory] = useState<PrizeCategory>()
     const [selectedPrizesList, setSelectedPrizesList] = useState<PrizeItem[]>([]);
     const [premium, setPremium] = useState(false);
 
     useEffect(() => {
+        // TODO: add filter is_visible=true
         fetch(`http://${IP}:8080/prize-categories`)
             .then((res) => res.json())
             .then((data) => {
@@ -39,20 +34,17 @@ function PrizesPage() {
             .then(setPrizesList)
             .catch((err) => console.error("Failed to fetch data:", err));
     }, []);
-    useEffect(() => {
-        fetch(`http://${IP}:5000/api/premiumPrizesList`)
-            .then((res) => res.json())
-            .then(setPremiumPrizesList)
-            .catch((err) => console.error("Failed to fetch data:", err));
-    }, []);
 
     const handleClose = () => {
         setDetailedPrizePopupVisible(false);
         document.body.classList.remove("no-scroll");
     }
-    const handleClickPrize = (prizeCategory: Omit<PrizeProps, "handleClick">, premium: boolean) => {
-        let prizeItem = (premium) ? premiumPrizeItemList.find((item) => item.prize_category_id === prizeCategory.id) : prizesList.find((item) => item.prize_category_id === prizeCategory.id);
-        let prizeListFilter = (premium) ? premiumPrizeItemList.filter((item) => item.prize_category_id === prizeCategory.id) : prizesList.filter((item) => item.prize_category_id === prizeCategory.id);
+
+    const handleClickPrize = (prizeCategory: PrizeCategory, premium: boolean) => {
+        // TODO: useEffect get prize category by id; dependency: prize item state
+
+        let prizeItem = prizesList.find((item) => item.prize_category_id === prizeCategory.id);
+        let prizeListFilter = prizesList.filter((item) => item.prize_category_id === prizeCategory.id);
 
         if (prizeItem)
         {
@@ -65,7 +57,6 @@ function PrizesPage() {
         }
     }
 
-    // console.log(prizesList)
     return (
         <main>
             <h1>Prizes</h1>
@@ -74,7 +65,6 @@ function PrizesPage() {
                     <h4>Tier 1 Prizes</h4>
                     <p>Talk to a sensei to buy these items!</p>
                     <div className="prizes">
-                        {/* {prizeCategoriesList.filter((item) => `${item.priceQuantity}` === '1').map((prize) => ( */}
                         {prizeCategoryList.filter((item) => `${item.price_quantity}` === '1' && `${item.price_coin_type}` === COIN.Gold).map((prize) => (
                             <Prize
                                 key={prize.id}
@@ -120,9 +110,8 @@ function PrizesPage() {
                     <h4>Premium Prizes</h4>
                     <p>Click "Order" to submit a request</p>
                     <div className="prizes">
-                        {/* TODO: filter prize category by obsidian coin type */}
-                        {premiumPrizeCategoryList.map((prize) => (
-                            <Prize 
+                        {prizeCategoryList.filter((item) => `${item.price_coin_type}` === COIN.Obsidian).map((prize) => (
+                            <Prize
                                 key={prize.id}
                                 {...prize}
                                 handleClick={() => {
@@ -132,20 +121,9 @@ function PrizesPage() {
                         ))}
                     </div>
                 </div>
-                {/* {prizesList.map((item) => (
-                    item.visible &&
-                    <>
-                        <Prize
-                            key={item.id}
-                            {...item}
-                            handleClick={() => {
-                                handleClickPrize(item);
-                            }}/>
-                    </>
-                ))} */}
             </div>
             <div className="overlay-area">
-                {isDetailedPrizePopupVisible && <DetailedPrizePopup handleClose={handleClose} prize={selectedPrizeCategory} premium={premium} prizeList={selectedPrizesList}/>}
+                {isDetailedPrizePopupVisible && selectedPrizeCategory && <DetailedPrizePopup handleClose={handleClose} prize={selectedPrizeCategory} premium={premium} prizeList={selectedPrizesList}/>}
             </div>
         </main>
     )
