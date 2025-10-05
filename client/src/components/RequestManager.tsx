@@ -2,9 +2,13 @@ import { useState, useEffect } from "react";
 
 import "./RequestManager.css";
 
+import { AsyncOrder } from "../OrderState";
+import { STATUS } from "../data.ts"
+
 import { IP } from "../App";
 
 export interface RequestManagerProps {
+    orderItem: AsyncOrder | undefined
     id: string;
     firstName: string;
     lastInitial: string;
@@ -20,56 +24,57 @@ export interface RequestManagerProps {
     updateStatus: (id: string, newStatus: string | number, adjustQueue: boolean) => void;
 }
 
-function RequestManager({ id, firstName, lastInitial, printName, linkToPrint, status, animating, printerAvailable, handleClick, updateStatus }: RequestManagerProps) {
-    const [statusQuestion, setStatusQuestion] = useState("");
+function RequestManager({ orderItem, id, firstName, lastInitial, printName, linkToPrint, status, animating, printerAvailable, handleClick, updateStatus }: RequestManagerProps) {
+    const [statusQuestion, setStatusQuestion] = useState("Accept order?");
     const [statusLabel, setStatusLabel] = useState("");
     const [showQuestion, setShowQuestion] = useState(true);
     const [queueLength, setQueueLength] = useState<number>(0);
     const [disableNo, setDisableNo] = useState(false);
 
-    useEffect(() => {
-        if (typeof status === "number") {
-            setStatusLabel(`#${status} in Queue`);
-            if (printerAvailable && status === 1) {
-                setShowQuestion(true);
-                setStatusQuestion("Start printing?")
-            } else {
-                setShowQuestion(false);
-            }
-        } else {
-            switch (status) {
-                case "Printing":
-                    setStatusLabel("Printing");
-                    setStatusQuestion("Finished printing?");
-                    setDisableNo(true);
-                    break;
-                case "Completed":
-                    setStatusLabel("Completed");
-                    setStatusQuestion("Picked-up?");
-                    setDisableNo(true);
-                    break;
-                case "PaymentRequired":
-                    setStatusLabel("Payment Required");
-                    setStatusQuestion("Payment received?");
-                    break;
-                case "OrderDenied":
-                    setStatusLabel("Order Denied");
-                    setStatusQuestion("Notified Ninja?");
-                    setDisableNo(true);
-                    break;
-                case "Received":
-                    setStatusLabel("Received");
-                    setStatusQuestion("Accept order?");
-                    break;
-                case "Reopened":
-                    setStatusLabel("Reopened");
-                    setShowQuestion(false);
-                    break;
-                default:
-                    break;
-            }
-        }
-    }, [status, printerAvailable]);
+    // useEffect(() => {
+    //     if (typeof status === "number") {
+    //         setStatusLabel(`#${status} in Queue`);
+    //         if (printerAvailable && status === 1) {
+    //             setShowQuestion(true);
+    //             setStatusQuestion("Start printing?")
+    //         } else {
+    //             setShowQuestion(false);
+    //         }
+    //     } else {
+    //         switch (status) {
+    //             case "Printing":
+    //                 setStatusLabel("Printing");
+    //                 setStatusQuestion("Finished printing?");
+    //                 setDisableNo(true);
+    //                 break;
+    //             case "Completed":
+    //                 setStatusLabel("Completed");
+    //                 setStatusQuestion("Picked-up?");
+    //                 setDisableNo(true);
+    //                 break;
+    //             case "PaymentRequired":
+    //                 setStatusLabel("Payment Required");
+    //                 setStatusQuestion("Payment received?");
+    //                 break;
+    //             case "OrderDenied":
+    //                 setStatusLabel("Order Denied");
+    //                 setStatusQuestion("Notified Ninja?");
+    //                 setDisableNo(true);
+    //                 break;
+    //             case "Received":
+    //                 setStatusLabel("Received");
+    //                 setStatusQuestion("Accept order?");
+    //                 break;
+    //             case "Reopened":
+    //                 setStatusLabel("Reopened");
+    //                 setShowQuestion(false);
+    //                 break;
+    //             default:
+    //                 break;
+    //         }
+    //     }
+    // }, [status, printerAvailable]);
+
     useEffect(() => {
         fetch(`http://${IP}:5000/api/queueLength`)
             .then((res) => {
@@ -85,6 +90,56 @@ function RequestManager({ id, firstName, lastInitial, printName, linkToPrint, st
     },[]);
 
     const handleYes = () => {
+        orderItem?.accept();
+
+        const orderStatus = orderItem?.getCurrentState().getName();
+        console.log(orderItem?.getCurrentState().getName() + " in request manager");
+
+        if (orderStatus)
+            {
+            switch (orderStatus) {
+            // switch (status) {
+                case STATUS.Processing:
+                // case "Printing":
+                    setStatusLabel("Printing");
+                    setStatusQuestion("Finished printing?");
+                    // setDisableNo(true);
+                    break;
+                case STATUS.Completed:
+                // case "Completed":
+                    setStatusLabel("Completed");
+                    setStatusQuestion("Picked-up?");
+                    // setDisableNo(true);
+                    break;
+                case STATUS.PaymentRequired:
+                // case "PaymentRequired":
+                    setStatusLabel("Payment Required");
+                    setStatusQuestion("Payment received?");
+                    break;
+                case STATUS.Denied:
+                // case "OrderDenied":
+                    setStatusLabel("Order Denied");
+                    setStatusQuestion("Notified Ninja?");
+                    setDisableNo(true);
+                    break;
+                case STATUS.Pending:
+                // case "Received":
+                    setStatusLabel("Received");
+                    setStatusQuestion("Accept order?");
+                    break;
+                case STATUS.InQueue:
+                    setStatusQuestion("Start printing?");
+                    break;
+                case "Reopened":
+                    setStatusLabel("Reopened");
+                    setShowQuestion(false);
+                    break;
+                default:
+                    setStatusQuestion(orderStatus)
+                    break;
+            }
+        }
+
         let newStatus = status;
         let adjustQueue = false;
         switch (status) {
@@ -117,26 +172,36 @@ function RequestManager({ id, firstName, lastInitial, printName, linkToPrint, st
         updateStatus(id, newStatus, adjustQueue);
     };
     const handleNo = () => {
-        let adjustQueue = false;
-        if (status === 1) {
-            adjustQueue = true;
-        }
-        updateStatus(id, "OrderDenied", adjustQueue);
+        orderItem?.deny();
+
+        setStatusLabel("Order Denied");
+        setStatusQuestion("Notified Ninja?");
+        setDisableNo(true);
+
+        // let adjustQueue = false;
+        // if (status === 1) {
+        //     adjustQueue = true;
+        // }
+        // updateStatus(id, "OrderDenied", adjustQueue);
     };
 
     return (
         <div className={`request-manager ${animating ? "animating" : ""}`}>
             <div className="status-section">
-                <h4>{statusLabel}</h4>
+                <h4>
+                    {/* {statusLabel}  */}
+                    {orderItem?.getCurrentState().getName()}</h4>
             </div>
             <div className="details-section">
-                <h4>{`${firstName} ${lastInitial}.`}</h4>
-                <p><strong>ID: </strong>{id}</p>
+                <h4>{`${firstName} ${lastInitial}. ${orderItem?.getFirstName()}`}</h4>
+                <p><strong>ID: </strong>{id} {orderItem?.getId()}</p>
             </div>
             <div className="print-details-section">
                 {linkToPrint ? (
                     <>
-                        <h4>{printName}</h4>
+                        <h4>
+                            {/* {printName}  */}
+                            {orderItem?.getPrintName()}</h4>
                         <button onClick={() => {window.open(linkToPrint, "_blank")}}>View Print</button>
                     </>
                 ) : (

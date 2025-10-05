@@ -6,7 +6,7 @@ import bodyParser from 'body-parser'
 import swaggerJsdoc from 'swagger-jsdoc'
 import swaggerUi from 'swagger-ui-express'
 
-import { getPrizeCategories, getPrizeCategory, createPrizeCategory, getPrizeItems, getPrizeItem, createPrizeItem } from './database.js'
+import { getPrizeCategories, getPrizeCategory, createPrizeCategory, updatePrizeCategory, deletePrizeCategory, getPrizeItems, getPrizeItem, createPrizeItem } from './database.js'
 
 const app = express()
 app.use(cors())
@@ -32,6 +32,20 @@ app.post("/prize-categories", async (req, res) => {
     const { name, price_quantity, price_coin_type, image, description } = req.body
     const prizeCategory = await createPrizeCategory( name, price_quantity, price_coin_type, image, description)
     res.status(201).send(prizeCategory)
+})
+
+app.put("/prize-categories/:id", async (req, res) => {
+    const id = req.params.id
+    const { name, price_quantity, price_coin_type, image, description } = req.body
+
+    const message = await updatePrizeCategory(id, name, price_quantity, price_coin_type, image, description)
+    res.status(200).send(message)
+})
+
+app.delete("/prize-categories/:id", async (req, res) => {
+    const id = parseInt(req.params.id)
+    const message = await deletePrizeCategory(id)
+    res.status(201).send(message)
 })
 
 // Prize Item API endpoints

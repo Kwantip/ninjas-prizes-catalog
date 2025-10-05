@@ -33,6 +33,29 @@ export async function createPrizeCategory(name, priceQuantity, priceCoinType, im
     return getPrizeCategory(id)
 }
 
+export async function updatePrizeCategory(id, name, priceQuantity, priceCoinType, image, description) {
+    const [result] = await pool.query(`
+        UPDATE prize_categories
+        SET name = ?, price_quantity = ?, price_coin_type = ?, image = ?, description = ?
+        WHERE id = ?
+        `, [name, priceQuantity, priceCoinType, image, description, id])
+    
+    return 'update success'
+}
+
+export async function deletePrizeCategory(id) {
+    // const [category] = getPrizeCategory(id)
+    // if (category)
+    // {
+        const [result] = await pool.query(`
+        DELETE FROM prize_categories
+        WHERE id = ?
+        `, [id])
+        return 'delete success'
+    // }
+    // return 'prize category does not exist'
+}
+
 
 // Prize Item API
 export async function getPrizeItems() {
@@ -57,5 +80,5 @@ export async function createPrizeItem(name, description, url, image, isInStock, 
     return getPrizeItem(id)
 }
 
-const result = await getPrizeItem(3)
-console.log(result)
+// const result = await getPrizeItem(3)
+// console.log(result)

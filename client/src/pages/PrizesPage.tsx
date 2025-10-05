@@ -75,7 +75,7 @@ function PrizesPage() {
                     <p>Talk to a sensei to buy these items!</p>
                     <div className="prizes">
                         {/* {prizeCategoriesList.filter((item) => `${item.priceQuantity}` === '1').map((prize) => ( */}
-                        {prizeCategoryList.filter((item) => `${item.price_quantity} ${item.price_coin_type}` === "1 Gold").map((prize) => (
+                        {prizeCategoryList.filter((item) => `${item.price_quantity}` === '1' && `${item.price_coin_type}` === COIN.Gold).map((prize) => (
                             <Prize
                                 key={prize.id}
                                 {...prize}
@@ -90,7 +90,7 @@ function PrizesPage() {
                     <h4>Tier 2 Prizes</h4>
                     <p>Talk to a sensei to buy these items!</p>
                     <div className="prizes">
-                        {prizeCategoryList.filter((item) => `${item.price_quantity} ${item.price_coin_type}` === "2 Gold").map((prize) => (
+                        {prizeCategoryList.filter((item) => `${item.price_quantity}` === '2' && `${item.price_coin_type}` === COIN.Gold).map((prize) => (
                             <Prize
                                 key={prize.id}
                                 {...prize}
@@ -105,7 +105,7 @@ function PrizesPage() {
                     <h4>Tier 3 Prizes</h4>
                     <p>Talk to a sensei to buy these items!</p>
                     <div className="prizes">
-                        {prizeCategoryList.filter((item) => `${item.price_quantity} ${item.price_coin_type}` === "3 Gold").map((prize) => (
+                        {prizeCategoryList.filter((item) => `${item.price_quantity}` === '3' && `${item.price_coin_type}` === COIN.Gold).map((prize) => (
                             <Prize
                                 key={prize.id}
                                 {...prize}
@@ -120,6 +120,7 @@ function PrizesPage() {
                     <h4>Premium Prizes</h4>
                     <p>Click "Order" to submit a request</p>
                     <div className="prizes">
+                        {/* TODO: filter prize category by obsidian coin type */}
                         {premiumPrizeCategoryList.map((prize) => (
                             <Prize 
                                 key={prize.id}
