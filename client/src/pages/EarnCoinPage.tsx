@@ -19,7 +19,7 @@ function EarnCoinPage() {
     const [earnCoinsErrorMessage, setEarnCoinsErrorMessage] = useState("");
     const [loseCoinsErrorMessage, setLoseCoinsErrorMessage] = useState("");
     const [calcCoin, setCalcCoin] = useState("Enter the fields above");
-    const [calcField, setCalcField] = useState({ multiplier: "Select", actionId: 0 });
+    const [calcField, setCalcField] = useState({ multiplier: "", actionId: -1 });
     const [uploadingAnnouncement, setUploadingAnnouncement] = useState(false);
     const [announcementData, setAnnouncementData] = useState<{
         visible: boolean;
@@ -335,8 +335,8 @@ function EarnCoinPage() {
                 <div className="coins-calculator-block container">
                     <form>
                         <label>My belt level
-                            <select value={calcField.multiplier} onChange={(e) => handleCalcFieldChange("multiplier", e.target.value)}>
-                                {/* <option>Select</option> */}
+                            <select value={calcField.multiplier} required onChange={(e) => handleCalcFieldChange("multiplier", e.target.value)}>
+                                <option value="" disabled hidden>Select a belt level</option>
                                 {Array.from(beltMap.entries()).map(([key]) => (
                                 <option value={key} key={key}>
                                     {key}
@@ -344,8 +344,8 @@ function EarnCoinPage() {
                             </select>
                         </label>
                         <label>What I did
-                            <select value={calcField.actionId} onChange={(e) => handleCalcFieldChange("actionId", +e.target.value)}>
-                                <option>Select</option>
+                            <select value={calcField.actionId} required onChange={(e) => handleCalcFieldChange("actionId", +e.target.value)}>
+                                <option value='-1' disabled hidden>Select an action</option>
                                 {earnCoinsRows.map((item) => (
                                     <option value={item.id} key={item.id}>{item.action}</option>
                                 ))}
