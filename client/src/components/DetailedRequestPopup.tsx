@@ -1,4 +1,7 @@
 import { useState } from "react";
+
+import { STATUS } from "../data.ts";
+
 import "./DetailedRequestPopup.css";
 
 import { IP } from "../App";
@@ -75,14 +78,13 @@ function DetailedRequestPopup({ handleClose, request }: DetailedRequestPopupProp
                             <p><strong>Change Status</strong></p>
                             <select value={request.status} onChange={(e) => setNewStatus(e.target.value)}>
                                 {/* <option></option> */}
-                                <option value="Receieved">Received</option>
-                                <option value="PaymentRequired">Payment Required</option>
+                                <option value={STATUS.Pending}>Received</option>
+                                <option value={STATUS.PaymentRequired}>Payment Required</option>
                                 <option>In Queue</option>
-                                <option value="Printing">Printing</option>
-                                <option value="Completed">Finished Printing</option>
-                                <option value="Fulfilled">Picked-Up</option>
-                                <option value="OrderDenied">Order Denied</option>
-                                <option value="Cancelled">Cancel Order</option>
+                                <option value={STATUS.Processing}>Printing</option>
+                                <option value={STATUS.Completed}>Finished Printing</option>
+                                <option value={STATUS.Delivered}>Picked-Up</option>
+                                <option value={STATUS.Denied}>Order Denied</option>
                             </select>
                         </form>
                     <p><strong>Received Date: </strong>{request.receivedDate}</p>

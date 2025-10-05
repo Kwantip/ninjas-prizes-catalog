@@ -8,6 +8,7 @@ import { IP } from "../App";
 import { AsyncOrder } from "../OrderState";
 
 import "./ManagePrintsRequestsPage.css";
+import { STATUS } from "../data";
 
 function ManagePrintsRequestsPage() {
     const [orderList, setOrderList] = useState<AsyncOrder[]>([])
@@ -21,7 +22,7 @@ function ManagePrintsRequestsPage() {
         linkToPrint: string | null;
         color: string;
         note: string;
-        status: string | number;
+        status: string;
         receivedDate: string;
         animating: boolean;
         printerAvailable: boolean;
@@ -54,7 +55,7 @@ function ManagePrintsRequestsPage() {
         linkToPrint: null,
         color: "Random",
         note: "FAKE REQUEST",
-        status: "OrderDenied",
+        status: STATUS.Pending,
         receivedDate: "meep",
         animating: false,
         printerAvailable: false
@@ -62,6 +63,8 @@ function ManagePrintsRequestsPage() {
     const [isPrinterFree, setIsPrinterFree] = useState<boolean>(true);
 
     const applyFilter = (filterField: string) => {
+        // TODO: use query params
+
         document.getElementById("filter-new-order-btn")?.classList.remove("selected");
         document.getElementById("filter-notify-ninja-btn")?.classList.remove("selected");
         document.getElementById("filter-print-queue-btn")?.classList.remove("selected");
@@ -77,19 +80,19 @@ function ManagePrintsRequestsPage() {
             setCurrentFilterField(filterField);
             switch (filterField) {
                 case "New Order":
-                    setFilteredRequestsList(requestsList.filter((item) => item.status === "Received"));
+                    setFilteredRequestsList(requestsList.filter((item) => item.status === STATUS.Pending));
                     document.getElementById("filter-new-order-btn")?.classList.add("selected");
                     break;
                 case "Notify Ninja":
-                    setFilteredRequestsList(requestsList.filter((item) => item.status === "PaymentRequired" || item.status === "Completed" || item.status === "OrderDenied"));
+                    setFilteredRequestsList(requestsList.filter((item) => item.status === STATUS.PaymentRequired || item.status === STATUS.Completed || item.status === STATUS.Denied));
                     document.getElementById("filter-notify-ninja-btn")?.classList.add("selected");
                     break;
                 case "Print Queue":
-                    setFilteredRequestsList(requestsList.filter((item) => item.status === "Printing" || typeof item.status === "number"));
+                    setFilteredRequestsList(requestsList.filter((item) => item.status === STATUS.Processing || typeof item.status === "number"));
                     document.getElementById("filter-print-queue-btn")?.classList.add("selected");
                     break;
                 case "Completed":
-                    setFilteredRequestsList(requestsList.filter((item) => item.status === "Completed"));
+                    setFilteredRequestsList(requestsList.filter((item) => item.status === STATUS.Completed));
                     document.getElementById("filter-completed-btn")?.classList.add("selected");
                     break;
                 default:
@@ -116,6 +119,7 @@ function ManagePrintsRequestsPage() {
     };
     const handleUpdateStatus = useCallback((id: string, newStatus: string | number, adjustQueue: boolean) => {
         // TODO: transition order state
+        // PATCH to order and POST order history
         console.log(orderList.find(order => order.getId() === id)?.getCurrentState().getName())
 
         let reqBody = [{id: id, field: "status", value: newStatus}];
@@ -130,7 +134,7 @@ function ManagePrintsRequestsPage() {
                     reqBody.push({id: queueItem.id, field: "status", value: newQueueNum})
             });
         }
-        if (newStatus === "Fulfilled" || newStatus === "Cancelled") {
+        if (newStatus === STATUS.Delivered || newStatus === STATUS.Denied) {
             fetch(`http://${IP}:5000/api/updateStatus`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
@@ -175,6 +179,7 @@ function ManagePrintsRequestsPage() {
     }
 
     useEffect(() => {
+        // TODO: GET orders
         fetch(`http://${IP}:5000/api/printsQueue`)
             .then((res) => res.json())
             .then(setRequestsList)
@@ -188,8 +193,11 @@ function ManagePrintsRequestsPage() {
 
     useEffect(() => {
         // TODO: create order state
+        // if status is not pending, set order state
         requestsList.map(item => {
-            orderList.push(new AsyncOrder(item.id, item.firstName, item.lastInitial, item.printName))
+            let orderStateItem = new AsyncOrder(item.id, item.firstName, item.lastInitial, item.printName)
+            orderStateItem.setStateByStatus(item.status)
+            orderList.push(orderStateItem)
         })
     });
 

@@ -2,6 +2,8 @@ import { useState, useEffect } from "react";
 
 import Step from "../components/Step";
 
+import { STATUS } from "../data.ts"
+
 import "./RequestPrintPage.css";
 
 import { IP } from "../App";
@@ -18,7 +20,7 @@ function RequestPrintPage() {
         linkToPrint: "",
         color: "Random",
         notes: "",
-        status: null,
+        status: STATUS.Pending,
         receivedDate: ""
     });
     const [id, setId] = useState("Ewwor 3:");
@@ -81,7 +83,7 @@ function RequestPrintPage() {
             linkToPrint: "",
             color: "Random",
             notes: "",
-            status: null,
+            status: STATUS.Pending,
             receivedDate: ""
         });
     };

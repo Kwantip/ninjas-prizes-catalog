@@ -1,5 +1,7 @@
 import { useState, useEffect } from "react";
 
+import { STATUS } from "../data.ts"
+
 import "./QueueItem.css";
 
 interface QueueItemProps {
@@ -24,25 +26,29 @@ function QueueItem({ id, firstName, lastInitial, printName, status }: QueueItemP
             setStatusExpanded(`${status} in queue`)
         } else {
             switch (status) {
-                case "Printing":
+                case STATUS.Processing:
                     setStatusLabel("P");
                     setStatusExpanded("Printing");
                     break;
-                case "Completed":
+                case STATUS.Completed:
                     setStatusLabel("✓");
                     setStatusExpanded("Ready");
                     break;
-                case "PaymentRequired":
+                case STATUS.PaymentRequired:
                     setStatusLabel("$");
                     setStatusExpanded("$ Needed")
                     break;
-                case "OrderDenied":
+                case STATUS.Denied:
                     setStatusLabel("X");
                     setStatusExpanded("Denied")
                     break;
-                case "Received":
+                case STATUS.Pending:
                     setStatusLabel("?");
                     setStatusExpanded("Received")
+                    break;
+                case STATUS.InQueue:
+                    setStatusLabel("#");
+                    setStatusExpanded("In Queue")
                     break;
                 default:
                     setStatusLabel("ERROR");

@@ -59,6 +59,29 @@ export class AsyncOrder {
         console.log(`Order ${this.id} state changed to ${state.getName()}`);
     }
 
+    // resume state
+    setStateByStatus(status: string)
+    {
+        switch (status)
+        {
+            case STATUS.PaymentRequired:
+                this.currentState = new AsyncPaymentRequiredState(this, STATUS.PaymentRequired);
+                break;
+            case STATUS.InQueue:
+                this.currentState = new AsyncInQueueState(this, STATUS.InQueue);
+                break;
+            case STATUS.Processing:
+                this.currentState = new AsyncProcessingState(this, STATUS.Processing);
+                break;
+            case STATUS.Completed:
+                this.currentState = new AsyncCompletedState(this, STATUS.Completed);
+                break;
+            default:
+                this.currentState = new AsyncPendingState(this, STATUS.Pending);
+                break;
+        }
+    }
+
     // helper method to prevent concurrent state changes
     async performAction(actionFn: () => void)
     {
@@ -88,7 +111,7 @@ export class AsyncOrder {
 
     async deny()
     {
-
+        return this.performAction(() => this.currentState.denyOrder());
     }
 }
 

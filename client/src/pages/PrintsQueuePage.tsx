@@ -5,6 +5,8 @@ import { IP } from "../App";
 
 import QueueItem from "../components/QueueItem";
 
+import { STATUS } from "../data.ts"
+
 import "./PrintsQueuePage.css";
 
 function PrintsQueuePage() {
@@ -72,9 +74,9 @@ function PrintsQueuePage() {
             <div className="filter-area">
                 <h4>Filter</h4>
                 <div className="filters-container">
-                    <p className="clickable" id="filter-action-required-btn" onClick={() => applyFilter("status", ["PaymentRequired", "Completed"], "filter-action-required-btn")}>Action Required</p>
-                    <p className="clickable" id="filter-completed-prints-btn" onClick={() => applyFilter("status", ["Completed"], "filter-completed-prints-btn")}>Completed Prints</p>
-                    <p className="clickable" id="filter-print-in-queue-btn" onClick={() => applyFilter("status", ["InQueue", "Printing"], "filter-print-in-queue-btn")}>Prints in Queue</p>
+                    <p className="clickable" id="filter-action-required-btn" onClick={() => applyFilter("status", [STATUS.PaymentRequired, STATUS.Completed], "filter-action-required-btn")}>Action Required</p>
+                    <p className="clickable" id="filter-completed-prints-btn" onClick={() => applyFilter("status", [STATUS.Completed], "filter-completed-prints-btn")}>Completed Prints</p>
+                    <p className="clickable" id="filter-print-in-queue-btn" onClick={() => applyFilter("status", [STATUS.InQueue, STATUS.Processing], "filter-print-in-queue-btn")}>Prints in Queue</p>
                     {filterApplied && <span className="material-symbols-outlined clickable" onClick={clearFilter}>close</span>}
                 </div>
                 <form>

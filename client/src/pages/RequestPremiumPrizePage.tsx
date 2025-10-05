@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 
+import { STATUS } from "../data.ts";
+
 import "./RequestPrintPage.css";
 
 import { IP } from "../App";
@@ -20,7 +22,7 @@ function RequestPremiumPrizePage() {
         linkToPrint: null,
         color: "Random",
         notes: "",
-        status: null,
+        status: STATUS.Pending,
         receivedDate: ""
     });
     const [id, setId] = useState("ERROR :((");
@@ -29,12 +31,20 @@ function RequestPremiumPrizePage() {
     useEffect(() => {
         Promise.all([
             fetch(`http://${IP}:5000/api/availableColors`).then((res) => res.json()),
+
+            // TODO: fetch prize category with query params price_coin_type=COIN.Obsidian
+            
             fetch(`http://${IP}:5000/api/premiumPrizesNames`).then((res) => res.json())
         ])
             .then(([colors, prizes]) => {
                 setAvailableColors(colors);
                 setAvailablePremiumPrizes(prizes);
             })
+            // extract array of name values
+            // .then(data => {
+            //     const prizeNames = data.map(prize => prize.name)
+            //     setAvailablePremiumPrizes(prizeNames);
+            // })
             .catch((err) => {
                 console.error("Failed to fetch data:", err);
             });
@@ -49,6 +59,8 @@ function RequestPremiumPrizePage() {
             console.error("Invalid form data!!");
             return;
         }
+
+        // TODO: POST order
 
         fetch(`http://${IP}:5000/api/printsQueue`, {
             method: "POST",
