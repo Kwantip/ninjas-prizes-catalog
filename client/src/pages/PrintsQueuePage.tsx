@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useSearchParams } from "react-router"
 
 import { IP } from "../App";
 
@@ -18,28 +19,22 @@ function PrintsQueuePage() {
         status: string | number;
         receivedDate: string
     }[]>([]);
-    const [filteredPrintsQueue, setFilteredPrintsQueue] = useState<{
-        id: string
-        firstName: string;
-        lastInitial: string;
-        printName: string;
-        linkToPrint: string | null;
-        color: string;
-        note: string;
-        status: string | number;
-        receivedDate: string
-    }[]>([]);
+
+    const [searchParams, setSearchParams] = useSearchParams();
     const [filterApplied, setFilterApplied] = useState(false);
-    const [currentFilterField, setCurrentFilterField] = useState<string>("");
 
     useEffect(() => {
-        fetch(`http://${IP}:5000/api/printsQueue`)
+        // TODO: GET orders
+
+        fetch(`http://${IP}:5000/api/printsQueue?${searchParams}`)
             .then((res) => res.json())
             .then(setPrintsQueue)
             .catch((err) => console.error("Failed to fetch prints queue: ", err));
-    }, []);
+    }, [searchParams]);
 
     const clearFilter = () => {
+        setSearchParams({});
+
         document.getElementById("filter-action-required-btn")?.classList.remove("selected");
         document.getElementById("filter-completed-prints-btn")?.classList.remove("selected");
         document.getElementById("filter-print-in-queue-btn")?.classList.remove("selected");
@@ -47,31 +42,27 @@ function PrintsQueuePage() {
         setFilterApplied(false);
     }
 
-    const applyFilter = (filterField: string) => {
-        clearFilter();
-        if (filterApplied && currentFilterField === filterField) {
-            setFilterApplied(false);
-        } else {
+    const applyFilter = (filterField: string, filterValue: string[], filterButton?: string) => {
+        clearFilter()
+        
+        if (filterValue.length > 0)
+        {
+            switch(filterField)
+            {
+                case "status":
+                    setSearchParams({ status: filterValue })
+                    break;
+                case "search": 
+                    setSearchParams({ search: filterValue })
+                    break;
+            }
+
+            if (filterButton)
+            {
+                document.getElementById(filterButton)?.classList.add("selected");
+            }
+
             setFilterApplied(true);
-            setCurrentFilterField(filterField);
-            switch (filterField) {
-                case "Action Required":
-                    setFilteredPrintsQueue(printsQueue.filter((item) => item.status === "Completed" || item.status === "PaymentRequired"));
-                    document.getElementById("filter-action-required-btn")?.classList.add("selected");
-                    break;
-                case "Completed Prints":
-                    setFilteredPrintsQueue(printsQueue.filter((item) => item.status === "Completed"));
-                    document.getElementById("filter-completed-prints-btn")?.classList.add("selected");
-                    break;
-                case "Print Queue":
-                    setFilteredPrintsQueue(printsQueue.filter((item) => item.status === "Printing" || typeof item.status === "number"));
-                    document.getElementById("filter-print-in-queue-btn")?.classList.add("selected");
-                    break;
-                default:
-                    const searchField = filterField.toLowerCase()
-                    setFilteredPrintsQueue(printsQueue.filter((item) => item.firstName.toLowerCase().includes(searchField) || item.id.toLowerCase().includes(searchField) || `${item.firstName} ${item.lastInitial}`.toLowerCase().includes(searchField) || item.printName.toLowerCase().includes(searchField)));
-                    break;
-                }
         }
     };
 
@@ -81,14 +72,14 @@ function PrintsQueuePage() {
             <div className="filter-area">
                 <h4>Filter</h4>
                 <div className="filters-container">
-                    <p className="clickable" id="filter-action-required-btn" onClick={() => applyFilter("Action Required")}>Action Required</p>
-                    <p className="clickable" id="filter-completed-prints-btn" onClick={() => applyFilter("Completed Prints")}>Completed Prints</p>
-                    <p className="clickable" id="filter-print-in-queue-btn" onClick={() => applyFilter("Print Queue")}>Prints in Queue</p>
+                    <p className="clickable" id="filter-action-required-btn" onClick={() => applyFilter("status", ["PaymentRequired", "Completed"], "filter-action-required-btn")}>Action Required</p>
+                    <p className="clickable" id="filter-completed-prints-btn" onClick={() => applyFilter("status", ["Completed"], "filter-completed-prints-btn")}>Completed Prints</p>
+                    <p className="clickable" id="filter-print-in-queue-btn" onClick={() => applyFilter("status", ["InQueue", "Printing"], "filter-print-in-queue-btn")}>Prints in Queue</p>
                     {filterApplied && <span className="material-symbols-outlined clickable" onClick={clearFilter}>close</span>}
                 </div>
                 <form>
-                    <input type="text" onChange={(e) => {applyFilter(e.target.value)}} placeholder="Search by name, print name, or ID" />
-                    <span className="material-symbols-outlined clickable">close</span>
+                    <input type="text" onChange={(e) => {applyFilter("search", [e.target.value])}} placeholder="Search by name, print name, or ID" />
+                    <span className="material-symbols-outlined clickable" onClick={clearFilter}>close</span>
                 </form>
             </div>            
             <div className="legends-section">
@@ -103,15 +94,11 @@ function PrintsQueuePage() {
                 </ul>
             </div>
             <div className="queue-items-section">
-                {!filterApplied ? (
+                {
                     printsQueue.filter((item) => item.status !== "Reopened").map((item) => (
                         <QueueItem key={item.id} {...item} />
                     ))
-                ) : (
-                    filteredPrintsQueue.map((item) => (
-                        <QueueItem key={item.id} {...item} />
-                    ))
-                )}
+                }
             </div>
         </main>
     )

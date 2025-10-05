@@ -543,9 +543,38 @@ app.put('/api/availableColors', async (req, res) => {
 app.get('/api/printsQueue', async (req, res) => {
     try {
         const data = await fs.readFile(printsRequestFilePath, 'utf-8');
-        const jsonData = JSON.parse(data);
+        let jsonData = JSON.parse(data);
+
+        console.log(req.query.status)
+
+        if (req.query.status)
+        {
+            let statusList = req.query.status
+            console.log(statusList.length)
+            if (typeof statusList === "string")
+            {
+                res.json(jsonData.activeRequests.filter((item) => item.status === statusList))
+            }
+            else
+            {
+                res.json(jsonData.activeRequests.filter((item) => statusList.includes(item.status)))
+            }
+        }
+        else if (req.query.search)
+        {
+            let searchValue = req.query.search.toLowerCase()
+            console.log(searchValue)
+            res.json(jsonData.activeRequests.filter((item) => item.firstName.toLowerCase().includes(searchValue) || (item.firstName + " " + item.lastInitial).toLowerCase().includes(searchValue) || item.printName.toLowerCase().includes(searchValue) || item.id.toLowerCase().includes(searchValue)))
+        }
+        else
+        {
+            res.json(jsonData.activeRequests);
+        }
+
+        
+
         // console.log(jsonData)
-        res.json(jsonData.activeRequests);
+        
     } catch (error) {
         console.error('Error reading file: ', error);
         res.status(500).json({ message: 'Error reading data file' });
