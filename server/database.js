@@ -12,7 +12,9 @@ const pool = mysql.createPool({
 
 // Prize Category API
 export async function getPrizeCategories() {
-    const [rows] = await pool.query("SELECT * FROM prize_categories")
+    const [rows] = await pool.query(`
+        SELECT * FROM prize_categories 
+        ORDER BY price_coin_type, price_quantity ASC`)
     return rows
 }
 
@@ -24,21 +26,21 @@ export async function getPrizeCategory(id) {
     return result
 }
 
-export async function createPrizeCategory(name, priceQuantity, priceCoinType, image, description) {
+export async function createPrizeCategory(name, priceQuantity, priceCoinType, image, description, isVisible) {
     const [result] = await pool.query(`
-        INSERT INTO prize_categories (name, price_quantity, price_coin_type, image, description)
+        INSERT INTO prize_categories (name, price_quantity, price_coin_type, image, description, is_visible)
         VALUES (?, ?, ?, ?, ?)
-        `, [name, priceQuantity, priceCoinType, image, description])
+        `, [name, priceQuantity, priceCoinType, image, description, isVisible])
     const id = result.insertId
     return getPrizeCategory(id)
 }
 
-export async function updatePrizeCategory(id, name, priceQuantity, priceCoinType, image, description) {
+export async function updatePrizeCategory(id, name, priceQuantity, priceCoinType, image, description, isVisible) {
     const [result] = await pool.query(`
         UPDATE prize_categories
-        SET name = ?, price_quantity = ?, price_coin_type = ?, image = ?, description = ?
+        SET name = ?, price_quantity = ?, price_coin_type = ?, image = ?, description = ?, is_visible = ?
         WHERE id = ?
-        `, [name, priceQuantity, priceCoinType, image, description, id])
+        `, [name, priceQuantity, priceCoinType, image, description, isVisible, id])
     
     return 'update success'
 }
@@ -71,14 +73,78 @@ export async function getPrizeItem(id) {
     return result
 }
 
-export async function createPrizeItem(name, description, url, image, isInStock, prizeCategoryId) {
+export async function createPrizeItem(name, image, stockAmount, prizeCategoryId) {
     const [result] = await pool.query(`
-        INSERT INTO prize_items (name, description, url, image, isInStock, prize_category_id)
+        INSERT INTO prize_items (name, image, stock_amount, prize_category_id)
         VALUES (?, ?, ?, ?, ?, ?)
-        `, [name, description, url, image, isInStock, prizeCategoryId])
+        `, [name, description, url, image, stockAmount, prizeCategoryId])
     const id = result.insertId
     return getPrizeItem(id)
 }
 
-// const result = await getPrizeItem(3)
-// console.log(result)
+export async function updatePrizeItem(name, image, stockAmount, prizeCategoryId) {
+    const [result] = await pool.query(`
+        UPDATE prize_items
+        SET name = ?, image = ?, stock_amount = ?, prize_category_id = ?
+        WHERE id = ?
+        `, [name, image, stockAmount, prizeCategoryId, id])
+    
+    return 'update success'
+}
+
+export async function deletePrizeItem(id) {
+    // const [category] = getPrizeCategory(id)
+    // if (category)
+    // {
+        const [result] = await pool.query(`
+        DELETE FROM prize_items
+        WHERE id = ?
+        `, [id])
+        return 'delete success'
+    // }
+    // return 'prize category does not exist'
+}
+
+// Colors API
+export async function getColors() {
+    const [rows] = await pool.query("SELECT * FROM colors")
+    return rows
+}
+
+export async function getColor(id) {
+    const [result] = await pool.query(`
+        SELECT * FROM colors
+        WHERE id = ?
+        `, [id])
+    return result
+}
+
+export async function createColor(name, isAvailable) {
+    const [result] = await pool.query(`
+        INSERT INTO colors (name, is_available)
+        VALUES (?, ?)
+        `, [name, isAvailable])
+    const id = result.insertId
+    return getColor(id)
+}
+
+export async function updateColor(name, isAvailable) {
+    const [result] = await pool.query(`
+        UPDATE colors
+        SET name = ?, is_available = ?
+        WHERE id = ?
+        `, [name, isAvailable])
+    
+    return 'update success'
+}
+
+export async function deleteColor(id) {
+    const [result] = await pool.query(`
+    DELETE FROM colors
+    WHERE id = ?
+    `, [id])
+    return 'delete success'
+}
+
+
+// Orders API
