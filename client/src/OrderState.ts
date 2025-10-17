@@ -11,6 +11,7 @@ export class AsyncOrder {
     private lastName: string;
     private printName: string;
     private currentState: AsyncOrderState;
+    private previousState: AsyncOrderState;
     
     private isProcessingAction: boolean;
 
@@ -24,6 +25,8 @@ export class AsyncOrder {
         // set initial state
         this.currentState = new AsyncPendingState(this, STATUS.Pending);
         this.isProcessingAction = false;
+
+        this.previousState = this.currentState;
     }
 
     getId()
@@ -51,9 +54,15 @@ export class AsyncOrder {
         return this.currentState;
     }
 
+    getPreviousState()
+    {
+        return this.previousState;
+    }
+
     // transition state
     setState(state: AsyncOrderState)
     {
+        this.previousState = this.currentState;
         this.currentState = state;
 
         console.log(`Order ${this.id} state changed to ${state.getName()}`);
@@ -66,18 +75,23 @@ export class AsyncOrder {
         {
             case STATUS.PaymentRequired:
                 this.currentState = new AsyncPaymentRequiredState(this, STATUS.PaymentRequired);
+                this.previousState = new AsyncPendingState(this, STATUS.Pending);
                 break;
             case STATUS.InQueue:
                 this.currentState = new AsyncInQueueState(this, STATUS.InQueue);
+                this.previousState = new AsyncPaymentRequiredState(this, STATUS.PaymentRequired);
                 break;
             case STATUS.Processing:
                 this.currentState = new AsyncProcessingState(this, STATUS.Processing);
+                this.previousState = new AsyncInQueueState(this, STATUS.PaymentRequired);
                 break;
             case STATUS.Completed:
                 this.currentState = new AsyncCompletedState(this, STATUS.Completed);
+                this.previousState = new AsyncProcessingState(this, STATUS.Processing);
                 break;
             default:
                 this.currentState = new AsyncPendingState(this, STATUS.Pending);
+                this.previousState = this.currentState;
                 break;
         }
     }
@@ -113,6 +127,11 @@ export class AsyncOrder {
     {
         return this.performAction(() => this.currentState.denyOrder());
     }
+
+    async retry()
+    {
+        return this.performAction(() => this.currentState.retryOrder());
+    }
 }
 
 // States: 
@@ -135,6 +154,12 @@ class AsyncOrderState {
     async denyOrder()
     {
         throw new Error("Method denyOrder not implemented")
+        return false;
+    }
+
+    async retryOrder()
+    {
+        throw new Error("Method retryOrder not implemented")
         return false;
     }
 
@@ -321,7 +346,7 @@ class AsyncProcessingState extends AsyncOrderState
 
             console.log(`Order ${this.getOrder().getId()} cancelled successfully`);
 
-            this.getOrder().setState(new AsyncDeniedState(this.getOrder(), STATUS.Denied))
+            this.getOrder().setState(new AsyncInQueueState(this.getOrder(), STATUS.InQueue))
             return true;
         }
         catch
@@ -367,7 +392,7 @@ class AsyncCompletedState extends AsyncOrderState
 
             console.log(`Order ${this.getOrder().getId()} cancelled successfully`);
 
-            this.getOrder().setState(new AsyncDeniedState(this.getOrder(), STATUS.Denied))
+            this.getOrder().setState(new AsyncInQueueState(this.getOrder(), STATUS.InQueue))
             return true;
         }
         catch
@@ -409,5 +434,28 @@ class AsyncDeniedState extends AsyncOrderState
     {
         console.log(`Cannot deny order ${this.getOrder().getId()}: Order already cancelled`);
         return false;
+    }
+
+    async retryOrder()
+    {
+        console.log(`Move to previous state: ${this.getOrder().getPreviousState()}`)
+
+        try
+        {
+            // API call to update order status
+            // await new Promise(resolve => setTimeout(resolve, 1000));
+
+            console.log(`Retry successful for order ${this.getOrder().getId()}`);
+
+            this.getOrder().setState(this.getOrder().getPreviousState());
+            return true;
+        }
+        catch (error)
+        {
+            console.error(`Retry failed for order ${this.getOrder().getId()}`, error);
+            return false;
+        }
+
+        return true;
     }
 }

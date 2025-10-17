@@ -118,6 +118,13 @@ function RequestManager({ orderItem, id, firstName, lastInitial, printName, link
         // updateStatus(id, "OrderDenied", adjustQueue);
     };
 
+    const handleRetry = () => {
+        orderItem?.retry();
+
+        const orderStatus = orderItem?.getCurrentState().getName();
+        setStatusElements(orderStatus)
+    };
+
     return (
         <div className={`request-manager ${animating ? "animating" : ""}`}>
             <div className="status-section">
@@ -142,6 +149,7 @@ function RequestManager({ orderItem, id, firstName, lastInitial, printName, link
                     <p>{statusQuestion}</p>
                     <div className="yes-no">
                         <span className="material-symbols-outlined clickable" onClick={handleYes}>check</span>
+                        <span className="material-symbols-outlined clickable" onClick={handleRetry}>retry</span>
                         {!disableNo && <span className="material-symbols-outlined clickable" onClick={handleNo}>close</span>}
                     </div>
                 </div>
