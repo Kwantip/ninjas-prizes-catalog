@@ -20,16 +20,24 @@ CREATE TABLE prize_categories (
     price_coin_type VARCHAR(50) NOT NULL,
     image VARCHAR(255),
     description VARCHAR(255) NOT NULL,
-    is_visible BOOLEAN NOT NULL
+    is_visible BOOLEAN NOT NULL,
+    is_orderable BOOLEAN NOT NULL
 );
 
+-- Create Prize Category for Custom Print
+INSERT INTO prize_categories (name, price_quantity, price_coin_type, image, description, is_visible, is_orderable)
+VALUES ('Custom Prints', 3, 'Obsidian', '', 'list of custom prints', FALSE, FALSE); 
+
 -- Example of adding a new Prize Category
-INSERT INTO prize_categories (name, price_quantity, price_coin_type, image, description, is_visible)
-VALUES ('Sanrio Keychains', 1, 'Gold', 'SanrioKeychains-2.jpg', 'Very cute keychains of Sanrio characters', TRUE); 
+INSERT INTO prize_categories (name, price_quantity, price_coin_type, image, description, is_visible, is_orderable)
+VALUES ('Sanrio Keychains', 1, 'Gold', 'SanrioKeychains-2.jpg', 'Very cute keychains of Sanrio characters', TRUE, FALSE); 
+
+INSERT INTO prize_categories (name, price_quantity, price_coin_type, image, description, is_visible, is_orderable)
+VALUES ('Katana', 1, 'Obsidian', 'Katana-1.jpg', 'cool sword', TRUE, TRUE); 
 
 -- Example of editing an existing Prize Category
 UPDATE prize_categories
-SET name = 'test edit', price_quantity = 1, price_coin_type = 'Silver', image = '', description = 'editing category from mysql', is_visible=TRUE
+SET name = 'test edit', price_quantity = 1, price_coin_type = 'Silver', image = '', description = 'editing category from mysql', is_visible = TRUE, is_orderable = FALSE
 WHERE id = 4;
 
 -- Prize Item
@@ -37,14 +45,23 @@ CREATE TABLE prize_items (
 	id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(50) NOT NULL UNIQUE,
     image VARCHAR(255),
-    stock_amount INT NOT NULL, /* TODO: maybe remove */
+    is_visible BOOLEAN NOT NULL,
     prize_category_id INT NOT NULL,
     FOREIGN KEY (prize_category_id) REFERENCES prize_categories(id)
 );
 
+SELECT prize_items.name
+FROM prize_categories
+INNER JOIN prize_items
+	ON prize_items.prize_category_id=prize_categories.id
+WHERE is_orderable=TRUE;
+
 -- Example of adding a new Prize Item
-INSERT INTO prize_items (name, image, stock_amount, prize_category_id)
-VALUES ('Hello Kitty', 'SanrioKeychains-2.jpg', 5, 1);
+INSERT INTO prize_items (name, image, is_visible, prize_category_id)
+VALUES ('Hello Kitty', 'SanrioKeychains-2.jpg', TRUE, 1);
+
+INSERT INTO prize_items (name, image, is_visible, prize_category_id)
+VALUES ('Custom Test', '', FALSE, 1);
 
 -- Filament colors
 CREATE TABLE filament_colors (
@@ -66,7 +83,7 @@ CREATE TABLE orders (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     status_changed_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    prize_item_id INT, /* custom prints would use NULL value */
+    prize_item_id INT NOT NULL,
     ninja_id INT NOT NULL UNIQUE,
     color_id INT NOT NULL,
     FOREIGN KEY (prize_item_id) REFERENCES prize_items(id),
@@ -75,8 +92,18 @@ CREATE TABLE orders (
 );
 
 -- Example of adding a new Order
-INSERT INTO orders (notes, link_to_item, status, prize_item_id, ninja_id, color_id)
+INSERT INTO orders (link_to_item, notes, status, prize_item_id, ninja_id, color_id)
 VALUES ('test order creation', '', 'PENDING', 1, 1, 1); 
+
+-- Example of a join query
+SELECT orders.id, ninjas.first_name, ninjas.last_name, prize_items.name, orders.link_to_item, filament_colors.name, orders.status, orders.created_at, orders.updated_at, orders.status_changed_at
+FROM Orders
+INNER JOIN prize_items
+	ON orders.prize_item_id=prize_items.id
+INNER JOIN ninjas
+	ON orders.ninja_id=ninjas.id
+INNER JOIN filament_colors
+	ON orders.color_id=filament_colors.id;
 
 -- History of Order modifications
 CREATE TABLE order_history (

@@ -2,31 +2,30 @@ import { useState, useEffect } from "react";
 
 import Step from "../components/Step";
 
-import { STATUS } from "../data.ts"
+import { OrderRequest, Color } from "../data.ts"
 
 import "./RequestPrintPage.css";
 
 import { IP } from "../App";
+import axios from "axios";
 
 function RequestPrintPage() {
     const [contClicked, setContClicked] = useState(false);
     const [submitClicked, setSubmitClicked] = useState(false);
-    const [availableColors, setAvailableColors] = useState<{ id: number; color: string }[]>([]);
-    const [requestData, setRequestData] = useState({
-        id: "",
-        firstName: "",
-        lastInitial: "",
-        printName: "",
-        linkToPrint: "",
-        color: "Random",
-        notes: "",
-        status: STATUS.Pending,
-        receivedDate: ""
+    const [availableColors, setAvailableColors] = useState<Color[]>([]);
+    const [requestData, setRequestData] = useState<OrderRequest>({
+        first_name: '',
+        last_name: '',
+        print_name: '',
+        link_to_item: '',
+        color: '',
+        notes: ''
     });
     const [id, setId] = useState("Ewwor 3:");
 
     useEffect(() => {
-        fetch(`http://${IP}:5000/api/availableColors`)
+        // TODO: GET Colors by isAvailable === TRUE
+        fetch(`http://${IP}:8080/filament-colors?isAvailable=1`)
             .then((res) => res.json())
             .then(setAvailableColors)
             .catch((err) => console.error("Failed to fetch colors:", err));
@@ -37,37 +36,23 @@ function RequestPrintPage() {
         window.scrollTo(0, 0);
     };
 
-    const handleFieldChange = (field: string, value: any) => {
-        setRequestData((prev) => ({ ...prev, [field]: value }));
-    };
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        if (!requestData.firstName || !requestData.lastInitial || !requestData.printName || !requestData.linkToPrint) {
+        if (!requestData.first_name || !requestData.last_name || !requestData.print_name || !requestData.link_to_item) {
             console.error("Invalid form data!!");
             return;
         }
-    
-        fetch(`http://${IP}:5000/api/printsQueue`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(requestData)
-        })
-            .then(async (res) => {
-                if (!res.ok) {
-                    const errorDetails = await res.text();
-                    console.error("Server response: ", errorDetails);
-                    throw new Error("Failed to submit print request.");
-                }
-                const data = await res.json();
+
+        axios.post('http://localhost:8080/orders', requestData)
+            .then(res => {
+                const data = res.data;
                 console.log("Request received with ID: ", data.id);
                 setId(data.id);
                 setContClicked(false);
                 setSubmitClicked(true);
                 window.scrollTo(0, 0);
             })
-            .catch((err) => {
-                console.error("Error details: ", err);
-            });
+            .catch(err => console.log(err))
     };
 
     const handleAnotherRequest = () => {
@@ -76,15 +61,12 @@ function RequestPrintPage() {
         window.scrollTo(0, 0);
 
         setRequestData({
-            id: "",
-            firstName: "",
-            lastInitial: "",
-            printName: "",
-            linkToPrint: "",
+            first_name: "",
+            last_name: "",
+            print_name: "",
+            link_to_item: "",
             color: "Random",
             notes: "",
-            status: STATUS.Pending,
-            receivedDate: ""
         });
     };
     
@@ -99,19 +81,19 @@ function RequestPrintPage() {
                             First Name*
                             <input
                                 type="text"
-                                value={requestData.firstName}
+                                value={requestData.first_name}
                                 maxLength={15}
-                                onChange={(e) => handleFieldChange("firstName", e.target.value)}
+                                onChange={(e) => setRequestData({...requestData, first_name: e.target.value})}
                                 required
                             />
                         </label>
                         <label>
-                            Last Initial*
+                            Last Name*
                             <input
                                 type="text"
-                                value={requestData.lastInitial}
-                                maxLength={1}
-                                onChange={(e) => handleFieldChange("lastInitial", e.target.value)}
+                                value={requestData.last_name}
+                                maxLength={15}
+                                onChange={(e) => setRequestData({...requestData, last_name: e.target.value})}
                                 required
                             />
                         </label>
@@ -119,8 +101,8 @@ function RequestPrintPage() {
                             Print Name*
                             <input
                                 type="text"
-                                value={requestData.printName}
-                                onChange={(e) => handleFieldChange("printName", e.target.value)}
+                                value={requestData.print_name}
+                                onChange={(e) => setRequestData({...requestData, print_name: e.target.value})}
                                 required
                             />
                         </label>
@@ -128,8 +110,8 @@ function RequestPrintPage() {
                             Link to Print*
                             <input
                                 type="url"
-                                value={requestData.linkToPrint}
-                                onChange={(e) => handleFieldChange("linkToPrint", e.target.value)}
+                                value={requestData.link_to_item}
+                                onChange={(e) => setRequestData({...requestData, link_to_item: e.target.value})}
                                 required
                             />
                         </label>
@@ -137,11 +119,12 @@ function RequestPrintPage() {
                             Color
                             <select
                                 value={requestData.color}
-                                onChange={(e) => handleFieldChange("color", e.target.value)}
+                                onChange={(e) => setRequestData({...requestData, color: e.target.value})}
                             >
+                                <option value="" disabled hidden>Select a color</option>
                                 {availableColors.map((color) => (
-                                    <option key={color.id} value={color.color}>
-                                        {color.color}
+                                    <option key={color.id} value={color.name}>
+                                        {color.name}
                                     </option>
                                 ))}
                             </select>
@@ -152,7 +135,7 @@ function RequestPrintPage() {
                                 rows={5}
                                 maxLength={500}
                                 value={requestData.notes}
-                                onChange={(e) => handleFieldChange("notes", e.target.value)}
+                                onChange={(e) => setRequestData({...requestData, notes: e.target.value})}
                             />
                         </label>
                     </div>
@@ -163,7 +146,7 @@ function RequestPrintPage() {
     } else if (submitClicked) {
         return (
             <main className="request-submitted">
-                <h1>{`${requestData.firstName} ${requestData.lastInitial}., your print request for ${requestData.printName} has been submitted!`}</h1>
+                <h1>{`${requestData.first_name} ${requestData.last_name}, your print request for ${requestData.print_name} has been submitted!`}</h1>
                 <p className="id-section">
                     {`Your request ID is `}
                     <strong>{id}</strong>

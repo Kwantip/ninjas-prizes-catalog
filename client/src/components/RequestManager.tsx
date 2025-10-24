@@ -1,162 +1,146 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 
 import "./RequestManager.css";
 
 import { AsyncOrder } from "../OrderState";
-import { STATUS } from "../data.ts"
+import { STATUS, Order } from "../data.ts"
 
-import { IP } from "../App";
+import axios from "axios";
 
 export interface RequestManagerProps {
-    orderItem: AsyncOrder | undefined
-    id: string;
-    firstName: string;
-    lastInitial: string;
-    printName: string;
-    linkToPrint: string | null;
-    color: string;
-    note: string;
-    status: string | number;
-    receivedDate: string;
-    animating: boolean;
-    printerAvailable: boolean;
+    order: Order;
+    // animating: boolean;
     handleClick: () => void;
-    updateStatus: (id: string, newStatus: string | number, adjustQueue: boolean) => void;
 }
 
-function RequestManager({ orderItem, id, firstName, lastInitial, printName, linkToPrint, status, animating, printerAvailable, handleClick, updateStatus }: RequestManagerProps) {
-    const [statusQuestion, setStatusQuestion] = useState("Accept order?");
-    const [showQuestion, setShowQuestion] = useState(true);
-    const [queueLength, setQueueLength] = useState<number>(0);
+function RequestManager({ order, handleClick}: RequestManagerProps) {
+    const [status, setStatus] = useState(order.status);
+    const [statusQuestion, setStatusQuestion] = useState("");
     const [disableNo, setDisableNo] = useState(false);
 
+    const [orderStateItem] = useState(new AsyncOrder(order.id))
+
     // initialize and update status 
-    const setStatusElements = (status: string) => {
+    useEffect(() => {
+        let question = ""
         switch (status) {
-            case STATUS.Processing:
-                setStatusQuestion("Finished printing?");
-                break;
-            case STATUS.Completed:
-                setStatusQuestion("Picked-up?");
+            case STATUS.Pending:
+                question = "Accept order?";
+                setDisableNo(false);
                 break;
             case STATUS.PaymentRequired:
-                setStatusQuestion("Payment received?");
-                break;
-            case STATUS.Denied:
-                setStatusQuestion("Notified Ninja?");
-                setDisableNo(true);
-                break;
-            case STATUS.Pending:
-                setStatusQuestion("Accept order?");
+                question = "Payment received?";
+                setDisableNo(false);
                 break;
             case STATUS.InQueue:
-                setStatusQuestion("Start printing?");
+                question = "Start printing?";
+                setDisableNo(false);
                 break;
-            case "Reopened":
-                setShowQuestion(false);
+            case STATUS.Processing:
+                question = "Finished printing?";
+                setDisableNo(false);
+                break;
+            case STATUS.Completed:
+                question = "Picked-up?";
+                setDisableNo(false);
+                break;
+            case STATUS.Denied:
+                question = "Notified Ninja?";
+                setDisableNo(true);
                 break;
             default:
-                setStatusQuestion(status + "?")
+                question = status + "?";
                 break;
         }
-    };
+        setStatusQuestion(question)
+    }, [status]);
 
-    useEffect(() => {
-        if (typeof status === "number") {
-            if (printerAvailable && status === 1) {
-                setShowQuestion(true);
-                setStatusQuestion("Start printing?")
-            } else {
-                setShowQuestion(false);
-            }
-        } else {
-            setStatusElements(status)
-        }
-    }, [status, printerAvailable]);
-
-    useEffect(() => {
-        fetch(`http://${IP}:5000/api/queueLength`)
-            .then((res) => {
-                if (!res.ok) {
-                    throw new Error(`HTTP error! status: ${res.status}`);
-                }
-                return res.json();
+    function handleUpdateStatus(id: number, newStatus: string) {
+        // PATCH to order and POST order history
+        axios.patch(`http://localhost:8080/orders/${id}`, { status: newStatus })
+            .then(res => {
+                console.log(res)
+                // navigate('/prizes-manager')
+                const data = res.data;
+                console.log("Request received with ID: ", data.id);
             })
-            .then(setQueueLength)
-            .catch((error) => {
-                console.error("Error getting queue length:", error);
-            });
-    },[]);
+            .catch(err => console.log(err))
 
-    const handleYes = () => {
-        orderItem?.accept();
+        // TODO: POST queue item
+        // if (newStatus === STATUS.InQueue)
+        // {
+        //     axios.post(`http://localhost:8080/orders/queue-item`, { })
+        //     .then(res => {
+        //         console.log(res)
+        //         // navigate('/prizes-manager')
+        //         const data = res.data;
+        //         console.log("Request received with ID: ", data.id);
+        //     })
+        //     .catch(err => console.log(err))
+        // }   
+    }
 
-        const orderStatus = orderItem?.getCurrentState().getName();
-        console.log(orderItem?.getCurrentState().getName() + " in request manager");
+    useEffect(() => {
+        // if status is not pending, set order state
+        orderStateItem.setStateByStatus(order.status)
+    }, []);
+
+    function handleYes() {
+        orderStateItem?.accept();
+
+        const orderStatus = orderStateItem?.getCurrentState().getName();
 
         if (orderStatus)
         {
-            setStatusElements(orderStatus)
+            handleUpdateStatus(order.id, orderStatus)
+            setStatus(orderStatus)
         }
-
-        let newStatus = status;
-        let adjustQueue = false;
-        
-        // console.log("HELLO", adjustQueue);
-        updateStatus(id, newStatus, adjustQueue);
     };
     const handleNo = () => {
-        orderItem?.deny();
+        orderStateItem?.deny();
 
-        setStatusQuestion("Notified Ninja?");
-        setDisableNo(true);
+        const orderStatus = orderStateItem?.getCurrentState().getName();
 
-        // let adjustQueue = false;
-        // if (status === 1) {
-        //     adjustQueue = true;
-        // }
-        // updateStatus(id, "OrderDenied", adjustQueue);
+        if (orderStatus)
+        {
+            handleUpdateStatus(order.id, orderStatus)
+            setStatus(orderStatus)
+        }
     };
 
     const handleRetry = () => {
-        orderItem?.retry();
+        orderStateItem?.retry();
 
-        const orderStatus = orderItem?.getCurrentState().getName();
-        setStatusElements(orderStatus)
+        const orderStatus = orderStateItem?.getCurrentState().getName();
+
+        if (orderStatus)
+        {
+            handleUpdateStatus(order.id, orderStatus)
+            setStatus(orderStatus)
+        }
     };
 
     return (
-        <div className={`request-manager ${animating ? "animating" : ""}`}>
+        <div className={`request-manager`}>
             <div className="status-section">
-                <h4>{orderItem?.getCurrentState().getName()}</h4>
+                <h4>{status}</h4>
             </div>
             <div className="details-section">
-                <h4>{`${orderItem?.getFirstName()} ${orderItem?.getLastName()}.`}</h4>
-                <p><strong>ID: </strong>{orderItem?.getId()}</p>
+                <h4>{`${order.first_name} ${order.last_name}`}</h4>
+                <p><strong>ID: </strong>{order.id}</p>
             </div>
             <div className="print-details-section">
-                {linkToPrint ? (
-                    <>
-                        <h4>{orderItem?.getPrintName()}</h4>
-                        <button onClick={() => {window.open(linkToPrint, "_blank")}}>View Print</button>
-                    </>
-                ) : (
-                    <h4>{orderItem?.getPrintName()}</h4>
-                )}
+                <h4>{order.print_name}</h4>
+                {order.link_to_item && <button onClick={() => {window.open(order.link_to_item, "_blank")}}>View Print</button>}
             </div>
-            {showQuestion ? (
                 <div className="update-status-section">
                     <p>{statusQuestion}</p>
                     <div className="yes-no">
                         <span className="material-symbols-outlined clickable" onClick={handleYes}>check</span>
-                        <span className="material-symbols-outlined clickable" onClick={handleRetry}>retry</span>
+                        {disableNo && <span className="material-symbols-outlined clickable" onClick={handleRetry}>retry</span>}
                         {!disableNo && <span className="material-symbols-outlined clickable" onClick={handleNo}>close</span>}
                     </div>
                 </div>
-                ) : (
-                <div>
-                </div>
-            )}
             <span className="material-symbols-outlined clickable" onClick={handleClick}>more_vert</span>
         </div>
     );

@@ -1,177 +1,43 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect } from "react";
+import { useSearchParams } from "react-router"
 
-import RequestManager, {RequestManagerProps} from "../components/RequestManager";
+import { FilterSection } from "../components/FilterSection";
+import RequestManager from "../components/RequestManager";
 import DetailedRequestPopup from "../components/DetailedRequestPopup";
 import PastOrdersPopup from "../components/PastOrdersPopup";
 
 import { IP } from "../App";
-import { AsyncOrder } from "../OrderState";
 
 import "./ManagePrintsRequestsPage.css";
-import { STATUS } from "../data";
+import { STATUS, Order } from "../data";
 
 function ManagePrintsRequestsPage() {
-    const [orderList, setOrderList] = useState<AsyncOrder[]>([])
+    const [searchParams, setSearchParams] = useSearchParams({});
 
-    const [requestsList, setRequestsList] = useState<{
-        orderItem: AsyncOrder
-        id: string
-        firstName: string;
-        lastInitial: string;
-        printName: string;
-        linkToPrint: string | null;
-        color: string;
-        note: string;
-        status: string;
-        receivedDate: string;
-        animating: boolean;
-        printerAvailable: boolean;
-    }[]>([]);
-    const [filteredRequestsList, setFilteredRequestsList] = useState<{
-        orderItem: AsyncOrder
-        id: string
-        firstName: string;
-        lastInitial: string;
-        printName: string;
-        linkToPrint: string | null;
-        color: string;
-        note: string;
-        status: string | number;
-        receivedDate: string;
-        animating: boolean;
-        printerAvailable: boolean;
-    }[]>([]);
-    const [filterApplied, setFilterApplied] = useState(false);
-    const [currentFilterField, setCurrentFilterField] = useState<string>("");
-    const [isAnimating, setIsAnimating] = useState(false);
-    const [isDetailedRequestPopupVisible, setDetailedRequestPopupVisible] = useState(false);
+    const [requestsList, setRequestsList] = useState<Order[]>([]);
+    const [selectedRequest, setSelectedRequest] = useState<Order>();
+
+    // const [isAnimating, setIsAnimating] = useState(false);
+    
+    const [isDetailedPopupVisible, setIsDetailedPopupVisible] = useState(false);
     const [isPastOrdersPopupVisible, setPastOrdersPopupVisible] = useState(false);
-    const [selectedRequest, setSelectedRequest] = useState<Omit<RequestManagerProps, "handleClick" | "updateQueue" | "updateStatus">>({
-        orderItem: undefined,
-        id: "DAL00",
-        firstName: "Fake",
-        lastInitial: "N",
-        printName: "Fake Print",
-        linkToPrint: null,
-        color: "Random",
-        note: "FAKE REQUEST",
-        status: STATUS.Pending,
-        receivedDate: "meep",
-        animating: false,
-        printerAvailable: false
-    });
-    const [isPrinterFree, setIsPrinterFree] = useState<boolean>(true);
-
-    const applyFilter = (filterField: string) => {
-        // TODO: use query params
-
-        document.getElementById("filter-new-order-btn")?.classList.remove("selected");
-        document.getElementById("filter-notify-ninja-btn")?.classList.remove("selected");
-        document.getElementById("filter-print-queue-btn")?.classList.remove("selected");
-        document.getElementById("filter-completed-btn")?.classList.remove("selected");
-
-        setIsAnimating(true);
-        setTimeout(() => setIsAnimating(false), 300);
-
-        if (filterApplied && currentFilterField === filterField) {
-            setFilterApplied(false);
-        } else {
-            setFilterApplied(true);
-            setCurrentFilterField(filterField);
-            switch (filterField) {
-                case "New Order":
-                    setFilteredRequestsList(requestsList.filter((item) => item.status === STATUS.Pending));
-                    document.getElementById("filter-new-order-btn")?.classList.add("selected");
-                    break;
-                case "Notify Ninja":
-                    setFilteredRequestsList(requestsList.filter((item) => item.status === STATUS.PaymentRequired || item.status === STATUS.Completed || item.status === STATUS.Denied));
-                    document.getElementById("filter-notify-ninja-btn")?.classList.add("selected");
-                    break;
-                case "Print Queue":
-                    setFilteredRequestsList(requestsList.filter((item) => item.status === STATUS.Processing || typeof item.status === "number"));
-                    document.getElementById("filter-print-queue-btn")?.classList.add("selected");
-                    break;
-                case "Completed":
-                    setFilteredRequestsList(requestsList.filter((item) => item.status === STATUS.Completed));
-                    document.getElementById("filter-completed-btn")?.classList.add("selected");
-                    break;
-                default:
-                    const searchField = filterField.toLowerCase()
-                    setFilteredRequestsList(requestsList.filter((item) => item.firstName.toLowerCase().includes(searchField) || item.id.toLowerCase().includes(searchField) || `${item.firstName} ${item.lastInitial}`.toLowerCase().includes(searchField) || item.printName.toLowerCase().includes(searchField)));
-                    break;
-            }
-        }
-    };
+    
+    const handleClick = (orderContent: Order) => {
+        setSelectedRequest(orderContent)
+        setIsDetailedPopupVisible(true);
+        window.scrollTo(0, 0);
+        document.body.classList.add("no-scroll");
+    }
 
     const handleClose = (type: string) => {
         if (type === "detailedRequest") {
-            setDetailedRequestPopupVisible(false);
+            setIsDetailedPopupVisible(false);
         } else if (type === "pastOrders") {
             setPastOrdersPopupVisible(false);
         }
         document.body.classList.remove("no-scroll");
     };
-    const handleClick = (request: Omit<RequestManagerProps, "handleClick" | "updateQueue" | "updateStatus">) => {
-        setSelectedRequest(request);
-        setDetailedRequestPopupVisible(true);
-        window.scrollTo(0, 0);
-        document.body.classList.add("no-scroll");
-    };
-    const handleUpdateStatus = useCallback((id: string, newStatus: string | number, adjustQueue: boolean) => {
-        // TODO: transition order state
-        // PATCH to order and POST order history
-        console.log(orderList.find(order => order.getId() === id)?.getCurrentState().getName())
 
-        let reqBody = [{id: id, field: "status", value: newStatus}];
-        console.log(adjustQueue)
-        if (adjustQueue) {
-            requestsList.filter((item) => typeof item.status === "number" && item.status > 1)
-                .forEach((queueItem) => {
-                    let newQueueNum = 0;
-                    if (typeof queueItem.status === "number") {
-                        newQueueNum = queueItem.status - 1;
-                    }
-                    reqBody.push({id: queueItem.id, field: "status", value: newQueueNum})
-            });
-        }
-        if (newStatus === STATUS.Delivered || newStatus === STATUS.Denied) {
-            fetch(`http://${IP}:5000/api/updateStatus`, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(reqBody),
-            })
-                .then(async (res) => {
-                    if (!res.ok) {
-                        const errorDetails = await res.text();
-                        console.error("Server response: ", errorDetails);
-                        throw new Error("Failed to update status");
-                    }
-                })
-                .catch((error) => {
-                    console.error("Error details: ", error);
-                });
-        } else {
-            fetch(`http://${IP}:5000/api/updateStatus`, {
-                method: "PATCH",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(reqBody),
-            })
-                .then(async (res) => {
-                    if (!res.ok) {
-                        const errorDetails = await res.text();
-                        console.error("Server response: ", errorDetails);
-                        throw new Error("Failed to update status");
-                    }
-                    fetch(`http://${IP}:5000/api/printsQueue`)
-                        .then((res) => res.json())
-                        .then(setRequestsList)
-                        .catch((err) => console.error("Failed to fetch prints queue: ", err));
-                })
-                .catch((error) => {
-                    console.error("Error details: ", error);
-                });
-        }
-    }, [requestsList]);
     const handleOpenPastOrders = () => {
         setPastOrdersPopupVisible(true);
         document.body.classList.add("no-scroll");
@@ -179,44 +45,26 @@ function ManagePrintsRequestsPage() {
     }
 
     useEffect(() => {
-        // TODO: GET orders
-        fetch(`http://${IP}:5000/api/printsQueue`)
+        fetch(`http://${IP}:8080/orders?exclude_status=DELIVERED&${searchParams}`)
             .then((res) => res.json())
             .then(setRequestsList)
             .catch((err) => console.error("Failed to fetch prints queue: ", err));
-    }, [handleUpdateStatus]);
+    }, [searchParams]);
 
-    useEffect(() => {
-        const printerStatus = requestsList.find((item) => item.status === "Printing");
-        // setIsPrinterFree(printerStatus ? false : true);
-    }, [requestsList]);
-
-    useEffect(() => {
-        // TODO: create order state
-        // if status is not pending, set order state
-        requestsList.map(item => {
-            let orderStateItem = new AsyncOrder(item.id, item.firstName, item.lastInitial, item.printName)
-            orderStateItem.setStateByStatus(item.status)
-            orderList.push(orderStateItem)
-        })
-    });
+    const buttons: { name: string, filter: string[]}[] = [
+        {name: "New Order", filter: [STATUS.Pending]}, 
+        {name: "Notify Ninja", filter: [STATUS.PaymentRequired, STATUS.Completed, STATUS.Denied]}, 
+        {name: "Print Queue", filter: [STATUS.InQueue, STATUS.Processing]},
+        {name: "Completed", filter: [STATUS.Completed]}
+    ];
 
     return (
         <main className="manage-requests-page">
             <h1>Prints Requests Manager</h1>
-            <div className="filter-area">
-                <h4>Filter</h4>
-                <div className="filters-container">
-                    <p className="clickable" id="filter-new-order-btn" onClick={() => applyFilter("New Order")}>New Orders</p>
-                    <p className="clickable" id="filter-notify-ninja-btn" onClick={() => applyFilter("Notify Ninja")}>Notify Ninja</p>
-                    <p className="clickable" id="filter-print-queue-btn" onClick={() => applyFilter("Print Queue")}>Print Queue</p>
-                    <p className="clickable" id="filter-completed-btn" onClick={() => applyFilter("Completed")}>Completed Prints</p>
-                </div>
-                <form>
-                    <input type="text" onChange={(e) => applyFilter(e.target.value)} placeholder="Search by name, print name, or ID" />
-                    <span className="material-symbols-outlined clickable">close</span>
-                </form>
-            </div>
+            <FilterSection
+                filterButtons={buttons}
+                onFilterApplied={setSearchParams}
+                />
             <div className="btns-area">
                 <button onClick={handleOpenPastOrders}>Past Orders</button>
             </div>
@@ -228,34 +76,19 @@ function ManagePrintsRequestsPage() {
                 <h4>.</h4>
             </div>
             <div className={`request-managers-container`}>
-                {!filterApplied ? (
+                {
                     requestsList.map((item) => (
                         <RequestManager
                             key={item.id}
-                            {...item}
-                            orderItem={orderList.find(order => order.getId() === item.id)}
-                            animating={isAnimating}
-                            printerAvailable={isPrinterFree}
+                            order={item}
+                            // animating={isAnimating}
                             handleClick={() => handleClick(item)}
-                            updateStatus={handleUpdateStatus}
                         />
                     ))
-                ) : (
-                    filteredRequestsList.map((item) => (
-                        <RequestManager
-                            key={item.id}
-                            {...item}
-                            orderItem={orderList.find(order => order.getId() === item.id)}
-                            animating={isAnimating}
-                            printerAvailable={isPrinterFree}
-                            handleClick={() => {handleClick(item)}}
-                            updateStatus={handleUpdateStatus}
-                        />
-                    ))
-                )}
+                }
             </div>
             <div className="overlay-area">
-                {isDetailedRequestPopupVisible && <DetailedRequestPopup handleClose={() => {handleClose("detailedRequest")}} request={selectedRequest}/>}
+                {isDetailedPopupVisible && selectedRequest && <DetailedRequestPopup handleClose={() => {handleClose("detailedRequest")}} request={selectedRequest}/>}
                 {isPastOrdersPopupVisible && <PastOrdersPopup handleClose={() => {handleClose("pastOrders")}} />}
             </div>
         </main>

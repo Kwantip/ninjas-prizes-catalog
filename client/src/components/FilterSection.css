@@ -1,0 +1,43 @@
+@import "../colors.css";
+
+manage-requests-page .filter-area {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+
+    margin: 50px;
+    margin-top: 0;
+}
+.manage-requests-page .filter-area .filters-container {
+    width: 600px;
+
+    display: flex;
+    justify-content: space-between;
+}
+.manage-requests-page .filter-area .filters-container button {
+    border: 2px solid var(--color-brand-primary);
+    color: var(--color-brand-primary);
+
+    padding: 5px 10px;
+}
+.manage-requests-page .filter-area form {
+    width: 600px;
+    
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+}
+.manage-requests-page .filter-area form input {
+    width: 550px;
+    height: 30px;
+
+    border: 2px solid black;
+
+    padding: 5px;
+}
+
+.selected {
+    color: var(--color-brand-primary);
+}

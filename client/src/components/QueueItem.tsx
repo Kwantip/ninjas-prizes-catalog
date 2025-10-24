@@ -5,24 +5,20 @@ import { STATUS } from "../data.ts"
 import "./QueueItem.css";
 
 interface QueueItemProps {
-    id: string;
+    id: number;
     firstName: string;
-    lastInitial: string;
+    lastName: string;
     printName: string;
-    linkToPrint: string | null;
-    color: string;
-    note: string;
-    status: string | number;
-    receivedDate: string;
+    status: string;
 }
 
-function QueueItem({ id, firstName, lastInitial, printName, status }: QueueItemProps) {
+function QueueItem({ id, firstName, lastName, printName, status }: QueueItemProps) {
     const [statusLabel, setStatusLabel] = useState("");
     const [statusExpanded, setStatusExpanded] = useState("");
 
     useEffect(() => {
         if (typeof status === "number") {
-            setStatusLabel(status.toString());
+            setStatusLabel(status);
             setStatusExpanded(`${status} in queue`)
         } else {
             switch (status) {
@@ -61,14 +57,14 @@ function QueueItem({ id, firstName, lastInitial, printName, status }: QueueItemP
         <div className="queue-item">
             <div className="detail-section">
                 <div className="status-section">
-                    {status === "Completed" ? <span className='material-symbols-outlined status-label'>check</span>
-                        : status === "OrderDenied" ? <span className='material-symbols-outlined status-label'>close</span>
+                    {status === STATUS.Delivered ? <span className='material-symbols-outlined status-label'>check</span>
+                        : status === STATUS.Denied ? <span className='material-symbols-outlined status-label'>close</span>
                         : <div className="status-label">{statusLabel}</div>
                     }
                     <div className="status-expanded">{statusExpanded}</div>
                 </div>
                 <div className="label-section">
-                    <h2>{`${firstName} ${lastInitial}.`}</h2>
+                    <h2>{`${firstName} ${lastName}`}</h2>
                     <p><strong>Print ID </strong>{id}</p>
                     <p><strong>Print Name </strong>{printName}</p>
                 </div>

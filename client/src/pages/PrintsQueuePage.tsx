@@ -3,87 +3,39 @@ import { useSearchParams } from "react-router"
 
 import { IP } from "../App";
 
+import { FilterSection } from "../components/FilterSection.tsx";
 import QueueItem from "../components/QueueItem";
 
-import { STATUS } from "../data.ts"
+import { STATUS, Order } from "../data.ts"
 
 import "./PrintsQueuePage.css";
 
 function PrintsQueuePage() {
-    const [printsQueue, setPrintsQueue] = useState<{
-        id: string
-        firstName: string;
-        lastInitial: string;
-        printName: string;
-        linkToPrint: string | null;
-        color: string;
-        note: string;
-        status: string | number;
-        receivedDate: string
-    }[]>([]);
+    const [printsQueue, setPrintsQueue] = useState<Order[]>([]);
 
-    const [searchParams, setSearchParams] = useSearchParams();
-    const [filterApplied, setFilterApplied] = useState(false);
+    const [searchParams, setSearchParams] = useSearchParams({});
 
     useEffect(() => {
-        // TODO: GET orders
-
-        fetch(`http://${IP}:5000/api/printsQueue?${searchParams}`)
+        fetch(`http://${IP}:8080/orders?exclude_status=DELIVERED&${searchParams}`)
             .then((res) => res.json())
             .then(setPrintsQueue)
             .catch((err) => console.error("Failed to fetch prints queue: ", err));
     }, [searchParams]);
 
-    const clearFilter = () => {
-        setSearchParams({});
-
-        document.getElementById("filter-action-required-btn")?.classList.remove("selected");
-        document.getElementById("filter-completed-prints-btn")?.classList.remove("selected");
-        document.getElementById("filter-print-in-queue-btn")?.classList.remove("selected");
-
-        setFilterApplied(false);
-    }
-
-    const applyFilter = (filterField: string, filterValue: string[], filterButton?: string) => {
-        clearFilter()
-        
-        if (filterValue.length > 0)
-        {
-            switch(filterField)
-            {
-                case "status":
-                    setSearchParams({ status: filterValue })
-                    break;
-                case "search": 
-                    setSearchParams({ search: filterValue })
-                    break;
-            }
-
-            if (filterButton)
-            {
-                document.getElementById(filterButton)?.classList.add("selected");
-            }
-
-            setFilterApplied(true);
-        }
-    };
+    const buttons: { name: string, filter: string[]}[] = [
+        {name: "Action Required", filter: [STATUS.PaymentRequired, STATUS.Completed]}, 
+        {name: "Completed Prints", filter: [STATUS.Completed]}, 
+        {name: "Prints in Queue", filter: [STATUS.InQueue, STATUS.Processing]}
+    ];
 
     return (
         <main className="prints-queue-page">
             <h1>Prints Queue</h1>
-            <div className="filter-area">
-                <h4>Filter</h4>
-                <div className="filters-container">
-                    <p className="clickable" id="filter-action-required-btn" onClick={() => applyFilter("status", [STATUS.PaymentRequired, STATUS.Completed], "filter-action-required-btn")}>Action Required</p>
-                    <p className="clickable" id="filter-completed-prints-btn" onClick={() => applyFilter("status", [STATUS.Completed], "filter-completed-prints-btn")}>Completed Prints</p>
-                    <p className="clickable" id="filter-print-in-queue-btn" onClick={() => applyFilter("status", [STATUS.InQueue, STATUS.Processing], "filter-print-in-queue-btn")}>Prints in Queue</p>
-                    {filterApplied && <span className="material-symbols-outlined clickable" onClick={clearFilter}>close</span>}
-                </div>
-                <form>
-                    <input type="text" onChange={(e) => {applyFilter("search", [e.target.value])}} placeholder="Search by name, print name, or ID" />
-                    <span className="material-symbols-outlined clickable" onClick={clearFilter}>close</span>
-                </form>
-            </div>            
+            <FilterSection
+                filterButtons={buttons}
+                onFilterApplied={setSearchParams}
+                />
+            {/* TODO: Move to QueueTable component */}
             <div className="legends-section">
                 <h4>Legend</h4>
                 <ul className="legends-items">
@@ -97,8 +49,14 @@ function PrintsQueuePage() {
             </div>
             <div className="queue-items-section">
                 {
-                    printsQueue.filter((item) => item.status !== "Reopened").map((item) => (
-                        <QueueItem key={item.id} {...item} />
+                    printsQueue.map((item) => (
+                        <QueueItem key={item.id} 
+                        id={item.id} 
+                        firstName={item.first_name} 
+                        lastName={item.last_name} 
+                        printName={item.print_name} 
+                        status={item.status} 
+                        />
                     ))
                 }
             </div>

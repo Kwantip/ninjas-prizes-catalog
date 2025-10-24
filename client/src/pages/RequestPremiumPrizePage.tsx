@@ -1,87 +1,64 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 
-import { STATUS } from "../data.ts";
+import { OrderRequest, Color } from "../data.ts";
 
 import "./RequestPrintPage.css";
 
 import { IP } from "../App";
+import axios from "axios";
 
 function RequestPremiumPrizePage() {
     const location = useLocation();
     const navigate = useNavigate();
 
     const [submitClicked, setSubmitClicked] = useState(false);
-    const [availableColors, setAvailableColors] = useState<{ id: number; color: string }[]>([]);
-    const [availablePremiumPrizes, setAvailablePremiumPrizes] = useState<{ name: string }[]>([]);
-    const [requestData, setRequestData] = useState({
-        id: "",
-        firstName: "",
-        lastInitial: "",
-        printName: location.state?.prize || "",
-        linkToPrint: null,
-        color: "Random",
-        notes: "",
-        status: STATUS.Pending,
-        receivedDate: ""
+    const [availableColors, setAvailableColors] = useState<Color[]>([]);
+    const [availablePremiumPrizes, setAvailablePremiumPrizes] = useState<{ id: 0, name: '' }[]>([]);
+    const [requestData, setRequestData] = useState<OrderRequest>({
+        first_name: '',
+        last_name: '',
+        print_name: location.state?.prize || '',
+        link_to_item: '',
+        color: '',
+        notes: ''
     });
     const [id, setId] = useState("ERROR :((");
 
     // Fetch available colors and prizes
     useEffect(() => {
         Promise.all([
-            fetch(`http://${IP}:5000/api/availableColors`).then((res) => res.json()),
+            fetch(`http://${IP}:8080/filament-colors?isAvailable=1`)
+            .then((res) => res.json()),
 
-            // TODO: fetch prize category with query params price_coin_type=COIN.Obsidian
-            
-            fetch(`http://${IP}:5000/api/premiumPrizesNames`).then((res) => res.json())
+            fetch(`http://${IP}:8080/prize-items?isOrderable=1&select=name`)
+            .then((res) => res.json())
         ])
             .then(([colors, prizes]) => {
                 setAvailableColors(colors);
                 setAvailablePremiumPrizes(prizes);
             })
-            // extract array of name values
-            // .then(data => {
-            //     const prizeNames = data.map(prize => prize.name)
-            //     setAvailablePremiumPrizes(prizeNames);
-            // })
             .catch((err) => {
                 console.error("Failed to fetch data:", err);
             });
     }, []);
 
-    const handleFieldChange = (field: string, value: any) => {
-        setRequestData((prev) => ({ ...prev, [field]: value }));
-    };
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        if (!requestData.firstName || !requestData.lastInitial || !requestData.printName) {
+        if (!requestData.first_name || !requestData.last_name || !requestData.print_name) {
             console.error("Invalid form data!!");
             return;
         }
 
-        // TODO: POST order
-
-        fetch(`http://${IP}:5000/api/printsQueue`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(requestData)
-        })
-            .then(async (res) => {
-                if (!res.ok) {
-                    const errorDetails = await res.text();
-                    console.error("Server response: ", errorDetails);
-                    throw new Error("Failed to submit premium prize request.");
-                }
-                const data = await res.json();
+        axios.post('http://localhost:8080/orders', requestData)
+            .then(res => {
+                const data = res.data;
                 console.log("Request received with ID: ", data.id);
                 setId(data.id);
                 setSubmitClicked(true);
                 window.scrollTo(0, 0);
             })
-            .catch((err) => {
-                console.error("Error details: ", err);
-            });
+            .catch(err => console.log("Failed to submit premium prize request: " + err))
     };
 
     const handleGoBack = () => {
@@ -92,7 +69,7 @@ function RequestPremiumPrizePage() {
     if (submitClicked) {
         return (
             <main className="request-submitted">
-                <h1>{`${requestData.firstName} ${requestData.lastInitial}., we've received your request for ${requestData.printName}!`}</h1>
+                <h1>{`${requestData.first_name} ${requestData.last_name}, we've received your request for ${requestData.print_name}!`}</h1>
                 <p className="id-section">
                     {`Your request ID is `}
                     <strong>{id}</strong>
@@ -116,27 +93,27 @@ function RequestPremiumPrizePage() {
                         First Name*
                         <input
                             type="text"
-                            value={requestData.firstName}
+                            value={requestData.first_name}
                             maxLength={15}
-                            onChange={(e) => handleFieldChange("firstName", e.target.value)}
+                            onChange={(e) => setRequestData({...requestData, first_name: e.target.value})}
                             required
                         />
                     </label>
                     <label>
-                        Last Initial*
+                        Last Name*
                         <input
                             type="text"
-                            value={requestData.lastInitial}
-                            maxLength={1}
-                            onChange={(e) => handleFieldChange("lastInitial", e.target.value)}
+                            value={requestData.last_name}
+                            maxLength={15}
+                            onChange={(e) => setRequestData({...requestData, last_name: e.target.value})}
                             required
                         />
                     </label>
                     <label>
                         Print Name*
                         <select
-                            value={requestData.printName}
-                            onChange={(e) => handleFieldChange("printName", e.target.value)}
+                            value={requestData.print_name}
+                            onChange={(e) => setRequestData({...requestData, print_name: e.target.value})}
                         >
                             <option value="" disabled>
                                 Select a prize
@@ -152,12 +129,12 @@ function RequestPremiumPrizePage() {
                         Color
                         <select
                             value={requestData.color}
-                            onChange={(e) => handleFieldChange("color", e.target.value)}
+                            onChange={(e) => setRequestData({...requestData, color: e.target.value})}
                         >
-                            <option value="Random">Random</option>
+                            <option value="" disabled hidden>Select a color</option>
                             {availableColors.map((color) => (
-                                <option key={color.id} value={color.color}>
-                                    {color.color}
+                                <option key={color.id} value={color.name}>
+                                    {color.name}
                                 </option>
                             ))}
                         </select>
@@ -168,7 +145,7 @@ function RequestPremiumPrizePage() {
                             rows={5}
                             maxLength={500}
                             value={requestData.notes}
-                            onChange={(e) => handleFieldChange("notes", e.target.value)}
+                            onChange={(e) => setRequestData({...requestData, notes: e.target.value})}
                         />
                     </label>
                 </div>

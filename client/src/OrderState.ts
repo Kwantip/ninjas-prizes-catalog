@@ -6,21 +6,15 @@ import { STATUS } from './data.ts'
 
 // Context: Order
 export class AsyncOrder {
-    private id: string;
-    private firstName: string;
-    private lastName: string;
-    private printName: string;
+    private id: number;
     private currentState: AsyncOrderState;
     private previousState: AsyncOrderState;
     
     private isProcessingAction: boolean;
 
-    constructor(id: string, firstName: string, lastName: string, printName: string)
+    constructor(id: number)
     {
         this.id = id;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.printName = printName;
 
         // set initial state
         this.currentState = new AsyncPendingState(this, STATUS.Pending);
@@ -32,21 +26,6 @@ export class AsyncOrder {
     getId()
     {
         return this.id;
-    }
-
-    getFirstName()
-    {
-        return this.firstName;
-    }
-
-    getLastName()
-    {
-        return this.lastName;
-    }
-    
-    getPrintName()
-    {
-        return this.printName;
     }
 
     getCurrentState()
@@ -88,6 +67,14 @@ export class AsyncOrder {
             case STATUS.Completed:
                 this.currentState = new AsyncCompletedState(this, STATUS.Completed);
                 this.previousState = new AsyncProcessingState(this, STATUS.Processing);
+                break;
+            case STATUS.Delivered:
+                this.currentState = new AsyncDeliveredState(this, STATUS.Delivered);
+                this.previousState = new AsyncCompletedState(this, STATUS.Completed);
+                break;
+            case STATUS.Denied:
+                this.currentState = new AsyncDeniedState(this, STATUS.Denied);
+                this.previousState = new AsyncPendingState(this, STATUS.Pending);
                 break;
             default:
                 this.currentState = new AsyncPendingState(this, STATUS.Pending);
